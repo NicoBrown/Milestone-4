@@ -1,0 +1,20 @@
+[
+    "pycodestyle": {
+        "title": "PyCodeStyle",
+        "type": "object",
+        "properties": {
+            "enabled": {
+                "title": "Enabled",
+                "type": "boolean",
+                "default": true,
+                "description": "Enable or disable PyCodeStyle."
+            },
+            "max-line-length": {
+                "title": "max-line-length",
+                "type": "number",
+                "default": 79,
+                "description": "The maximum line length. Default 79."
+            }
+        }
+    }
+]
