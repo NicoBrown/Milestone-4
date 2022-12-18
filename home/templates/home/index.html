@@ -2,5 +2,58 @@
 {% load static %}
 
 {% block content %}
-<h1 class="">It works!</h1>
+<section class="section">
+    <div class="hero-image-div  me-5" title="Background-graphic" alt="background-graphic">
+    </div>
+    <div class="row d-flex align-items-center" id="hero-banner">
+        <div class="col-10 offset-1 mt-5 " id="hero-text-div">
+            <h1 class="h2">Use Kwik Split to divide your bills with</h1>
+
+            <div class="hero-text word"></div>
+            <!-- <h1 class="hero-text"><i class="fas fa-long-arrow-alt-right me-2 arrow"></i>Family</h1>
+            <h1 class="hero-text rellax" data-rellax-speed="-1">Friends</h1>
+            <h1 class="hero-text mb-5 rellax" data-rellax-speed="-2"><i
+                    class="fas fa-long-arrow-alt-right me-2 arrow"></i>Anyone</h1> -->
+            <h2 class="h2">Scan and split invoices, bills and receipts.<br>
+                Make payments and track expenses with ease.</h3>
+        </div>
+    </div>
+</section>
+<section id="about-section" class="container section">
+    <div class="row d-flex align-items-center">
+        <h1 class="col-12 section-heading">Skip the Kwik math</h1>
+        <div class="col-sm-12 col-lg-6 align-items-center my-5">
+            <h1 class="h1 mb-5 text-decoration-underline">Just scan your receipt</h1>
+            <h4 class="">Split complicated bills with ease!<br> Just take a
+                picture of your receipt, and Splitwise will automatically scan its contents.</h4>
+            <h4 class="mt-5">After scanning a receipt, Kwiksplit will detect the
+                individual
+                items so that you can assign them to your friends. Perfect for splitting restaurant and grocery bills.
+            </h4>
+        </div>
+        <div class="col-sm-12 col-lg-6">
+            <img id="image-scan" class="rellax img-fluid" data-rellax-speed="-1"
+                src=" {% static 'images/scan-image.webp' %}">
+        </div>
+    </div>
+</section>
+<div class="align-items-center justify-content-middle">
+    <div class="img-fluid divider-image container order-first">
+        <div class="rellaxH img-fluid divider-image-background" data-rellax-speed="-1"></div>
+    </div>
+</div>
+<section id="about-section" class="">
+    <div class="container text-center">
+        <h1 class="col-12 text-center section-heading">Pay the Kwik Split way</h1>
+        <div>
+            <img class="img-fluid" src=" {% static 'images/background.webp' %}">
+        </div>
+
+        <h3 class="">Split expenses with any group: trips, housemates, friends, and
+            family. Split by % or shares of total and leave tips.
+            <br><br>
+            Send payments to friends using your bank account or paypal,
+            stripe, venmo accounts.</h3>
+    </div>
+</section>
 {% endblock %}

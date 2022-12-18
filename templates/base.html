@@ -14,6 +14,16 @@
     {% endblock %}
 
     {% block corecss %}
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
+    <!-- Globalt sylesheet -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% endblock %}
 
     {% block corejs %}
@@ -23,82 +33,62 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
     </script>
-    <script src="../static/js/javascript.js" crossorigin="anonymous">
-    </script>
+    <!-- MDB -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.js"></script>
+
     {% endblock %}
 
     {% block extra_js %}
     {% endblock %}
 
     <title>Kwik Split | {% block extra-title %} {% endblock %}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
 
 <body>
-    <header class="container-fluid fixed-top"></header>
+    <header class="sticky-top"></header>
 
     {% if messages %}
     <div class="message-container"></div>
     {% endif %}
-    <nav class="navbar is-light" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="https://bulma.io">
-                <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
-            </a>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-colour sticky-top">
+        <!-- Container wrapper -->
+        <div class="container-fluid m-3">
 
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
-                data-target="navbarBasicExample">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
+            <!-- Navbar brand -->
+            <a class="navbar-brand mt-lg-0 h1 text-center align-middle" href="#">KwikSplit</a>
+
+            <!-- Toggle button -->
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
+                data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Collapsible wrapper -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- Link -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                </ul>
+                {% if request.user.is_authenticated %}
+                <a href="" class="btn btn-outline-light btn-light mx-3 btn-lg" data-mdb-color="dark">My Profile</a>
+                <a href="{% url 'account_logout' %}" class="btn btn-outline-light btn-light btn-lg mx-3"
+                    data-mdb-color="dark">Logout</a>
+                {% else %}
+                <a href="{% url 'account_signup' %}" class="btn btn-outline-light btn-light mx-3 btn-lg"
+                    data-mdb-color="dark">
+                    <strong>Sign up</strong>
+                </a>
+                <a href="{% url 'account_login' %}" class="btn btn-outline-light btn-light  mx-3 btn-lg"
+                    data-mdb-color="dark">
+                    Log in
+                </a>
+                {% endif %}
+            </div>
         </div>
-
-        <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start">
-                <a class="navbar-item">
-                    Home
-                </a>
-
-                <a class="navbar-item">
-                    Documentation
-                </a>
-
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
-                        More
-                    </a>
-
-                    <div class="navbar-dropdown">
-                        <a class="navbar-item">
-                            About
-                        </a>
-                        <a class="navbar-item">
-                            Jobs
-                        </a>
-                        <a class="navbar-item">
-                            Contact
-                        </a>
-                        <hr class="navbar-divider">
-                        <a class="navbar-item">
-                            Report an issue
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <a class="button is-primary">
-                            <strong>Sign up</strong>
-                        </a>
-                        <a class="button is-light">
-                            Log in
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
     </nav>
     {% block page_header %}
@@ -107,7 +97,60 @@
     {% block content %}
     {% endblock %}
 
-    {% block postloadjs %}
+    {% block postload-js %}
+    <script src="https://cdn.jsdelivr.net/gh/dixonandmoe/rellax@master/rellax.min.js"></script>
+    <script>
+        var words = ['Friends', 'Family', 'Anyone'],
+            part,
+            i = 0,
+            offset = 0,
+            len = words.length,
+            forwards = true,
+            skip_count = 0,
+            skip_delay = 20,
+            speed = 90;
+        var wordflick = function () {
+            setInterval(function () {
+                if (forwards) {
+                    if (offset >= words[i].length) {
+                        ++skip_count;
+                        if (skip_count == skip_delay) {
+                            forwards = false;
+                            skip_count = 0;
+                        }
+                    }
+                } else {
+                    if (offset == 0) {
+                        forwards = true;
+                        i++;
+                        offset = 0;
+                        if (i >= len) {
+                            i = 0;
+                        }
+                    }
+                }
+                part = words[i].substr(0, offset);
+                if (skip_count == 0) {
+                    if (forwards) {
+                        offset++;
+                    } else {
+                        offset--;
+                    }
+                }
+                $('.word').text(part);
+            }, speed);
+        };
+
+        $(document).ready(function () {
+            wordflick();
+        });
+    </script>
+    <script>
+        var rellaxH = new Rellax('.rellax', {
+            horizontal: true
+        });
+    </script>
+    <script src='{% static "js/javascript.js" %}' crossorigin="anonymous"></script>
     {% endblock %}
 </body>
 
