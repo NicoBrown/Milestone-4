@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.instagram',
     'home',
-    'user_account',
+    'profiles',
+    # Other
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
