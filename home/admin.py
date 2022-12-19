@@ -1,4 +1,4 @@
-from .models import Profile
+from .models import profiles
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from .models import User
@@ -7,11 +7,11 @@ from .models import User
 # Register your models here.
 
 # ...
-admin.site.register(Profile)
+admin.site.register(profiles)
 
 
 class ProfileInline(admin.StackedInline):
-    model = Profile
+    model = profiles
 
 
 class UserAdmin(admin.ModelAdmin):
