@@ -75,27 +75,26 @@
                 </ul>
                 {% if request.user.is_authenticated %}
                 <div class="d-inline-flex position-relative">
-                    <span
-                        class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                    <span class="position-absolute start-100 p-1 bg-danger border border-dark rounded-circle">
                         <span class="visually-hidden">New alerts</span>
                     </span>
                     {% if request.user.profile_image %}
-                    <img class="rounded-circle shadow-4" src={{request.user.profile_image}}} alt="Avatar"
+                    <img class="rounded-circle border-dark" src={{request.user.profile_image}}} alt="Avatar"
                         style="width: 50px; height: 50px;">
                     {% else %}
-                    <a class="h1 mt-1 ms-3 text-center align-middle btn btn-light btn-floating text-bg-dark" href="#"><i
-                            class="fas fa-user-alt"></i>
+                    <a class="h1 mt-1 ms-me-3 text-center align-middle btn btn-large btn-secondary btn-floating text-bg-dark"
+                        href="{% url 'profile' %}"><i class="fas fa-user-alt fa-xl"></i>
                     </a>
 
                     {% endif %}
                 </div>
-                <a href="{% url 'account_logout' %}" class="btn btn-outline-light btn-light mx-3"
+                <a href="{% url 'account_logout' %}" class="btn btn-outline-light btn-light mx-5"
                     data-mdb-color="dark">Logout</a>
                 {% else %}
-                <a href="{% url 'account_signup' %}" class="btn btn-outline-light btn-light mx-3" data-mdb-color="dark">
+                <a href="{% url 'account_signup' %}" class="btn btn-outline-light btn-light mx-5" data-mdb-color="dark">
                     <strong>Sign up</strong>
                 </a>
-                <a href="{% url 'account_login' %}" class="btn btn-outline-light btn-light mx-3" data-mdb-color="dark">
+                <a href="{% url 'account_login' %}" class="btn btn-outline-light btn-light mx-5" data-mdb-color="dark">
                     Log in
                 </a>
                 {% endif %}
