@@ -36,12 +36,14 @@
                   {% endif %}
                 </div>
                 <form class="login" method="POST" action="{% url 'account_login' %}">
-                  {% csrf_token %}
-                  {{ form|crispy }}
-                  {% if redirect_field_value %}
-                  <input class="form-control form-control-lg mb-3" type="hidden" name="{{ redirect_field_name }}"
-                    value="{{ redirect_field_value }}" />
-                  {% endif %}
+                  <div class="col-12 d-flex justify-content-evenly flex-column">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    {% if redirect_field_value %}
+                    <input class="form-control form-control-lg mb-3" type="hidden" name="{{ redirect_field_name }}"
+                      value="{{ redirect_field_value }}" />
+                    {% endif %}
+                  </div>
                   <div class="text-center">
                     <a class="btn btn-secondary"
                       href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>

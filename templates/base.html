@@ -27,15 +27,15 @@
     {% endblock %}
 
     {% block corejs %}
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous">
     </script>
     <!-- MDB -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.js"></script>
-
+    <script src='{% static "js/javascript.js" %}'></script>
     {% endblock %}
 
     {% block extra_js %}
@@ -45,36 +45,24 @@
 </head>
 
 <body>
-    <header class="sticky-top"></header>
-
     {% if messages %}
     <div class="message-container"></div>
     {% endif %}
+
+    {% block page_header %}
+    <header class="sticky-top"></header>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-colour sticky-top">
         <!-- Container wrapper -->
-        <div class="container-fluid m-3">
+        <div class="container-fluid m-md-3">
 
             <!-- Navbar brand -->
-            <a class="navbar-brand mt-lg-0 h1 text-center align-middle" href="#">KwikSplit</a>
-
-            <!-- Toggle button -->
-            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
-                data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
+            <a class="navbar-brand mt-lg-0 h1 text-center align-middle underline" href="{% url 'home' %}">KwikSplit</a>
 
             <!-- Collapsible wrapper -->
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <!-- Link -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                </ul>
+            <div class="">
                 {% if request.user.is_authenticated %}
-                <div class="d-inline-flex position-relative">
+                <div class="d-inline-flex position-relative me-3">
                     <span class="position-absolute start-100 p-1 bg-danger border border-dark rounded-circle">
                         <span class="visually-hidden">New alerts</span>
                     </span>
@@ -82,19 +70,20 @@
                     <img class="rounded-circle border-dark" src={{request.user.profile_image}}} alt="Avatar"
                         style="width: 50px; height: 50px;">
                     {% else %}
-                    <a class="h1 mt-1 ms-me-3 text-center align-middle btn btn-large btn-secondary btn-floating text-bg-dark"
-                        href="{% url 'profile' %}"><i class="fas fa-user-alt fa-xl"></i>
+                    <a class="h1 mt-1 ms-me-3 text-center align-middle btn btn-large btn-secondary btn-floating text-bg-light"
+                        href="{% url 'user_home' %}"><i class="fas fa-user-alt fa-xl"></i>
                     </a>
-
                     {% endif %}
                 </div>
-                <a href="{% url 'account_logout' %}" class="btn btn-outline-light btn-light mx-5"
+                <a href="{% url 'account_logout' %}" class="btn btn-outline-light btn-light mx-lg-5"
                     data-mdb-color="dark">Logout</a>
                 {% else %}
-                <a href="{% url 'account_signup' %}" class="btn btn-outline-light btn-light mx-5" data-mdb-color="dark">
+                <a href="{% url 'account_signup' %}" class="btn btn-outline-light btn-light mx-lg-5"
+                    data-mdb-color="dark">
                     <strong>Sign up</strong>
                 </a>
-                <a href="{% url 'account_login' %}" class="btn btn-outline-light btn-light mx-5" data-mdb-color="dark">
+                <a href="{% url 'account_login' %}" class="btn btn-outline-light btn-light mx-lg-5"
+                    data-mdb-color="dark">
                     Log in
                 </a>
                 {% endif %}
@@ -102,7 +91,7 @@
         </div>
         </div>
     </nav>
-    {% block page_header %}
+
     {% endblock %}
 
     {% block content %}
@@ -161,7 +150,7 @@
             horizontal: true
         });
     </script>
-    <script src='{% static "js/javascript.js" %}' crossorigin="anonymous"></script>
+
     {% endblock %}
 </body>
 
