@@ -3,16 +3,43 @@
 
 
 {% block content %}
+<div class="row d-flex justify-content-evenly flex-column m-5 p-5">
+    <form class="signup col-lg-12 col-xl-6 offset-xl-3" id="signup_form" method="post" action="">
+        {% csrf_token %}
+        <div class="modal-content  p-5 mx-auto">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload a photo of your receipt</h5>
+                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="form-label">Make sure it is well lit and straight</p>
+                <div class="my-5">
+                    <input type="file" class="form-control" id="customFile" onchange="preview()" required />
+                </div>
+                <img id="frame" title="uploaded-image" src="" class="img-fluid rounded mx-auto d-block my-3"
+                    alt=""></img>
+            </div>
+            <div class="d-grid gap-2 d-sm-block mx-auto text-center">
+                <button type="reset" id="image-reset" onclick="clearImage()"
+                    class="btn bg-warning bg-gradient text-dark mx-md-3 disabled">Clear
+                    image</button>
+                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary  mx-md-3">Submit Image</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    function preview() {
+        frame.src = URL.createObjectURL(event.target.files[0]);
+        document.getElementById('image-reset').classList.remove('disabled');
+    }
 
-<h1>Add Expense</h1>
-
-<form class="signup" id="signup_form" method="post" action="">
-    {% csrf_token %}
-    <div class="col-12 d-flex justify-content-evenly flex-column">
-    </div>
-    <div class="text-center">
-        <button type="submit">Submit</button>
-    </div>
-</form>
-
+    function clearImage() {
+        event.preventDefault();
+        document.getElementById('customFile').value = null;
+        frame.src = "";
+        document.getElementById('image-reset').classList.add('disabled');
+    }
+</script>
 {% endblock %}
