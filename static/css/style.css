@@ -49,12 +49,16 @@
     }
 }
 
-input:not(#id_remember) {
-    width: 100%;
-    margin-bottom: 1em;
+.control-group {
+    display: inline-flex;
 }
 
-.checkbox {
+.control-group label {
+    width: 40%;
+}
+
+input {
+    width: 100%;
     margin-bottom: 1em;
 }
 
@@ -68,7 +72,7 @@ h3 {
 }
 
 .navbar-colour {
-    background-color: #6C6EA0;
+    background-color: rgb(54, 54, 54);
 }
 
 #hero-banner {
@@ -220,7 +224,7 @@ h3 {
     font-size: 5em;
 }
 
-.section-heading:first-child {
+.underline {
     background: linear-gradient(to left, #3DDC97, #F7A278 100%);
     background-position: 0 90%;
     background-size: 100% 15px;
