@@ -35,7 +35,8 @@
     </script>
     <!-- MDB -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.js"></script>
-    <script src='{% static "js/javascript.js" %}'></script>
+    <script src="https://cdn.jsdelivr.net/gh/dixonandmoe/rellax@master/rellax.min.js"></script>
+
     {% endblock %}
 
     {% block extra_js %}
@@ -45,24 +46,6 @@
 </head>
 
 <body>
-    {% if messages %}
-    <div class="message-container">
-        {% for message in messages %}
-        {% with message.level as level %}
-        {% if level == 40 %}
-        {% include 'includes/toasts/toast_error.html' %}
-        {% elif level == 30 %}
-        {% include 'includes/toasts/toast_warning.html' %}
-        {% elif level == 25 %}
-        {% include 'includes/toasts/toast_success.html' %}
-        {% else %}
-        {% include 'includes/toasts/toast_info.html' %}
-        {% endif %}
-        {% endwith %}
-        {% endfor %}
-    </div>
-    {% endif %}
-
     {% block page_header %}
     <header class="sticky-top"></header>
     <!-- Navbar -->
@@ -109,64 +92,26 @@
     {% endblock %}
 
     {% block content %}
+    {% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+        {% with message.level as level %}
+        {% if level == 40 %}
+        {% include 'includes/toasts/toast_error.html' %}
+        {% elif level == 30 %}
+        {% include 'includes/toasts/toast_warning.html' %}
+        {% elif level == 25 %}
+        {% include 'includes/toasts/toast_success.html' %}
+        {% else %}
+        {% include 'includes/toasts/toast_info.html' %}
+        {% endif %}
+        {% endwith %}
+        {% endfor %}
+    </div>
+    {% endif %}
     {% endblock %}
-
+    <script src='{% static "js/javascript.js" %}'></script>
     {% block postload-js %}
-    <script src="https://cdn.jsdelivr.net/gh/dixonandmoe/rellax@master/rellax.min.js"></script>
-    <script type="text/javascript">
-        $('.toast').toast('show');
-    </script>
-    <script>
-        var words = ['Friends', 'Family', 'Anyone'],
-            part,
-            i = 0,
-            offset = 0,
-            len = words.length,
-            forwards = true,
-            skip_count = 0,
-            skip_delay = 20,
-            speed = 90;
-        var wordflick = function () {
-            setInterval(function () {
-                if (forwards) {
-                    if (offset >= words[i].length) {
-                        ++skip_count;
-                        if (skip_count == skip_delay) {
-                            forwards = false;
-                            skip_count = 0;
-                        }
-                    }
-                } else {
-                    if (offset == 0) {
-                        forwards = true;
-                        i++;
-                        offset = 0;
-                        if (i >= len) {
-                            i = 0;
-                        }
-                    }
-                }
-                part = words[i].substr(0, offset);
-                if (skip_count == 0) {
-                    if (forwards) {
-                        offset++;
-                    } else {
-                        offset--;
-                    }
-                }
-                $('.word').text(part);
-            }, speed);
-        };
-
-        $(document).ready(function () {
-            wordflick();
-        });
-    </script>
-    <script>
-        var rellaxH = new Rellax('.rellax', {
-            horizontal: true
-        });
-    </script>
 
     {% endblock %}
 </body>

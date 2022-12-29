@@ -4,7 +4,8 @@
 
 {% block content %}
 <div class="row d-flex justify-content-evenly flex-column m-5 p-5">
-    <form class="signup col-lg-12 col-xl-6 offset-xl-3" id="signup_form" method="post" action="">
+    <form class="signup col-lg-12 col-xl-6 offset-xl-3" id="signup_form" method="post" action="{% url 'add_image' %}"
+        enctype="multipart/form-data">
         {% csrf_token %}
         <div class="modal-content  p-5 mx-auto">
             <div class="modal-header">
@@ -14,7 +15,8 @@
             <div class="modal-body">
                 <p class="form-label">Make sure it is well lit and straight</p>
                 <div class="my-5">
-                    <input type="file" class="form-control" id="customFile" onchange="preview()" required />
+                    <input type="file" name="image" class="form-control" id="customFile" onchange="preview()"
+                        required />
                 </div>
                 <img id="frame" title="uploaded-image" src="" class="img-fluid rounded mx-auto d-block my-3"
                     alt=""></img>
@@ -29,6 +31,8 @@
         </div>
     </form>
 </div>
+{% endblock %}
+{% block postload-js %}
 <script>
     function preview() {
         frame.src = URL.createObjectURL(event.target.files[0]);
