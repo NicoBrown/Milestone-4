@@ -12,3 +12,5 @@ data.txt
 .gitignore
 db.sqlite3
 kwik-split-0a449986ee26.json
+.vscode/settings.json
+.env
