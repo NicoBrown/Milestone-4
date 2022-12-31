@@ -8,3 +8,7 @@ node_modules/
 .github/
 cloudinary_python.txt
 db.sqlite3
+data.txt
+.gitignore
+db.sqlite3
+kwik-split-0a449986ee26.json

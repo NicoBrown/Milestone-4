@@ -3,30 +3,40 @@
 
 
 {% block content %}
-<div class="row d-flex justify-content-evenly flex-column m-5 p-5">
+<div class="row d-flex justify-content-evenly flex-column m-3 p-lg-5">
     <form class="signup col-lg-12 col-xl-6 offset-xl-3" id="signup_form" method="post" action="{% url 'add_image' %}"
         enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="modal-content  p-5 mx-auto">
+        <div class="modal-content p-3 p-lg-5 mx-auto">
             <div class="modal-header">
                 <h5 class="modal-title">Upload a photo of your receipt</h5>
                 <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p class="form-label">Make sure it is well lit and straight</p>
-                <div class="my-5">
+                <div class="d-flex m-3">
                     <input type="file" name="image" class="form-control" id="customFile" onchange="preview()"
                         required />
+                    <button type="reset" id="image-reset" onclick="clearImage()"
+                        class="btn btn-small bg-warning bg-gradient text-dark ms-sm-3 ms-md-5 disabled text-nowrap mb-3 w-25">Clear</button>
                 </div>
-                <img id="frame" title="uploaded-image" src="" class="img-fluid rounded mx-auto d-block my-3"
-                    alt=""></img>
+                <img id="frame" height="300" width="300" title="uploaded-image" src=""
+                    class="img-fluid rounded mx-auto d-block my-3 d-none" alt=""></img>
+                <hr>
+                <h5 class="modal-title">Add users to the receipt below</h5>
+                <p class="form-label">They can select individual expenses later</p>
+                <div class="d-flex m-3">
+                    <input type="search" id="userSearch" class="form-control border" placeholder="User Search" />
+                    <button type="button" onclick="addUser()" class="btn btn-outline-primary mb-3 ms-sm-3 ms-md-5 w-25">
+                        <i class="fas fa-user-plus"></i>
+                    </button>
+                </div>
+                <ul class="list-group list-group-light list-group-small my-3" id="userList">
+                </ul>
             </div>
             <div class="d-grid gap-2 d-sm-block mx-auto text-center">
-                <button type="reset" id="image-reset" onclick="clearImage()"
-                    class="btn bg-warning bg-gradient text-dark mx-md-3 disabled">Clear
-                    image</button>
                 <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary  mx-md-3">Submit Image</button>
+                <button type="submit" class="btn btn-primary  mx-md-3">Submit</button>
             </div>
         </div>
     </form>
@@ -36,6 +46,7 @@
 <script>
     function preview() {
         frame.src = URL.createObjectURL(event.target.files[0]);
+        document.getElementById('frame').classList.remove('d-none');
         document.getElementById('image-reset').classList.remove('disabled');
     }
 
@@ -43,7 +54,38 @@
         event.preventDefault();
         document.getElementById('customFile').value = null;
         frame.src = "";
+        frame.classList.add('d-none');
         document.getElementById('image-reset').classList.add('disabled');
+    }
+
+    function addUser() {
+        event.preventDefault();
+        var userSearch = document.getElementById("userSearch");
+
+        if (userSearch.value != null) {
+            // get dom elements
+            var ul = document.getElementById("userList");
+
+            // create new elements
+            var li = document.createElement("li");
+            var icon = document.createElement("i");
+
+            // add classes and append to new elements
+            icon.classList.add("fas", "fa-times-circle", "fa-xl", "text-danger", "cursor");
+
+            icon.addEventListener('click', function handleClick(event) {
+                event.preventDefault();
+                parent = event.target.closest('.list-group-item').remove();
+            });
+
+            li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
+            li.appendChild(document.createTextNode(userSearch.value));
+            li.appendChild(icon);
+            ul.appendChild(li);
+        }
+
+        userSearch.value = null;
+
     }
 </script>
 {% endblock %}
