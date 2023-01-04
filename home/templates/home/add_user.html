@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="row d-flex justify-content-evenly flex-column m-3 p-lg-5">
+    {% csrf_token %}
+    <div class="card col-lg-12 col-xl-6 offset-xl-3 p-3 p-lg-5 mx-auto">
+        <div class="modal-header">
+            <h5 class="modal-title">Search for and add friends below</h5>
+        </div>
+        <div class="modal-body">
+            <div class="m-3 text-nowrap">
+                <form method="GET" action="{% url 'user_search' %}" class="">
+                    {% csrf_token %}
+                    <input type="text" id="user_search" name="user_search"
+                        class="form-control border mb-3 d-inline w-75" placeholder="User Search">
+                    <button type="submit" class="btn btn-outline-primary mb-3 ms-3 d-inline w-25">
+                        Search
+                    </button>
+                </form>
+            </div>
+            <p>Search Results</p>
+            <ul id="" class="list-group list-group-light list-group-small my-3 d-flex justify-content-between">
+                {% if profiles %}
+                {% for profile in profiles %}
+                <li class="d-flex justify-content-between list-group-item">{{ profile }}
+                    <i type="button" class="btn btn-secondary fa fa-user-plus" onclick="addUser( '{{ profile }}' )">
+                    </i>
+                </li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+            <hr>
+            <p>Added Users</p>
+            <form class="my-3" id="userList" method="GET" action="{% url 'user_search' %}">
+                {% csrf_token %}
+                <div class="mx-auto text-center">
+                    <a href="{% url 'user_home' %}"><button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">Close</button></a>
+                    <button type="submit" class="btn btn-primary  mx-md-3">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

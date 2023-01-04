@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'home',
     'expenses',
     'profiles',
+
     # Other
     "storages",
     'crispy_forms',

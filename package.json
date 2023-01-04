@@ -12,8 +12,8 @@
             "max-line-length": {
                 "title": "max-line-length",
                 "type": "number",
-                "default": 79,
-                "description": "The maximum line length. Default 79."
+                "default": 100,
+                "description": "The maximum line length. Default 100."
             }
         }
     }

@@ -15,7 +15,7 @@
 
     {% block corecss %}
     <!-- MDB -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.css" rel="stylesheet" />
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <!-- Google Fonts -->
@@ -27,16 +27,9 @@
     {% endblock %}
 
     {% block corejs %}
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
-        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous">
-    </script>
-    <!-- MDB -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/dixonandmoe/rellax@master/rellax.min.js"></script>
-
+    <script src='{% static "js/javascript.js" %}'></script>
     {% endblock %}
 
     {% block extra_js %}
@@ -72,15 +65,12 @@
                     </a>
                     {% endif %}
                 </div>
-                <a href="{% url 'account_logout' %}" class="btn btn-outline-light btn-light mx-lg-5"
-                    data-mdb-color="dark">Logout</a>
+                <a href="{% url 'account_logout' %}" class="btn btn-outline-light btn-light mx-lg-5">Logout</a>
                 {% else %}
-                <a href="{% url 'account_signup' %}" class="btn btn-outline-light btn-light mx-lg-5"
-                    data-mdb-color="dark">
+                <a href="{% url 'account_signup' %}" class="btn btn-outline-light btn-light mx-lg-5">
                     <strong>Sign up</strong>
                 </a>
-                <a href="{% url 'account_login' %}" class="btn btn-outline-light btn-light mx-lg-5"
-                    data-mdb-color="dark">
+                <a href="{% url 'account_login' %}" class="btn btn-outline-light btn-light mx-lg-5">
                     Log in
                 </a>
                 {% endif %}
@@ -110,9 +100,10 @@
     </div>
     {% endif %}
     {% endblock %}
-    <script src='{% static "js/javascript.js" %}'></script>
     {% block postload-js %}
-
+    <script type="text/javascript">
+        $('.toast').toast('show');
+    </script>
     {% endblock %}
 </body>
 

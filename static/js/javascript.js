@@ -1,3 +1,28 @@
+document.onload = function () {
+
+    // Check for click events on the navbar burger icon
+    document.getElementsByClassName("navbar-burger").click(function () {
+
+        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+        document.getElementsByClassName("navbar-burger").toggleClass("is-active");
+        document.getElementsByClassName("navbar-menu").toggleClass("is-active");
+
+    });
+
+    toasts = document.getElementsByClassName(".toast");
+    for (toast in toasts) {
+        toast.show()
+    };
+
+
+    var rellaxH = new Rellax('.rellax', {
+        horizontal: true
+    });
+
+    wordflick();
+};
+
+
 var words = ['Friends', 'Family', 'Anyone'],
     part,
     i = 0,
@@ -38,25 +63,4 @@ var wordflick = function () {
         }
         $('.word').text(part);
     }, speed);
-};
-
-document.onload = function () {
-
-    // Check for click events on the navbar burger icon
-    document.getElementsByClassName("navbar-burger").click(function () {
-
-        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-        document.getElementsByClassName("navbar-burger").toggleClass("is-active");
-        document.getElementsByClassName("navbar-menu").toggleClass("is-active");
-
-    });
-
-    toast = document.getElementsByClassName(".toast");
-    toast.show();
-
-    var rellaxH = new Rellax('.rellax', {
-        horizontal: true
-    });
-
-    wordflick();
 };

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from google.protobuf.json_format import MessageToJson
 from PIL import Image
 from .models import Expense
+from profiles.models import UserProfile
 from django.shortcuts import render, get_object_or_404
 from django import forms
 from django.core.serializers import serialize
@@ -104,7 +105,7 @@ def add_image(request):
             return render(request, "home/user_home.html")
     else:
 
-        profiles = Profile.objects.exclude(user=request.user)
+        profiles = UserProfile.objects.all()
         template = 'expenses/upload_image.html'
         context = {
             # 'on_profile_page': True,
@@ -126,7 +127,7 @@ def add_expense(request, product_id):
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Successfully updated product!')
+            messages.info(request, 'Successfully updated product!')
             return redirect(reverse('product_detail', args=[product.id]))
         else:
             messages.error(request,

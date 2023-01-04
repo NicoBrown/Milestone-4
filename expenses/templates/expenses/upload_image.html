@@ -10,7 +10,6 @@
         <div class="modal-content p-3 p-lg-5 mx-auto">
             <div class="modal-header">
                 <h5 class="modal-title">Upload a photo of your receipt</h5>
-                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p class="form-label">Make sure it is well lit and straight</p>
@@ -26,16 +25,21 @@
                 <h5 class="modal-title">Add users to the receipt below</h5>
                 <p class="form-label">They can select individual expenses later</p>
                 <div class="d-flex m-3">
-                    <input type="search" id="userSearch" class="form-control border" placeholder="User Search" />
-                    <button type="button" onclick="addUser()" class="btn btn-outline-primary mb-3 ms-sm-3 ms-md-5 w-25">
-                        <i class="fas fa-user-plus"></i>
-                    </button>
+                    <form method="GET" action="{% url 'add_image' %}">
+                        <select type="text" id="userSearch" class="form-control border mb-3" placeholder="User Search"
+                            role="listbox" aria-multiselectable="false" aria-disabled="false" aria-haspopup="true"
+                            aria-expanded="false"></select>
+                        <button type="submit" onclick="addUser()"
+                            class="btn btn-outline-primary mb-3 ms-sm-3 ms-md-5 w-25">
+                            <i class="fas fa-user-plus"></i>
+                        </button>
                 </div>
                 <ul class="list-group list-group-light list-group-small my-3" id="userList">
                 </ul>
             </div>
             <div class="d-grid gap-2 d-sm-block mx-auto text-center">
-                <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                <a href="{% url 'user_home' %}"><button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">Close</button></a>
                 <button type="submit" class="btn btn-primary  mx-md-3">Submit</button>
             </div>
         </div>

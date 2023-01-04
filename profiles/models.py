@@ -13,9 +13,9 @@ class UserProfile(models.Model):
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     follows = models.ManyToManyField(
-        "self", related_name="followed_by", symmetrical=False, blank=True
-    )
-    stripe_customer_id = models.CharField(max_length=20, null=True, blank=True)
+        "self", related_name="followed_by", symmetrical=False, blank=True)
+    stripe_customer_id = models.CharField(
+        max_length=20, default="", null=True, blank=True)
     default_phone_number = models.CharField(
         max_length=20, null=True, blank=True)
     default_country = CountryField(
@@ -26,6 +26,9 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
+    def get_full_name(self):
+        return f'{self.user.first_name} {self.user.last_name}'
+
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
@@ -33,11 +36,9 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     Create or update the user profile
     """
     if created:
-        UserProfile.objects.create(user=instance)
-        userProfile.save()
-        userProfile.follows.add(instance.profile)
-        userProfile.save()
+        user_profile = UserProfile(user=instance)
+        user_profile.save()
     # Existing users: just save the profile
-    instance.userprofile.save()
+    # instance.UserProfile.save()
 
 # Create your models here.
