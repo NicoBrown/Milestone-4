@@ -60,12 +60,13 @@
 input,
 select {
     width: 100%;
-    margin-bottom: 1em;
+
 }
 
-input:disabled {
-    background: white;
-    color: black;
+.input {
+    background: white !important;
+    color: black !important;
+    cursor: default;
 }
 
 .h1,
@@ -179,6 +180,7 @@ h3 {
 .cursor {
     cursor: pointer;
 }
+
 
 .arrow {
     color: #66C7F4;

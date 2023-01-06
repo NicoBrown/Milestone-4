@@ -80,8 +80,6 @@
     </nav>
 
     {% endblock %}
-
-    {% block content %}
     {% if messages %}
     <div class="message-container">
         {% for message in messages %}
@@ -99,6 +97,8 @@
         {% endfor %}
     </div>
     {% endif %}
+
+    {% block content %}
     {% endblock %}
     {% block postload-js %}
     <script type="text/javascript">

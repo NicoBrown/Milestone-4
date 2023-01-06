@@ -22,6 +22,7 @@ class UserProfile(models.Model):
         blank_label='Country *', null=True, blank=True)
     default_postcode = models.CharField(max_length=20, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
+    # profile_image_url = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return self.user.username

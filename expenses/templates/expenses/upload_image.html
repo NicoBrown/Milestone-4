@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="row d-flex justify-content-evenly flex-column m-3 p-lg-5">
-    <form class="signup col-lg-12 col-xl-6 offset-xl-3" id="signup_form" method="post" action="{% url 'add_image' %}"
+    <form class="signup col-lg-12 col-xl-6 offset-xl-3" id="signup_form" method="POST" action="{% url 'add_image' %}"
         enctype="multipart/form-data">
         {% csrf_token %}
         <div class="modal-content p-3 p-lg-5 mx-auto">
@@ -13,34 +13,20 @@
             </div>
             <div class="modal-body">
                 <p class="form-label">Make sure it is well lit and straight</p>
-                <div class="d-flex m-3">
-                    <input type="file" name="image" class="form-control" id="customFile" onchange="preview()"
-                        required />
-                    <button type="reset" id="image-reset" onclick="clearImage()"
-                        class="btn btn-small bg-warning bg-gradient text-dark ms-sm-3 ms-md-5 disabled text-nowrap mb-3 w-25">Clear</button>
+                <div class="row input-group ">
+                    <input type="file" name="image" class="col-10 form-control form-control-sm mb-3" id="customFile"
+                        onchange="preview()" required />
+                    <button type="reset" id="image-reset" onclick="clearImage()" class="btn btn-small col-2 bg-warning bg-gradient text-dark form-control-sm mb-3 disabled
+                        mb-3">Clear</button>
                 </div>
                 <img id="frame" height="300" width="300" title="uploaded-image" src=""
                     class="img-fluid rounded mx-auto d-block my-3 d-none" alt=""></img>
                 <hr>
-                <h5 class="modal-title">Add users to the receipt below</h5>
-                <p class="form-label">They can select individual expenses later</p>
-                <div class="d-flex m-3">
-                    <form method="GET" action="{% url 'add_image' %}">
-                        <select type="text" id="userSearch" class="form-control border mb-3" placeholder="User Search"
-                            role="listbox" aria-multiselectable="false" aria-disabled="false" aria-haspopup="true"
-                            aria-expanded="false"></select>
-                        <button type="submit" onclick="addUser()"
-                            class="btn btn-outline-primary mb-3 ms-sm-3 ms-md-5 w-25">
-                            <i class="fas fa-user-plus"></i>
-                        </button>
-                </div>
-                <ul class="list-group list-group-light list-group-small my-3" id="userList">
-                </ul>
             </div>
-            <div class="d-grid gap-2 d-sm-block mx-auto text-center">
-                <a href="{% url 'user_home' %}"><button type="button" class="btn btn-secondary"
+            <div class="d-flex justify-content-center">
+                <a class="mx-3" href="{% url 'user_home' %}"><button type="button" class="btn btn-secondary btn-small"
                         data-dismiss="modal">Close</button></a>
-                <button type="submit" class="btn btn-primary  mx-md-3">Submit</button>
+                <button type="submit" class="mx-3 btn btn-primary">Submit</button>
             </div>
         </div>
     </form>
@@ -62,34 +48,71 @@
         document.getElementById('image-reset').classList.add('disabled');
     }
 
-    function addUser() {
-        event.preventDefault();
-        var userSearch = document.getElementById("userSearch");
+    // function addUser() {
+    //     event.preventDefault();
 
-        if (userSearch.value != null) {
-            // get dom elements
-            var ul = document.getElementById("userList");
+    //     var userSelect = document.getElementById("userSelect");
 
-            // create new elements
-            var li = document.createElement("li");
-            var icon = document.createElement("i");
+    //     if (userSelect.value != null) {
+    //         // get dom elements
+    //         var ul = document.getElementById("userList");
 
-            // add classes and append to new elements
-            icon.classList.add("fas", "fa-times-circle", "fa-xl", "text-danger", "cursor");
+    //         // create new elements
+    //         var li = document.createElement("li");
+    //         var icon = document.createElement("i");
+    //         var input = document.createElement("input");
+    //         var p = document.createElement("p");
 
-            icon.addEventListener('click', function handleClick(event) {
-                event.preventDefault();
-                parent = event.target.closest('.list-group-item').remove();
-            });
+    //         // create a div to hold the users selected
+    //         var outerDiv = document.createElement("div");
+    //         var innerDiv = document.createElement("div");
+    //         outerDiv.classList.add("card")
+    //         innerDiv.classList.add("card-content", "d-flex", "justify-content-between", "text-nowrap",
+    //             "align-items-baseline")
 
-            li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
-            li.appendChild(document.createTextNode(userSearch.value));
-            li.appendChild(icon);
-            ul.appendChild(li);
-        }
+    //         // set up list item classes
+    //         li.classList.add("mx-3", "my-3")
 
-        userSearch.value = null;
+    //         // set up input element
+    //         input.name = "add_users";
+    //         input.type = "text";
+    //         id_number = Math.random().toString(36);
+    //         input.id = id_number;
+    //         input.classList.add(
+    //             "form-control", "icon-trailing", "input", "invisible");
+    //         input.value = userSelect.options[userSelect.selectedIndex].value;
 
-    }
+    //         // set up icon classes and append to new elements
+    //         icon.classList.add("fas", "fa-times-circle", "fa-xl", "text-danger", "cursor", "my-3", "mx-3");
+    //         icon.addEventListener('click', function handleClick(event) {
+    //             event.preventDefault();
+    //             parent = event.target.closest('li').remove();
+    //         });
+
+    //         p.innerText = userSelect.options[userSelect.selectedIndex].label
+    //         p.classList.add("my-3", "mx-3")
+    //         // li.appendChild(document.createTextNode(userSelect.options[userSelect.selectedIndex].label));
+    //         innerDiv.appendChild(p)
+    //         innerDiv.appendChild(input)
+    //         innerDiv.appendChild(icon)
+    //         outerDiv.appendChild(innerDiv)
+    //         li.appendChild(outerDiv)
+
+    //         var listItems = ul.querySelectorAll('li');
+    //         var exists = false;
+
+    //         listItems.forEach(function (listItem) {
+    //             if (listItem.innerText === li.innerText) {
+    //                 exists = true;
+    //                 alert("Item already exists");
+    //             }
+    //         })
+    //         if (!exists) {
+    //             ul.appendChild(li);;
+    //         }
+
+    //     }
+    //     userSelect.value = null;
+    // }
 </script>
 {% endblock %}

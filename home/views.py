@@ -49,6 +49,7 @@ def user_search(request):
     template = 'home/user_home.html'
     context = {
         'profile': profile
+
     }
 
     if request.method == 'GET':

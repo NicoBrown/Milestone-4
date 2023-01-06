@@ -1,19 +1,14 @@
-from dataclass_wizard import fromdict, asdict
 from typing import List as PyList
-from dataclasses import dataclass
-from google.protobuf.json_format import MessageToJson
 from PIL import Image
 from .models import Expense
 from profiles.models import UserProfile
 from django.shortcuts import render, get_object_or_404
-from django import forms
-from django.core.serializers import serialize
-from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from google.cloud import documentai, vision_helpers
+from google.cloud import documentai
 from google.api_core.client_options import ClientOptions
 from google.protobuf.json_format import MessageToDict
+from base64 import b64encode
 
 # from .forms import UserProfileForm
 # from checkout.models import Order
@@ -26,16 +21,6 @@ import base64
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"kwik-split-0a449986ee26.json"
 
-
-@dataclass
-class line_element:
-    id: int
-    amount: str
-    quantity: int
-    unit_price: int
-    description: str
-
-
 # TODO(developer): Uncomment these variables before running the sample.
 project_id = 'kwik-split'
 location = 'eu'  # Format is 'us' or 'eu'
@@ -46,72 +31,105 @@ processor_id = '8a4fbaeb2765405e'  # Create processor before running sample
 @login_required
 def add_image(request):
     """ upload image to Google vision API """
-    # profile = get_object_or_404(UserProfile, user=request.user)
+    profile = get_object_or_404(UserProfile, user=request.user)
 
     if request.method == "POST":
-        try:
-            opts = ClientOptions(
-                api_endpoint=f"{location}-documentai.googleapis.com")
-            # lang = request.POST["language"]
-            client = documentai.DocumentProcessorServiceClient(
-                client_options=opts)
-            name = client.processor_path(project_id, location, processor_id)
+        profiles = []
 
-            # get posted image and encode image to in memory byte stream
-            image = request.FILES['image']
-            image_content = image.read()
+        if 'add_users' in request.POST:
+            query = request.POST.getlist('add_users')
+            for i in query:
+                profiles.append(get_object_or_404(
+                    UserProfile, pk=i))
+    # try:
+        opts = ClientOptions(
+            api_endpoint=f"{location}-documentai.googleapis.com")
+        # lang = request.POST["language"]
+        client = documentai.DocumentProcessorServiceClient(
+            client_options=opts)
+        name = client.processor_path(project_id, location, processor_id)
 
-            # need to set mime type on image upload Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
-            mime_type = image.content_type.split('.')[-1]
+        # get posted image and encode image to in memory byte stream
+        image = request.FILES['image']
+        image_content = image.read()
 
-            # Load Binary Data into Document AI RawDocument Object
-            raw_document = documentai.RawDocument(
-                content=image_content, mime_type=mime_type)
+        encoded = b64encode(image_content)
+        # need to set mime type on image upload Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
+        mime_type = image.content_type.split('.')[-1]
+        mime = mime_type + ";" if mime_type else ";"
 
-            # Configure the process request
-            process_request = documentai.ProcessRequest(
-                name=name, raw_document=raw_document)
+        # Load Binary Data into Document AI RawDocument Object
+        raw_document = documentai.RawDocument(
+            content=image_content, mime_type=mime_type)
 
-            result = client.process_document(request=process_request)
+        # Configure the process request
+        process_request = documentai.ProcessRequest(
+            name=name, raw_document=raw_document)
 
-            # For a full list of Document object attributes, please reference this page:
-            # https://cloud.google.com/python/docs/reference/documentai/latest/google.cloud.documentai_v1.types.Document
-            document = result.document
+        result = client.process_document(request=process_request)
 
-            json_dump = [proto.Message.to_dict(
-                entity) for entity in document.entities]
+        # For a full list of Document object attributes, please reference this page:
+        # https://cloud.google.com/python/docs/reference/documentai/latest/google.cloud.documentai_v1.types.Document
 
-            entities = []
-            line = {}
+        document = result.document
 
-            # # # Grab each key/value pair and their corresponding confidence scores.
-            # for entity in json_dump:
-            #     if entity.type == "line_item":
-            #         for key, value in entity.items():
-            #             line.update({key: value})
+        json_dump = [proto.Message.to_dict(
+            entity) for entity in document.entities]
 
-            #         entities.append(line)
-            #         line.clear()
+        line_items = {}
+        line_item = {}
+        normalized_item = {}
+        normalized_items = {}
 
-            context = {
-                'entities': json_dump,
-            }
+        # # # Grab each key/value pair and their corresponding confidence scores.
+        for entity in json_dump:
+            if len(entity['properties']) > 2:
+                line_item = {}
+                for property in entity['properties']:
+                    if property['type_'] == "line_item/description":
+                        line_item['description'
+                                  ] = property['mention_text']
+                    elif property['type_'] == "line_item/quantity":
+                        line_item['quantity'
+                                  ] = property['mention_text']
+                    elif property['type_'] == "line_item/amount":
+                        line_item['amount'
+                                  ] = property['mention_text']
+                    else:
+                        line_item[entity["type_"]] = property["mention_text"]
+                line_items.update({entity['id']: line_item})
 
-            return render(request, "expense_overview.html", context)
-        except error:
-            messages.add_message(
-                request, messages.ERROR, "Problem with image, please try again"
-            )
-            return render(request, "home/user_home.html")
-    else:
+        for entity in json_dump:
+            if len(entity['properties']) == 0:
+                if entity.get('normalized_value') is not None:
+                    normalized_items[entity["type_"]
+                                     ] = entity['normalized_value']['text']
+            if len(entity['properties']) == 1:
+                if entity.get('properties') is not None:
+                    normalized_items[entity["type_"]
+                                     ] = entity['mention_text']
 
-        profiles = UserProfile.objects.all()
-        template = 'expenses/upload_image.html'
         context = {
-            # 'on_profile_page': True,
-            "profiles": profiles
+            'profile': profile,
+            'image_uri': encoded,
+            'normalized_items': normalized_items,
+            'line_items': line_items,
+            'entities': json_dump,
+            'profiles': profiles,
         }
+        return render(request, "expenses/expense_overview.html", context)
+        # except error:
+        #     messages.add_message(
+        #         request, messages.ERROR, "Problem with image, please try again"
+        #     )
+        #     return render(request, "home/user_home.html")
+    else:
+        template = 'expenses/upload_image.html'
+        profile = get_object_or_404(UserProfile, user=request.user)
 
+        context = {
+            'profile': profile
+        }
         return render(request, template, context)
 
 
