@@ -27,6 +27,8 @@
     {% endblock %}
 
     {% block corejs %}
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/dixonandmoe/rellax@master/rellax.min.js"></script>
     <script src='{% static "js/javascript.js" %}'></script>
@@ -102,7 +104,10 @@
     {% endblock %}
     {% block postload-js %}
     <script type="text/javascript">
-        $('.toast').toast('show');
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        var toastList = toastElList.map(function (toastEl) {
+            return new bootstrap.Toast(toastEl, option)
+        })
     </script>
     {% endblock %}
 </body>
