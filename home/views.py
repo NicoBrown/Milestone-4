@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from profiles.models import UserProfile
+from expenses.models import Expense, OrderLineItem
 from django.db.models import Q
 from django.contrib.auth.models import User
 
@@ -28,29 +29,17 @@ def profile(request, user):
 
 def user_home(request):
     """ Display the user's home page. """
-
-    profile = get_object_or_404(UserProfile, user=request.user)
-
+    expense_list = []
     template = 'home/user_home.html'
-    context = {
-        'profile': profile
-    }
-
-    return render(request, template, context)
-
-
-@ login_required
-def user_search(request):
-    """ Display the user's profile. """
     profile = get_object_or_404(UserProfile, user=request.user)
     profiles = UserProfile.objects.all()
     query = None
 
-    template = 'home/user_home.html'
-    context = {
-        'profile': profile
-
-    }
+    line_items = OrderLineItem.objects.filter(user_profile=profile)
+    for line_item in line_items:
+        if line_item.order.user_profile != request.user:
+            if line_item.order not in expense_list:
+                expense_list.append(line_item.order)
 
     if request.method == 'GET':
         if 'user_search' in request.GET:
@@ -65,6 +54,7 @@ def user_search(request):
             profiles = profiles.filter(queries)
             if (profiles):
                 context = {
+                    'expenses': expense_list,
                     'profile': profile,
                     'profiles': profiles,
                 }
@@ -72,6 +62,22 @@ def user_search(request):
             else:
                 messages.error(
                     request, 'Search Failed. Could not find and users.')
+    if request.method == "POST":
+        if 'follow' in request.POST:
+            search_profile = get_object_or_404(
+                UserProfile, pk=request.POST['follow'])
+            profile.follows.add(search_profile)
+        elif 'unfollow' in request.POST:
+            search_profile = get_object_or_404(
+                UserProfile, pk=request.POST['unfollow'])
+            profile.follows.remove(search_profile)
+        profile.save()
+
+    context = {
+        'expenses': expense_list,
+        'profile': profile
+    }
+
     return render(request, template, context)
 
 
@@ -80,20 +86,5 @@ def update_following(request,  pk):
     """ Display the user's profile. """
 
     current_user_profile = get_object_or_404(UserProfile, user=request.user)
-
-    if request.method == "POST":
-        # if not hasattr(request.user, 'profile'):
-        #     missing_profile = UserProfile(user=request.user)
-        #     missing_profile.save()
-        profile = get_object_or_404(
-            UserProfile, pk=pk)
-        data = request.POST
-        action = data.get("follow")
-        if action == "follow":
-            current_user_profile.follows.add(profile)
-        elif action == "unfollow":
-            current_user_profile.follows.remove(profile)
-        current_user_profile.save()
-        return render(request, "home/user_home.html", {"profile": current_user_profile})
 
     return render(request, "home/user_home.html", {"profile": current_user_profile})
