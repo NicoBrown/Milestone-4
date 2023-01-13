@@ -5,6 +5,9 @@ from profiles.models import UserProfile
 from expenses.models import Expense, OrderLineItem
 from django.db.models import Q
 from django.contrib.auth.models import User
+from custom_storages import MediaStorage
+
+import os
 
 
 # Create your views here.
@@ -12,18 +15,30 @@ from django.contrib.auth.models import User
 
 def index(request):
     """ A view to return the index page """
+    if request.user.is_authenticated:
 
+        profile = get_object_or_404(UserProfile, user=request.user)
+
+        context = {
+            'profile': profile,
+            'on_profile_page': False,
+        }
+
+        return render(request, 'home/index.html', context)
     return render(request, 'home/index.html')
 
 
 def profile(request, user):
 
-    profile = get_object_or_404(UserProfile, user=request.user)
+    if request.user.is_authenticated:
+        profile = get_object_or_404(UserProfile, user=request.user)
 
-    context = {
-        'profile': profile,
-        'on_profile_page': False,
-    }
+        context = {
+            'profile': profile,
+            'on_profile_page': False,
+        }
+        return render(request, "home/user_home.html", context)
+
     return render(request, "home/user_home.html", context)
 
 
@@ -63,6 +78,22 @@ def user_home(request):
                 messages.error(
                     request, 'Search Failed. Could not find and users.')
     if request.method == "POST":
+        if request.FILES != {}:
+            image = request.FILES['image']
+
+            file_directory_within_bucket = f"user_upload_files/{profile.user.username}"
+
+            # synthesize a full file path; note that we included the filename
+            file_path_within_bucket = os.path.join(
+                file_directory_within_bucket,
+                image.name
+            )
+
+            media_storage = MediaStorage()
+            media_storage.save(file_path_within_bucket, image)
+            profile.profile_image_url = media_storage.url(
+                file_path_within_bucket)
+
         if 'follow' in request.POST:
             search_profile = get_object_or_404(
                 UserProfile, pk=request.POST['follow'])

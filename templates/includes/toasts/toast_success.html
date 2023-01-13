@@ -1,9 +1,10 @@
-<div class="toast show fade toast-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true"
-    data-mdb-color="success" data-mdb-position="top-center" data-mdb-offset="50">
+<div class="toast show fade toast-success position-absolute start-50 mt-5" role="alert" aria-live="assertive"
+    aria-atomic="true" data-autohide="true" data-delay="10000" data-color="success" onclick="toast(this);"
+    data-position="top-center" data-offset="50">
     <div class="toast-header toast-success">
         <i class="fas fas fa-thumbs-up fa-lg me-2"></i>
         <strong class="me-auto">Success!</strong>
-        <button type="button" class="btn-close" data-mdb-dismiss="toast" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-dismiss="toast" aria-label="Close"></button>
     </div>
     <div class="toast-body">{{ message }}
         {% if grand_total and not on_profile_page %}

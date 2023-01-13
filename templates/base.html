@@ -54,33 +54,29 @@
             <!-- Collapsible wrapper -->
             <div class="">
                 {% if request.user.is_authenticated %}
-                <div class="d-inline-flex position-relative me-3">
-                    <span class="position-absolute start-100 p-1 bg-danger border border-dark rounded-circle">
-                        <span class="visually-hidden">New alerts</span>
-                    </span>
-                    {% if request.user.profile_image %}
-                    <img class="rounded-circle border-dark" src={{request.user.profile_image}}} alt="Avatar"
-                        style="width: 50px; height: 50px;">
+                <div class="d-inline-flex d-flex align-items-center justify-content-center position-relative me-3">
+                    {% if profile.profile_image_url %}
+                    <a href="{% url 'user_home' %}"> <img class="rounded-circle border-dark"
+                            src='{{ profile.profile_image_url }}' height="50" width="50">
+                    </a>
                     {% else %}
                     <a class="h1 mt-1 ms-me-3 text-center align-middle btn btn-large btn-secondary btn-floating text-bg-light"
-                        href="{% url 'user_home' %}"><i class="fas fa-user-alt fa-xl"></i>
+                        href="{% url 'user_home' %}"><i class="fas fa-user-alt fa-2xl"></i>
                     </a>
                     {% endif %}
+                    <a href="{% url 'account_logout' %}" class="btn btn-outline-light btn-light mx-3">Logout</a>
                 </div>
-                <a href="{% url 'account_logout' %}" class="btn btn-outline-light btn-light mx-lg-5">Logout</a>
                 {% else %}
-                <a href="{% url 'account_signup' %}" class="btn btn-outline-light btn-light mx-lg-5">
+                <a href="{% url 'account_signup' %}" class="btn btn-outline-light btn-light mx-3">
                     <strong>Sign up</strong>
                 </a>
-                <a href="{% url 'account_login' %}" class="btn btn-outline-light btn-light mx-lg-5">
+                <a href="{% url 'account_login' %}" class="btn btn-outline-light btn-light mx-3">
                     Log in
                 </a>
                 {% endif %}
             </div>
         </div>
-        </div>
     </nav>
-
     {% endblock %}
     {% if messages %}
     <div class="message-container">
@@ -104,10 +100,9 @@
     {% endblock %}
     {% block postload-js %}
     <script type="text/javascript">
-        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
-        var toastList = toastElList.map(function (toastEl) {
-            return new bootstrap.Toast(toastEl, option)
-        })
+        function toast(element) {
+            element.remove()
+        }
     </script>
     {% endblock %}
 </body>

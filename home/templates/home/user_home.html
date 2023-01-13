@@ -9,6 +9,7 @@
         <h1 class="ms-3 h5">Expenses still to pay:</h1>
         <div class="m-3">
             <form class="" id="unpaid_item_form" method="POST" action="{% url 'add_expense' %}">
+                {% csrf_token %}
                 <div class="collapse" id="empty_content">
                     <div class="d-flex justify-content-evenly">
                         <div class="col-12 mx-lg-3 p-3 my-3 text-white bg-info rounded card">
@@ -209,7 +210,45 @@
     </section>
     <Section class="col-md-12 col-lg-5 p-3 g-0">
         <div id="topnav" class="my-3 pt-lg-2 p-3 g-0">
-            <h1 class="h5">Search and follow users here:</h1>
+            {% if request.user.is_authenticated %}
+            <form method="POST" action="{% url 'user_home' %}" class="d-flex mb-3" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12 d-flex flex-column justify-content-center">
+                        <div class="col-12 text-center">
+                            {% if profile.profile_image_url %}
+                            <img id="frame" class="rounded float-left border-dark" src="{{ profile.profile_image_url }}"
+                                alt="Avatar" height="300" width="300">
+                            {% else %}
+                            <img id="frame" title="uploaded-image"
+                                src="{% static 'images/stock-user-profile-icon.jpg' %}"
+                                class="img-fluid rounded float-left d-block" height="300" width="300" alt=""></img>
+                            {% endif %}
+                        </div>
+                        <input type="file" name="image" class="col-12 form-control form-control-sm my-1" id="customFile"
+                            onchange="preview()" required />
+                        <div class="btn-group btn-group-sm text-center" role="group">
+                            <button type="submit" id="image-submit"
+                                class="btn btn-small btn-primary bg-gradient text-dark disabled">Submit</button>
+                            <button type="reset" id="image-reset" onclick="clearImage()"
+                                class="btn btn-small bg-warning bg-gradient text-dark disabled">Clear</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mx-5 w-100">
+                    <div class="col-12">
+                        <p class="my-3"><strong>Name:</strong> {{ profile.user.first_name }}
+                            {{ profile.user.last_name }} </p>
+                        <p class="my-3"><strong>Username</strong> : {{ profile.user.username }}</p>
+                        <p class="my-3"><strong>Email</strong> : {{ profile.user.email }}</p>
+                        <p class="my-3"><strong>Phone</strong> : {{ profile.default_phone_number }}</p>
+                        <p class="my-3"><strong>Postcode</strong> : {{ profile.default_postcode }}</p>
+                    </div>
+                </div>
+            </form>
+            {% endif %}
+            <hr>
+            <h1 class="mt-5 h5">Search and follow users here:</h1>
             <div class="">
                 <form method="GET" action="{% url 'user_home' %}" class="d-flex">
                     {% csrf_token %}
@@ -231,23 +270,22 @@
                         {% csrf_token %}
                         <div class="card">
                             <div class="card-content d-flex justify-content-between text-nowrap">
-                                {% if user_profile.UserProfile.profile_image_url %}
-                                <img class="rounded-circle border-dark" src={{request.user.profile_image}}} alt="Avatar"
-                                    style="width: 50px; height: 50px;">
-                                {% else %}
-                                <a class="h1 mt-1 ms-me-3 text-center align-middle btn btn-large btn-secondary btn-floating text-bg-light"
-                                    href="{% url 'user_home' %}"><i class="fas fa-user-alt fa-xl"></i>
+                                {% if user_profile.profile_image_url %}
+                                <a href="{% url 'user_home' %}"> <img class="rounded-circle border-dark"
+                                        src='{{ user_profile.profile_image_url }}' height="50" width="50">
                                 </a>
+                                {% else %}
+                                <i class="fas fa-user-alt fa-2xl ms-5 mt-4"></i>
                                 {% endif %}
                                 <a href="{% url 'profile' user_profile.pk %}">
                                     <p class="ms-3 my-3">{{ user_profile }}</p>
                                 </a>
                                 <div class="my-3">
                                     {% if user_profile in profile.follows.all %}
-                                    <button class="btn btn-sm bg-warning mx-1" name="unfollow"
+                                    <button class="btn btn-sm bg-warning me-5" name="unfollow"
                                         value="{{ user_profile.pk }}">Unfollow</button>
                                     {% else %}
-                                    <button class="btn btn-sm  bg-primary" name="follow"
+                                    <button class="btn btn-sm  bg-primary me-5" name="follow"
                                         value="{{ user_profile.pk }}">Follow</button>
                                     {% endif %}
                                 </div>
@@ -267,11 +305,19 @@
                         {% csrf_token %}
                         <div class="card">
                             <div class="card-content d-flex justify-content-between text-nowrap">
+                                {% if following.profile_image_url %}
+                                <a href="{% url 'user_home' %}"> <img class="rounded-circle border-dark"
+                                        src='{{ following.profile_image_url }}' height="50" width="50">
+                                </a>
+                                {% else %}
+                                <i class="fas fa-user-alt fa-2xl ms-5 mt-4"></i>
+                                {% endif %}
                                 <a href="{% url 'profile' following.pk %}">
-                                    <p class="ms-3 my-3">{{ following }}</p>
+                                    <p class="ms-3 my-3">{{ following }}
+                                    </p>
                                 </a>
                                 <div class="my-3">
-                                    <button class="btn btn-sm bg-warning mx-1" name="unfollow"
+                                    <button class="btn btn-sm bg-warning me-5" name="unfollow"
                                         value="{{ following.pk }}">Unfollow</button>
                                 </div>
                             </div>
@@ -314,5 +360,22 @@
             collapse_item.classList.add('collapse')
         }
     };
+
+    function preview() {
+        frame.src = URL.createObjectURL(event.target.files[0]);
+        document.getElementById('frame').classList.remove('d-none');
+        document.getElementById('image-reset').classList.remove('disabled');
+        document.getElementById('image-submit').classList.remove('disabled');
+    }
+
+    function clearImage() {
+        event.preventDefault();
+        document.getElementById('customFile').value = null;
+        frame.src = "";
+        frame.classList.add('d-none');
+        document.getElementById('image-reset').classList.add('disabled');
+        document.getElementById('image-submit').classList.add('disabled');
+
+    }
 </script>
 {% endblock %}
