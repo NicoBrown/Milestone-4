@@ -70,6 +70,8 @@ class OrderLineItem(Model):
     tax_amount = models.DecimalField(
         max_digits=6, decimal_places=2, null=True, blank=True)
     is_paid = models.BooleanField(default=False, null=True, blank=True)
+    stripe_pid = models.CharField(
+        max_length=254, null=True, blank=True, default='')
 
     def save(self, *args, **kwargs):
         """

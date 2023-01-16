@@ -37,3 +37,14 @@ class OrderForm(forms.ModelForm):
                 self.fields[field].widget.attrs['placeholder'] = placeholder
             self.fields[field].widget.attrs['class'] = 'stripe-style-input'
             self.fields[field].label = False
+
+
+class Register_bank_acc(forms.Form):
+
+    self.fields['account_holder_name'] = forms.CharField(required=True)
+    self.fields['routing_number'] = forms.IntegerField(required=True)
+    self.fields['account_Number'] = forms.CharField(required=True)
+    self.fields['country'] = forms.CharField(
+        required=True)
+
+                                                       )

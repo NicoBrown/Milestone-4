@@ -2,6 +2,7 @@ from PIL import Image
 from .models import Expense, OrderLineItem
 from django.forms import modelformset_factory, Form
 from profiles.models import UserProfile
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -11,6 +12,7 @@ from google.api_core.client_options import ClientOptions
 from base64 import b64encode, b64decode
 from io import BytesIO, TextIOWrapper
 
+import stripe
 import proto
 import os
 import uuid
@@ -18,11 +20,11 @@ import uuid
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"kwik-split-0a449986ee26.json"
 
-# TODO(developer): Uncomment these variables before running the sample.
-project_id = 'kwik-split'
-location = 'eu'  # Format is 'us' or 'eu'
-processor_id = '8a4fbaeb2765405e'  # Create processor before running sample
-# Refer to https://cloud.google.com/document-ai/docs/manage-processor-versions for more information
+# set google document AI variables
+project_id = os.environ["DOCUMENT_AI_PROJECT_ID"]
+location = os.environ["DOCUMENT_AI_LOCATION"]  # Format is 'us' or 'eu'
+# Create processor before running sample, Refer to https://cloud.google.com/document-ai/docs/manage-processor-versions for more information
+processor_id = os.environ["DOCUMENT_AI_PROCESSOR_ID"]
 
 
 def expense_detail(request, expense_id):
@@ -40,10 +42,13 @@ def expense_detail(request, expense_id):
 @login_required
 def add_expense(request, expense_id=""):
     """ upload image to Google vision API """
+
     profile = get_object_or_404(UserProfile, user=request.user)
-    profiles = []
     tip_split = False
-    current_user_profile = get_object_or_404(UserProfile, user=request.user)
+
+    context = {
+        'profile': profile
+    }
 
     if request.method == "POST" and request.FILES != {}:
         # try:
@@ -84,15 +89,8 @@ def add_expense(request, expense_id=""):
         }
 
         return render(request, 'expenses/edit_expense.html', context)
-        # except error:
-        #     messages.add_message(
-        #         request, messages.ERROR, "Problem with image, please try again"
-        #     )
-        #     return render(request, "home/user_home.html")
 
     elif request.method == 'POST' and request.FILES == {}:
-
-        print(request.POST.items)
 
         line_items = [v for k, v in request.POST.items()
                       if k.startswith('line_item ')]
@@ -102,7 +100,7 @@ def add_expense(request, expense_id=""):
             supplier_name=request.POST.get('supplier_name', ''),
             supplier_address=request.POST.get('supplier_address', ''),
             supplier_phone=request.POST.get('supplier_phone', ''),
-            user_profile=current_user_profile,
+            user_profile=profile,
             total_amount=float(request.POST.get('total_amount', 0)),
             total_tax_amount=float(request.POST.get('total_tax_amount', 0)),
             tip_amount=float(request.POST.get('tip_amount', 0)),
@@ -117,22 +115,22 @@ def add_expense(request, expense_id=""):
 
         line_items = [v for k, v in request.POST.items()
                       if k.startswith('line_item ')]
+        if line_items:
+            for line_item in line_items:
+                items = line_item.split(" % ")
+                user_profile = get_object_or_404(UserProfile, pk=int(items[3]))
 
-        for line_item in line_items:
-            items = line_item.split(" % ")
-            user_profile = get_object_or_404(UserProfile, pk=int(items[3]))
-
-            order_line_item = OrderLineItem(
-                order=expense,
-                user_profile=user_profile,
-                description=items[0],
-                quantity=float(items[1]),
-                amount=float(items[2]),
-                lineitem_total=float(items[1]) * float(items[2]),
-                tax_amount=0,
-                is_paid=False,
-            )
-            order_line_item.save()
+                order_line_item = OrderLineItem(
+                    order=expense,
+                    user_profile=user_profile,
+                    description=items[0],
+                    quantity=float(items[1]),
+                    amount=float(items[2]),
+                    lineitem_total=float(items[1]) * float(items[2]),
+                    tax_amount=0,
+                    is_paid=False,
+                )
+                order_line_item.save()
 
         expense.update_totals()
 
@@ -140,12 +138,10 @@ def add_expense(request, expense_id=""):
         return redirect(reverse("user_home"))
 
     else:
+
         template = 'expenses/upload_image.html'
         profile = get_object_or_404(UserProfile, user=request.user)
 
-        context = {
-            'profile': profile
-        }
         return render(request, template, context)
 
 
@@ -251,3 +247,19 @@ def upload_to_Document_AI(mime, image_content):
         entity) for entity in document.entities]
 
     return result_dict
+
+
+def dashboard(request):
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+    stripe_public_key = os.environ["STRIPE_PUBLIC_KEY"]
+    stripe_secret_key = os.environ["STRIPE_SECRET_KEY"]
+    stripe.api_key = stripe_secret_key
+
+    # Extend the Stripe Client SDK to make an API request to a beta endpoint
+    stripe.api_version = '2022-08-01; embedded_connect_beta=v1'
+
+    account_session = stripe.AccountSession.create(
+        account=user_profile.stripe_customer_id
+    )
+
+    return render(request, 'expenses/dashboard.html', {'client_secret': account_session.client_secret, 'stripe_public_key': stripe_public_key})
