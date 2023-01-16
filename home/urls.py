@@ -8,4 +8,5 @@ urlpatterns = [
     path('user_following/<int:pk>',
          views.update_following, name='update_following'),
     path("profile/<int:pk>", views.profile, name="profile"),
+    path('onboard_user', views.onboard_user, name='onboard_user'),
 ]

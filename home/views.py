@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from custom_storages import MediaStorage
 
 import os
+import stripe
 
 
 # Create your views here.
@@ -77,6 +78,7 @@ def user_home(request):
             else:
                 messages.error(
                     request, 'Search Failed. Could not find and users.')
+
     if request.method == "POST":
         if request.FILES != {}:
             image = request.FILES['image']
@@ -119,3 +121,30 @@ def update_following(request,  pk):
     current_user_profile = get_object_or_404(UserProfile, user=request.user)
 
     return render(request, "home/user_home.html", {"profile": current_user_profile})
+
+
+@login_required
+def onboard_user(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
+
+    stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
+
+    account_response = stripe.Account.retrieve(profile.stripe_customer_id)
+
+    if account_response.requirements['currently_due'] != []:
+        response = stripe.AccountLink.create(
+            account=account_response.id,
+            # TODO: change for deployment
+            refresh_url=f'https://{request.META["HTTP_X_FORWARDED_HOST"]}/user_home',
+            # TODO: change for deployment
+            return_url=f'https://{request.META["HTTP_X_FORWARDED_HOST"]}/user_home',
+            type="account_onboarding",
+            collect="eventually_due",
+        )
+
+        return redirect(response.url)
+    else:
+        profile.stripe_requirements_due = False
+        profile.save()
+
+        return redirect(reverse("user_home"))

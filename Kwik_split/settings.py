@@ -88,7 +88,11 @@ TEMPLATES = [
             'libraries':{
                 'bin_2_img': 'Kwik_split.templatetags.bin_2_img',
                 'batch': 'Kwik_split.templatetags.batch',
-            }
+            },
+            'builtins': [
+                'crispy_forms.templatetags.crispy_forms_tags',
+                'crispy_forms.templatetags.crispy_forms_field',
+            ]
         },
     },
 ]
