@@ -141,8 +141,15 @@ def onboard_user(request):
             type="account_onboarding",
             collect="eventually_due",
         )
+        if account_response.requirements['currently_due'] != []:
+            profile.stripe_requirements_due = True
+            profile.save()
+            return redirect(reverse(response.url))
 
-        return redirect(response.url)
+        else:
+            profile.stripe_requirements_due = False
+            profile.save()
+            return redirect(response.url)
     else:
         profile.stripe_requirements_due = False
         profile.save()
