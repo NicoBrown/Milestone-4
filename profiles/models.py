@@ -19,10 +19,10 @@ class UserProfile(models.Model):
     follows = models.ManyToManyField(
         "self", related_name="followed_by", symmetrical=False, blank=True)
     stripe_customer_id = models.CharField(
-        max_length=20, default="", null=True, blank=True)
+        max_length=100, default="", null=True, blank=True)
     stripe_requirements_due = models.BooleanField(default=True)
     default_phone_number = models.CharField(
-        max_length=20, null=True, blank=True)
+        max_length=100, null=True, blank=True)
     default_country = CountryField(
         blank_label='Country *', null=True, blank=True)
     default_postcode = models.CharField(max_length=20, null=True, blank=True)

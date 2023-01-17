@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bin_2_img %}
+
+
+{% block content %}
+<div class="fixed-action-btn d-flex justify-content-between" id="fixed1" style="height: 80px;">
+    <div class="btn-group bg-success d-flex justify-content-between align-items-center" role="group">
+        <button class="btn btn-success" id="tourbutton">
+            Start tour?
+        </button>
+        <button type="button" onclick="this.parentNode.parentNode.remove(); return false;" class="btn-close m-1"
+            aria-label="Close">
+        </button>
+    </div>
+</div>
+<div class="row d-flex justify-content-evenly flex-column m-3 p-lg-5">
+    <form class="col-lg-12 col-xl-8 offset-xl-2" id="expense_form" method="POST" action="{% url 'add_expense' %}"
+        enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="card p-lg-5 p-sm-1 mx-auto">
+            <div class="row">
+                <ul class="col-12 col col-lg-6 list-group list-group-light list-unstyled p-3"
+                    data-tour="step: 1; title: Supplier Information; content: Start here by checking the supplier information and amending the fields where needed">
+
+                    <label class="h5" for="expense_id">Expense ID:</label>
+                    <div class="fw-bold col-12 input-group mb-2">
+                        <input id="expense_id" name="expense_id" value="{{ expense_id }}"
+                            class="form-control form-control-light form-control-sm" aria-label="readonly input"
+                            readonly></h5>
+                    </div>
+                    <h5 class="h5">Edit supplier details below:</h5>
+                    {% for key, value in normalized_items.items %}
+                    {% if key == "supplier_name" or key == "supplier_address" or key == "supplier_phone" %}
+                    <li class="">
+                        <label class="" for="{{ key }}">{{ key }}</label>
+                        <div class="fw-bold col-12 input-group">
+                            <input class="form-control form-control-sm" name="{{ key }}" id="{{ key }}"
+                                value="{{ value |default:'No value for this one sorry 🤷' }}">
+                            </input>
+                            <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if 'supplier_name' not in normalized_items %}
+                    <li class="">
+                        <label class="" for="supplier_name">Supplier Name</label>
+                        <div class="fw-bold col-12 input-group">
+                            <input class="form-control form-control-sm" name="supplier_name" id="supplier_name"
+                                value="No value for this one sorry 🤷">
+                            </input>
+                            <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% if 'supplier_address' not in normalized_items %}
+                    <li class="">
+                        <label class="" for="supplier_address">Supplier Address</label>
+                        <div class="fw-bold col-12 input-group">
+                            <input class="form-control form-control-sm" name="supplier_address" id="supplier_address"
+                                value="No value for this one sorry 🤷">
+                            </input>
+                            <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% if 'supplier_address' not in normalized_items %}
+                    <li class="">
+                        <label class="" for="supplier_phone">Supplier Phone</label>
+                        <div class="fw-bold col-12 input-group">
+                            <input class="form-control form-control-sm" name="supplier_phone" id="supplier_phone"
+                                value="No value for this one sorry 🤷">
+                            </input>
+                            <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
+                        </div>
+                    </li>
+                    {% endif %}
+                </ul>
+                <div class="col-10 offset-1 col order-first col-lg-5 p-3">
+                    <input type="text" value="{{ image_url }}" class="collapse invisible" name="image_url">
+                    <img src="{{ image_url }}" height="100%" width="100%" alt="" />
+                    </input>
+                </div>
+            </div>
+            <hr>
+            <h5 class="h5">Add users to items below:</h5>
+            <ul class="list-group list-group-light list-unstyled"
+                data-tour="step: 2; title: Order Items; content: Assign people you follow to the individual items below using the dropdowns">
+                {% for key, values in line_items.items %}
+                <li class="row list-group-item card m-1">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="fw-bold col-6">
+                            <p class="">
+                                {{ values.description |default:"No description sorry 🤷" }}
+                            </p>
+                        </div>
+                        <div class="col-6 d-flex justify-content-between">
+                            <label class="me-3" for="quantity_{{ forloop.counter }}">Quantity:</label>
+                            <input type="number" class="form-control form-control-sm"
+                                id="quantity_{{ forloop.counter }}" onchange="quantityChange(this);"
+                                value="{{ values.quantity }}">
+                            </input>
+                            <label class="mx-3" for="amount_{{ forloop.counter }}">Amount:</label>
+                            <input class="form-control form-control-sm" id=" amount_{{ forloop.counter }}"
+                                onchange="amountChange(this);" value="{{ values.amount |default:'#' }}">
+                            </input>
+                        </div>
+                    </div>
+                    <!-- <span class="badge badge-primary rounded-pill">14</span> -->
+                    <div class="d-flex justify-content-between align-items-start">
+                        <p class="col-6">Assign to user:</p>
+                        <select name="line_item {{ forloop.counter }}"
+                            class="form-select form-control form-control-sm w-50">
+                            {% for profile in profile.follows.all %}
+                            <option
+                                value="{{ values.description }} % {{ values.quantity }} % {{ values.amount }} % {{ profile.pk }}"
+                                label="{{ profile }}">
+                            </option>
+                            {% endfor %}
+                        </select>
+                </li>
+                {% endfor %}
+            </ul>
+            <hr>
+            <ul class="col-12 list-group list-group-light list-unstyled mb-3"
+                data-tour="step: 3; title: Other Items; content: Check the amounts for tax, tips and the totals and make changes if needed">
+
+                {% for key, value in normalized_items.items %}
+                {% if key == "total_tax_amount" %}
+                <li class="list-item">
+                    <div class="input-group">
+                        <h5 class="h5 col-6 fw-bold me-3">Tax amount:</h5>
+                        <input class="col-6 form-control form-control-sm form-icon-trailing" name="{{ key }}"
+                            value="{{ value |default:'No value for this one sorry 🤷' }}">
+                        </input>
+                        <span class="input-group-text"><i class="fas fa-pen trailing"></i></span>
+                    </div>
+                </li>
+                {% endif %}
+                {% if key == "tip_amount" %}
+                <li class="list-item">
+                    <div class="input-group">
+                        <h5 class="h5 col-6 form-control fw-bold me-3">Tip amount:
+                        </h5>
+                        <input class="col-6 form-control form-control-sm form-icon-trailing" name="{{ key }}"
+                            value="{{ value |default:'No value for this one sorry 🤷' }}">
+                        </input>
+                        <span class="input-group-text"><i class="fas fa-pen trailing"></i></span>
+                    </div>
+                </li>
+                {% endif %}
+                {% endfor %}
+                {% for key, value in normalized_items.items %}
+                {% if "line_item" in normalized_items.keys %}
+                <div class="row">
+                    <h5 class="h5 col-12">label the below items:</h5>
+                    <p class="col-6 d-inline-flex text-center">Label</p>
+                    <p class="col-6 d-inline-flex text-center">Value</p>
+                </div>
+                {% endif %}
+                {% if key == "line_item" %}
+                <li class="list-item">
+                    <div class="input-group">
+                        <select class="col-5 form-select form-control form-control-sm me-3 form-icon-trailing"
+                            onChange="check_tip(this);">
+                            <option selected>** Ignore Amount **</option>
+                            <option>total_tax_amount</option>
+                            <option>tip_amount</option>
+                        </select>
+                        <input class="col-6 form-control form-control-sm" name=""
+                            value="{{ value |default:'No value for this one sorry 🤷' }}">
+                        </input>
+                        <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
+                        <div id="tip-amount" class="form-check collapse collapse-horizontal m-2">
+                            <input type="checkbox" class="form-check-input" name="tip_split"
+                                id="{{ key }} {{ forloop.counter }} tip_split" />
+                            <label class="form-check-label" for="{{ key }} {{ forloop.counter }} tip_split">Split
+                                the
+                                Tip amount evenly?</label>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+                {% endfor %}
+                {% for key, value in normalized_items.items %}
+                {% if key == "total_amount" %}
+                <hr>
+                <li class="list-item">
+                    <div class="input-group ">
+                        <h5 class="h5 fw-bold me-3 mt-2">Total including Tax, Tips, etc: </h5>
+                        <input class="form-control form-control-sm form-icon-trailing" name="{{ key }}"
+                            value="{{ value |default:'No value for this one sorry 🤷' }}">
+                        </input>
+                        <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
+                    </div>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            <div class="d-grid gap-2 d-sm-block mx-auto text-center"
+                data-tour="step: 4; title: Finish; content: You can submit or cancel the expense here. Your friends will receive notifications of the items above when you press submit and they can split the cost with you. You'll be returned to the home screen if you cancel">
+                <a type="button" class="btn btn-secondary" href="{% url 'user_home' %}">Cancel</a>
+                <button type="submit" class="btn btn-primary mx-md-3">Submit Expense</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block postload-js %}
+{{ block.super }}
+<script>
+    /*
+     * Initialize Tourguide.js
+     */
+    var tourguide = new Tourguide();
+
+    function startTour() {
+        tourguide.start();
+    }
+    // Attach the touruide start event to the button press
+    var tourbutton = document.getElementById("tourbutton");
+    tourbutton.addEventListener("click", startTour);
+
+    function check_tip(selected) {
+        Selected.nextElementSibling.setAttribute('name', Selected.options[Selected.selectedIndex].text);
+
+        tip = document.getElementById('tip-amount')
+        if (Selected.options[Selected.selectedIndex].text == 'tip_amount') {
+            if (tip.classList.contains("collapse")) {
+                tip.classList.remove('collapse', 'collapse-horizontal')
+            }
+        } else {
+            tip.classList.add('collapse', 'collapse-horizontal')
+        }
+    }
+
+    function quantityChange(selected) {
+        newValue = selected.getAttribute("value")
+
+        parentLi = selected.closest("li")
+        options = parentLi.querySelectorAll("option")
+        const value = option[0].getAttribute("value").split("%")
+        print(value)
+        value[2] = newValue
+
+        optionValue = value.join()
+
+        print(optionValue)
+
+        for (option in options) {
+            option.setAttribute("value", optionValue)
+        }
+    }
+
+    function amountChange(selected) {
+        newValue = selected.getAttribute("value")
+
+        parentLi = selected.closest("li")
+        options = parentLi.querySelectorAll("option")
+        const value = option[0].getAttribute("value").split("%")
+        print(value)
+        value[3] = newValue
+
+        optionValue = value.join()
+
+        print(optionValue)
+
+        for (option in options) {
+            option.setAttribute("value", optionValue)
+        }
+    }
+</script>
+{% endblock %}

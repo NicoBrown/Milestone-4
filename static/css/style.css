@@ -113,6 +113,10 @@ h3 {
     border-left: 5px solid rgb(54, 54, 54);
 }
 
+.image_cover {
+    object-fit: cover;
+}
+
 @keyframes openclose {
     0% {
         top: 0.2rem;
