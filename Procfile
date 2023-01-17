@@ -1,1 +1,1 @@
-web: gunicorn kwik-split.wsgi:application
+web: gunicorn Kwik_split.wsgi:application
