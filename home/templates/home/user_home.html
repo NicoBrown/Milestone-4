@@ -3,7 +3,8 @@
 {% block page_header %}
 {{ block.super }}
 {% if profile.stripe_requirements_due %}
-<div class=" text-center bg-warning bg-gradient bg-opacity-75 text-dark">
+<div class="text-center bg-warning bg-gradient bg-opacity-75 text-dark"
+    data-tour="step: 1; title: Verify your account with stripe; content: Stripe handles all of our payments, verify your details with them to make and accept payments">
     <a class="" href="{% url 'onboard_user' %}">
         <h1 class="h3 text-dark p-2">Verify your account now with <svg viewBox="0 0 60 25"
                 xmlns="http://www.w3.org/2000/svg" width="60" height="25" class="UserLogo variant-- ">
@@ -18,10 +19,18 @@
 {% endblock %}
 
 {% block content %}
+<div class="fixed-action-btn d-flex justify-content-between" id="fixed1" style="height: 80px;">
+    <div class="btn-group bg-success d-flex justify-content-between align-items-center" role="group">
+        <button class="btn btn-success" id="tourbutton">
+            Start tour?
+        </button>
+        <button type="button" onclick="this.parentNode.parentNode.remove(); return false;" class="btn-close m-1"
+            aria-label="Close">
+        </button>
+    </div>
+</div>
 <div class="row justify-content-evenly">
-    <section class="col-md-12 col-lg-5 p-3 g-0 bg-light bg-gradient">
-        <a href="{% url 'dashboard' %}">Dashboard Link
-        </a>
+    <section class="col-md-12 col-lg-5 mt-5 p-3 g-0 bg-light bg-gradient">
         {% if expenses %}
         <h1 class="ms-3 h5">Expenses still to pay:</h1>
         <div class="m-3">
@@ -29,7 +38,7 @@
                 <form class="" id="unpaid_item_form" method="POST" action="{% url 'add_expense' %}">
                     {% csrf_token %}
                     <div class="d-flex justify-content-evenly">
-                        <div class="col-12 mx-lg-3 p-3 my-3 text-white bg-info rounded card">
+                        <div class="col-12 mx-lg-3 p-3 text-white bg-info rounded card">
                             <div class="d-flex card-content ">
                                 <div>
                                     <i class="fas fa-cannabis fa-xl mx-1 mx-lg-5"></i>
@@ -231,7 +240,8 @@
             {% endif %}
             <hr class="mt-5">
             <!-- Grid container for buttons -->
-            <div class="text-center disabled flex-colum align-self-center mt-5">
+            <div class="text-center disabled flex-colum align-self-center mt-5"
+                data-tour="step: 4; title: Add a new expense ; content: Add a new expense here and split it with friends">
                 <button onclick="location.href='{% url 'add_expense' %}'" {% if profile.stripe_requirements_due %}
                     disabled {% endif %} type="button"
                     class="position-relative {% if profile.stripe_requirements_due %} disabled {% endif %} btn btn-small btn-primary">
@@ -245,21 +255,22 @@
                 <p class="mt-1"></p>
             </div>
     </section>
-    <Section class="col-md-12 col-lg-5 p-3 g-0">
+    <Section class="col-md-12 col-lg-5 mt-2 p-3 g-0">
         <div id="topnav" class="my-3 pt-lg-2 p-3 g-0">
             {% if request.user.is_authenticated %}
             <form method="POST" action="{% url 'user_home' %}" class="d-flex mb-3" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="col-12 d-flex flex-column justify-content-center">
+                    <div class="col-12 d-flex flex-column justify-content-center"
+                        data-tour="step: 5; title: Profile Image ; content: You can upload a new profile image here">
                         <div class="col-12 text-center">
                             {% if profile.profile_image_url %}
-                            <img id="frame" class="rounded float-left border-dark" src="{{ profile.profile_image_url }}"
-                                alt="Avatar" height="300" width="300">
+                            <img id="frame" class="image_cover rounded float-left border-dark"
+                                src="{{ profile.profile_image_url }}" alt="Avatar" height="300" width="300">
                             {% else %}
                             <img id="frame" title="uploaded-image"
                                 src="{% static 'images/stock-user-profile-icon.jpg' %}"
-                                class="img-fluid rounded float-left d-block" height="300" width="300" alt=""></img>
+                                class="image_cover rounded float-left d-block" height="300" width="300" alt=""></img>
                             {% endif %}
                         </div>
                         <input type="file" name="image" class="col-12 form-control form-control-sm my-1" id="customFile"
@@ -285,85 +296,93 @@
             </form>
             {% endif %}
             <hr>
-            <h1 class="mt-5 h5">Search and follow users here:</h1>
-            <div class="">
-                <form method="GET" action="{% url 'user_home' %}" class="d-flex">
-                    {% csrf_token %}
-                    <input type="text" id="user_search" name="user_search" class="form-control border mb-3 flex-grow-1"
-                        placeholder="User Search">
-                    <button type="submit" class="btn btn-outline-primary mb-3 ms-3">
-                        Search
-                    </button>
-                </form>
-            </div>
-            <ul class="list-group list-group-light list-unstyled">
-                {% if profiles %}
-                <p>Search Results</p>
-                {% endif %}
-                {% for user_profile in profiles %}
-                {% if user_profile != profile %}
-                <li class="my-3">
-                    <form method="POST" action="{% url 'user_home' %}">
+            <div
+                data-tour="step: 2; title: Search Results; content: User Search Results will appear underneath the search bar">
+                <h1 class="mt-5 h5">Search and follow users here:</h1>
+                <div class=""
+                    data-tour="step: 1; title: Add and follow other users; content: Search for other users and follow them to enable you to split payments with them">
+                    <form method="GET" action="{% url 'user_home' %}" class="d-flex">
                         {% csrf_token %}
-                        <div class="card">
-                            <div class="card-content d-flex flex-wrap justify-content-between">
-                                {% if user_profile.profile_image_url %}
-                                <a href="{% url 'user_home' %}"> <img class="rounded-circle border-dark"
-                                        src='{{ user_profile.profile_image_url }}' height="50" width="50">
-                                </a>
-                                {% else %}
-                                <i class="fas fa-user-alt fa-2xl mx-1 mx-lg-5 mt-4"></i>
-                                {% endif %}
-                                <a href="{% url 'profile' user_profile.pk %}">
-                                    <p class="ms-3 my-3">{{ user_profile }}</p>
-                                </a>
-                                <div class="my-3">
-                                    {% if user_profile in profile.follows.all %}
-                                    <button class="btn btn-sm bg-warning me-1 me-lg-5" name="unfollow"
-                                        value="{{ user_profile.pk }}">Unfollow</button>
+                        <input type="text" id="user_search" name="user_search"
+                            class="form-control border mb-3 flex-grow-1" placeholder="User Search">
+                        <button type="submit" class="btn btn-outline-primary mb-3 ms-3">
+                            Search
+                        </button>
+                    </form>
+                </div>
+                <ul class="list-group list-group-light list-unstyled">
+                    {% if profiles %}
+                    <p>Search Results</p>
+                    {% endif %}
+                    {% for user_profile in profiles %}
+                    {% if user_profile != profile %}
+                    <li class="my-3">
+                        <form method="POST" action="{% url 'user_home' %}">
+                            {% csrf_token %}
+                            <div class="card">
+                                <div class="card-content  mx-1 mx-lg-5 d-flex flex-wrap justify-content-between">
+                                    {% if user_profile.profile_image_url %}
+                                    <a class="mt-1" href="{% url 'user_home' %}">
+                                        <img class="image_cover rounded-circle border-dark" alt="Profile image"
+                                            src='{{ user_profile.profile_image_url }}' height="50" width="50">
+                                    </a>
                                     {% else %}
-                                    <button class="btn btn-sm  bg-primary me-1 me-lg-5" name="follow"
-                                        value="{{ user_profile.pk }}">Follow</button>
+                                    <i class="fas mx-2 fa-user-alt fa-2xl mt-4" height="50" width="50"></i>
                                     {% endif %}
+                                    <a href="{% url 'profile' user_profile.pk %}">
+                                        <p class="ms-3 my-3">{{ user_profile }}</p>
+                                    </a>
+                                    <div class="my-3">
+                                        {% if user_profile in profile.follows.all %}
+                                        <button class="btn btn-sm bg-warning me-1 me-lg-5" name="unfollow"
+                                            value="{{ user_profile.pk }}">Unfollow</button>
+                                        {% else %}
+                                        <button class="btn btn-sm  bg-primary me-1 me-lg-5" name="follow"
+                                            value="{{ user_profile.pk }}">Follow</button>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                </li>
-                {% endif %}
-                {% endfor %}
-            </ul>
-            <h1 class="h5 mt-md-5">Already Following:</h1>
-            <ul class="list-group list-group-light list-unstyled">
-                {% for following in profile.follows.all %}
-                {% if following != profile %}
-                <li class="my-3">
-                    <form method="POST" action="{% url 'user_home' %}">
-                        {% csrf_token %}
-                        <div class="card">
-                            <div class="card-content d-flex justify-content-between flex-wrap">
-                                {% if following.profile_image_url %}
-                                <a href="{% url 'user_home' %}"> <img class="rounded-circle border-dark"
-                                        src='{{ following.profile_image_url }}' height="50" width="50">
-                                </a>
-                                {% else %}
-                                <i class="fas fa-user-alt fa-2xl ms-1 ms-lg-5 mt-4"></i>
-                                {% endif %}
-                                <a href="{% url 'profile' following.pk %}">
-                                    <p class="ms-3 my-3">{{ following }}
-                                    </p>
-                                </a>
-                                <div class="my-3">
-                                    <button class="btn btn-sm bg-warning me-5" name="unfollow"
-                                        value="{{ following.pk }}">Unfollow</button>
+                        </form>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div data-tour="step: 3; title: Followed Users; content: Users you follow will show here">
+                <h1 class="h5 mt-md-5">Already Following:</h1>
+                <ul class="list-group list-group-light list-unstyled">
+                    {% for following in profile.follows.all %}
+                    {% if following != profile %}
+                    <li class="my-3">
+                        <form method="POST" action="{% url 'user_home' %}">
+                            {% csrf_token %}
+                            <div class="card">
+                                <div class="card-content  mx-1 mx-lg-5 d-flex justify-content-between flex-wrap">
+                                    {% if following.profile_image_url %}
+                                    <a class="mt-1" href="{% url 'user_home' %}"> <img
+                                            class="image_cover rounded-circle border-dark"
+                                            src='{{ following.profile_image_url }}' height="50" width="50">
+                                    </a>
+                                    {% else %}
+                                    <i class="fas fa-user-alt fa-2xl ms-1 mt-4"></i>
+                                    {% endif %}
+                                    <a href="{% url 'profile' following.pk %}">
+                                        <p class="ms-3 my-3">{{ following }}
+                                        </p>
+                                    </a>
+                                    <div class="my-3">
+                                        <button class="btn btn-sm bg-warning me-5" name="unfollow"
+                                            value="{{ following.pk }}">Unfollow</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                </li>
-                {% endif %}
-                {% endfor %}
-            </ul>
+                        </form>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </Section>
 </div>
@@ -379,7 +398,21 @@
 
 {% block postload-js %}
 {{ block.super }}
+
+
 <script>
+    /*
+     * Initialize Tourguide.js
+     */
+    var tourguide = new Tourguide();
+
+    function startTour() {
+        tourguide.start();
+    }
+    // Attach the touruide start event to the button press
+    var tourbutton = document.getElementById("tourbutton");
+    tourbutton.addEventListener("click", startTour);
+
     function accordian_content(accordian) {
         var e = document.querySelectorAll('#accordian1 > div');
         e.length ? document.getElementById("empty_content").classList.remove('collapse') : console.log("works fine")
