@@ -44,7 +44,7 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     """
     if created:
         user_profile = UserProfile(user=instance)
-        stripe.api_key = "sk_test_51MOlcgGL2Yk3bPvdwA0i5CQEQJscrbeoHnctzks8WvTdN0L0pUYsQBYP1kdS7yrPxUPYaEoKTgEATElzy62knLQc00ORjtOIWy"
+        stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
 
         user_account_response = stripe.Account.create(
             email=user_profile.user.email,
