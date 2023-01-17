@@ -1,9 +1,12 @@
-<div class="toast show fade toast-info" role="alert" aria-live="assertive" aria-atomic="true" data-color="info"
-    data-autohide="true" data-position="top-center" onclick="toast(this);" data-offset="50" data-delay="10000">
+<div class="toast show fade toast-info position-absolute start-50 mt-5" role="alert" aria-live="assertive"
+    aria-atomic="true" data-color="info" data-autohide="true" data-position="top-center" onclick="toast(this);"
+    data-offset="50" data-delay="10000">
     <div class="toast-header toast-info">
         <i class="fas fa-info-circle fa-lg me-2"></i>
         <strong class="me-auto">info!</strong>
         <button type="button" class="btn-close" data-mdb-dismiss="toast" aria-label="Close"></button>
     </div>
-    <div class="toast-body">{{ message }}</div>
+    <div class="toast-body">
+        <p>{{ message }}</p>
+    </div>
 </div>
