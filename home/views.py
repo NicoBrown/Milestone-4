@@ -29,8 +29,8 @@ def index(request):
     return render(request, 'home/index.html')
 
 
+@login_required
 def profile(request, user):
-
     if request.user.is_authenticated:
         profile = get_object_or_404(UserProfile, user=request.user)
 
@@ -43,6 +43,7 @@ def profile(request, user):
     return render(request, "home/user_home.html", context)
 
 
+@login_required
 def user_home(request):
     """ Display the user's home page. """
     expense_list = []
@@ -114,7 +115,7 @@ def user_home(request):
     return render(request, template, context)
 
 
-@ login_required
+@login_required
 def update_following(request,  pk):
     """ Display the user's profile. """
 

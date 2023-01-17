@@ -27,18 +27,6 @@ location = os.environ["DOCUMENT_AI_LOCATION"]  # Format is 'us' or 'eu'
 processor_id = os.environ["DOCUMENT_AI_PROCESSOR_ID"]
 
 
-def expense_detail(request, expense_id):
-    """ A view to show individual product details """
-
-    expense = get_object_or_404(Expense, pk=expense_id)
-
-    context = {
-        'expense': expense,
-    }
-
-    return render(request, 'expense/expense_detail.html', context)
-
-
 @login_required
 def add_expense(request, expense_id=""):
     """ upload image to Google vision API """
@@ -145,15 +133,19 @@ def add_expense(request, expense_id=""):
         return render(request, template, context)
 
 
-@ login_required
+@login_required
 def edit_expense(request, expense_id):
-    """ add an expense after uploading an image """
+    """ Edit an expense after uploading an image """
 
-    current_user_profile = get_object_or_404(UserProfile, user=request.user)
+    profile = get_object_or_404(UserProfile, user=request.user)
+
+    context = {
+        'profile': profile
+    }
 
     if request.method == 'POST':
 
-        messages.info(request, 'Successfully Saved Expense!')
+        messages.info(request, 'Successfully saved changes to expense!')
         return render(request, "home/user_home.html", {"profile": current_user_profile}, args=[expense_id])
 
         # else:
@@ -162,11 +154,11 @@ def edit_expense(request, expense_id):
         #                     'Please ensure the form is valid.'))
     else:
         # form = ProductForm(instance=product)
-        messages.info(request, f'placeholder text')
+
         return render(request, "expense/edit_expense.html", {"profile": current_user_profile})
 
 
-@ login_required
+@login_required
 def delete_expense(request, expense_id):
     """ Delete a product from the store """
     if not request.user:
@@ -219,6 +211,7 @@ def update_normalized_items(json_dump):
     return normalized_items
 
 
+@login_required
 def upload_to_Document_AI(mime, image_content):
     """ Upload document to Google DocumnetAI servece through client library and return document """
 
@@ -247,19 +240,3 @@ def upload_to_Document_AI(mime, image_content):
         entity) for entity in document.entities]
 
     return result_dict
-
-
-def dashboard(request):
-    user_profile = get_object_or_404(UserProfile, user=request.user)
-    stripe_public_key = os.environ["STRIPE_PUBLIC_KEY"]
-    stripe_secret_key = os.environ["STRIPE_SECRET_KEY"]
-    stripe.api_key = stripe_secret_key
-
-    # Extend the Stripe Client SDK to make an API request to a beta endpoint
-    stripe.api_version = '2022-08-01; embedded_connect_beta=v1'
-
-    account_session = stripe.AccountSession.create(
-        account=user_profile.stripe_customer_id
-    )
-
-    return render(request, 'expenses/dashboard.html', {'client_secret': account_session.client_secret, 'stripe_public_key': stripe_public_key})
