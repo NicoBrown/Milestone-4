@@ -34,6 +34,8 @@ class StripeWH_Handler:
         print(intent)
 
         print(pid)
+        print(
+            "*****************************************************************************")
 
         grand_total = round(intent.charges.data[0].amount / 100, 2)
 

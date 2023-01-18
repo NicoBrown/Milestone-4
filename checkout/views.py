@@ -102,6 +102,8 @@ def checkout_success(request, CHECKOUT_SESSION_ID):
         expense_id = response['metadata']['expense_id']
         expense = Expense.objects.get(expense_id=expense_id)
         print(response)
+        destination_profile = UserProfile.objects.get(
+            user__username={response['metadata']['destination_profile']})
 
         line_item_pks = [v for k, v in response['metadata'].items()
                          if v.isnumeric()]
@@ -115,7 +117,9 @@ def checkout_success(request, CHECKOUT_SESSION_ID):
         expense.update_totals()
         expense.save()
         messages.success(
-            request, f"Payment successfully made to {response['metadata']['destination_profile']}! You may have to wait for the order to process so refresh the page in a few minutes")
+            request,
+            f"Payment successfully made to {response['metadata']['destination_profile']}! You may have to wait for the order to process so refresh the page in a few minutes",
+            extra_tags=destination_profile.profile_image_url)
     else:
         messages.ERROR(
             request, f"No payment has been made, please try to checkout again")

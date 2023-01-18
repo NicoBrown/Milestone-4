@@ -67,8 +67,10 @@ def add_expense(request, expense_id=""):
         result_dict = upload_to_Document_AI(mime_type, content)
         line_items = update_line_items(result_dict)
         normalized_items = update_normalized_items(result_dict)
+        net_amount = line_items['net_amount']
 
         context = {
+            'net_amount': net_amount,
             'expense_id': expense_id,
             'image_url': image_url,
             'profile': profile,
@@ -98,6 +100,8 @@ def add_expense(request, expense_id=""):
         )
 
         tip_split = request.POST.get('tip_split', False)
+        expense.update_totals()
+        expense.save()
 
         line_items = [v for k, v in request.POST.items()
                       if k.startswith('line_item ')]
@@ -117,13 +121,12 @@ def add_expense(request, expense_id=""):
                     is_paid=False,
                 )
 
-                if user_profile == profile:
-                    order_line_item.is_paid = True,
+                order_line_item.tax_amount = float(
+                    order_line_item.amount) / float(expense.total_amount) / float(expense.total_tax_amount)
+
+                order_line_item.is_paid = user_profile == profile
 
                 order_line_item.save()
-
-        expense.update_totals()
-        expense.save()
 
         messages.info(request, 'Successfully Saved Expense!')
         return redirect(reverse("user_home"))
@@ -195,6 +198,14 @@ def update_line_items(json_dump):
                 else:
                     line_item[entity["type_"]] = property["mention_text"]
             line_items.update({entity['id']: line_item})
+
+    net_amount = 0
+    for line_item in line_items.values():
+        quantity = int(line_item['quantity'])
+        amount = float(line_item['amount'])
+        net_amount += quantity * amount
+
+    line_items.update({'net_amount': net_amount})
     return line_items
 
 
