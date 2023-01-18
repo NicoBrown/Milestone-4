@@ -42,28 +42,28 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     """
     Create or update the user profile
     """
-    if created:
+    stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
+    user_object = UserProfile.objects.filter(user=instance).first()
+
+    if user_object is None:
         user_profile = UserProfile(user=instance)
-        stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
 
-        user_account_response = stripe.Account.create(
-            email=user_profile.user.email,
-            country="GB",
-            type="custom",
-            business_type='individual',
-            individual={
-                "first_name": user_profile.user.first_name,
-                "last_name": user_profile.user.first_name,
-            },
-            business_profile={"url": "https://www.google.com/",
-                              "mcc": "5734"},
-            capabilities={"card_payments": {"requested": True},
-                          "transfers": {"requested": True}},
-            tos_acceptance={"date": 1609798905, "ip": "0.0.0.0"},
-        )
-
+        if not user_profile.stripe_customer_id:
+            user_account_response = stripe.Account.create(
+                email=instance.email,
+                country="GB",
+                type="custom",
+                business_type='individual',
+                individual={
+                    "first_name": instance.first_name,
+                    "last_name": instance.last_name,
+                },
+                business_profile={"url": "https://www.google.com/",
+                                  "mcc": "5734"},
+                capabilities={"card_payments": {"requested": True},
+                              "transfers": {"requested": True}},
+                tos_acceptance={"date": 1609798905, "ip": "0.0.0.0"},
+            )
+        user_profile.follows = user_profile
         user_profile.stripe_customer_id = user_account_response.stripe_id
-
         user_profile.save()
-    # Existing users: just save the profile
-    # instance.UserProfile.save()

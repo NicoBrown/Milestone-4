@@ -32,7 +32,7 @@
 <div class="row justify-content-evenly">
     <section class="col-md-12 col-lg-5 mt-5 p-3 g-0 bg-light bg-gradient">
         {% if expenses %}
-        <h1 class="ms-3 h5">Expenses still to pay:</h1>
+        <h1 class="ms-3 h5">Unsettled Expenses:</h1>
         <div class="m-3">
             <div class="collapse" id="empty_content">
                 <form class="" id="unpaid_item_form" method="POST" action="{% url 'add_expense' %}">
@@ -59,8 +59,8 @@
                 <form class="" method="GET" action="{% url 'checkout' %}">
                     {% csrf_token %}
                     {% for line_item in expense.lineitems.all %}
-                    {% if line_item.user_profile == profile and line_item.is_paid == False %}
-                    <div class="accordion-item">
+                    {% if line_item.user_profile == profile %}
+                    <div class="accordion-item border border-secondary">
                         <span class="d-flex justify-content-between p-2">
                             <h6 class="accordion-header my-3"
                                 id="heading_{{ forloop.counter0 }}_{{ expense.expense_id }}">
@@ -95,12 +95,12 @@
                                                 <th>Quantity</th>
                                                 <th>Amount</th>
                                                 <th>Total</th>
+                                                <th>Owner</th>
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for line_item in expense.lineitems.all %}
-                                            {% if line_item.user_profile == profile and line_item.is_paid == False %}
                                             <tr>
                                                 <input class="collapse collapse-horizontal" name="{{ line_item.pk }}"
                                                     id="{{ line_item }}" value="{{ line_item.pk }}">
@@ -118,18 +118,29 @@
                                                     <p>£ {{ line_item.lineitem_total }}</p>
                                                 </td>
                                                 <td>
-                                                    <span class="badge badge-danger rounded-pill d-inline">Unpaid</span>
+                                                    <p class="text-wrap">{{ line_item.user_profile }}</p>
+                                                </td>
+                                                <td>
+                                                    {% if line_item.user_profile != profile and line_item.is_paid == False %}
+                                                    <span class="badge badge-danger rounded-pill d-inline">Awaiting
+                                                        Payment</span>
+                                                    {% elif line_item.user_profile != profile and line_item.is_paid == True %}
+                                                    <span class="badge badge-success rounded-pill d-inline">Paid</span>
+                                                    {% elif line_item.user_profile == profile %}
+                                                    <span class="badge badge-info rounded-pill d-inline">Your
+                                                        Expense</span>
+                                                    {% endif %}
                                                 </td>
                                             </tr>
-                                            {% endif %}
                                             {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="text-end my-3">
+                                    {% if expense.user_profile != profile %}
                                     <button type="submit" value="{{ expense.pk }}"
                                         {% if profile.stripe_requirements_due %} disabled {% endif %} name="expense_id"
-                                        class="btn btn-primary btn-small">Pay
+                                        class="btn btn-small btn-primary">Pay
                                         Expense
                                         {% if profile.stripe_requirements_due %}
                                         <span
@@ -138,6 +149,9 @@
                                         </span>
                                         {% endif %}
                                     </button>
+                                    {% else %}
+                                    <div class="my-5"></div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <a class="btn btn-primary btn-floating float-right m-2 collapse" data-mdb-toggle="collapse"
@@ -159,7 +173,7 @@
             <div class="accordion" id="accordion2">
                 {% for expense in expenses %}
                 {% if expense.paid_amount == expense.net_amount %}
-                <div class="pe-0 me-0 accordion-item">
+                <div class="pe-0 me-0 accordion-item border border-secondary">
                     <span class="d-flex justify-content-between p-2">
                         <h6 class="accordion-header my-3" id="heading_{{ forloop.counter0 }}_{{ expense.expense_id }}">
                             {{ expense.supplier_name }}
@@ -193,6 +207,7 @@
                                             <th>Quantity</th>
                                             <th>Amount</th>
                                             <th>Total</th>
+                                            <th>Owner</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
@@ -216,7 +231,15 @@
                                                 <p>£ {{ line_item.lineitem_total }}</p>
                                             </td>
                                             <td>
+                                                <p class="text-wrap">{{ line_item.user_profile }}</p>
+                                            </td>
+                                            <td>
+                                                {% if line_item.user_profile != profile and line_item.is_paid == True %}
                                                 <span class="badge badge-success rounded-pill d-inline">Paid</span>
+                                                {% elif line_item.user_profile == profile %}
+                                                <span class="badge badge-info rounded-pill d-inline">Your
+                                                    Expense</span>
+                                                {% endif %}
                                             </td>
                                         </tr>
                                         {% endif %}
@@ -240,20 +263,25 @@
             {% endif %}
             <hr class="mt-5">
             <!-- Grid container for buttons -->
-            <div class="text-center disabled flex-colum align-self-center mt-5"
+            <div class=" position-relative text-center flex-colum align-self-center mt-5"
                 data-tour="step: 4; title: Add a new expense ; content: Add a new expense here and split it with friends">
-                <button onclick="location.href='{% url 'add_expense' %}'" {% if profile.stripe_requirements_due %}
-                    disabled {% endif %} type="button"
-                    class="position-relative {% if profile.stripe_requirements_due %} disabled {% endif %} btn btn-small btn-primary">
+                <button onclick="location.href='{% url 'add_expense' %}'"
+                    {% if profile.stripe_requirements_due or not profile.follows.all %} disabled {% endif %}
+                    type="button" class="btn btn-small btn-primary">
                     Add a new expense
-                    {% if profile.stripe_requirements_due %}
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-warning">
-                        Verify account
-                    </span>
-                    {% endif %}
                 </button>
-                <p class="mt-1"></p>
+                {% if profile.stripe_requirements_due or not profile.follows.all %}
+                <span class="position-absolute  top-0 start-55 translate-middle badge rounded-pill
+                badge-danger">
+                    {% if profile.stripe_requirements_due %}
+                    Verify account first
+                    {% else %}
+                    Add followers first
+                    {% endif %}
+                </span>
             </div>
+        </div>
+        {% endif %}
     </section>
     <Section class="col-md-12 col-lg-5 mt-2 p-3 g-0">
         <div id="topnav" class="my-3 pt-lg-2 p-3 g-0">

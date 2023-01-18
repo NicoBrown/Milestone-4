@@ -133,24 +133,19 @@ def onboard_user(request):
     account_response = stripe.Account.retrieve(profile.stripe_customer_id)
 
     if account_response.requirements['currently_due'] != []:
+        profile.stripe_requirements_due = True
+        profile.save()
         response = stripe.AccountLink.create(
             account=account_response.id,
             # TODO: change for deployment
             refresh_url=f'https://{request.META["HTTP_X_FORWARDED_HOST"]}/user_home',
             # TODO: change for deployment
-            return_url=f'https://{request.META["HTTP_X_FORWARDED_HOST"]}/user_home',
+            return_url=f'https://{request.META["HTTP_X_FORWARDED_HOST"]}/onboard_user',
             type="account_onboarding",
             collect="eventually_due",
         )
-        if account_response.requirements['currently_due'] != []:
-            profile.stripe_requirements_due = True
-            profile.save()
-            return redirect(reverse(response.url))
+        return redirect(response.url)
 
-        else:
-            profile.stripe_requirements_due = False
-            profile.save()
-            return redirect(response.url)
     else:
         profile.stripe_requirements_due = False
         profile.save()

@@ -99,8 +99,6 @@ def add_expense(request, expense_id=""):
 
         tip_split = request.POST.get('tip_split', False)
 
-        expense.save()
-
         line_items = [v for k, v in request.POST.items()
                       if k.startswith('line_item ')]
         if line_items:
@@ -118,9 +116,14 @@ def add_expense(request, expense_id=""):
                     tax_amount=0,
                     is_paid=False,
                 )
+
+                if user_profile == profile:
+                    order_line_item.is_paid = True,
+
                 order_line_item.save()
 
         expense.update_totals()
+        expense.save()
 
         messages.info(request, 'Successfully Saved Expense!')
         return redirect(reverse("user_home"))
@@ -211,7 +214,6 @@ def update_normalized_items(json_dump):
     return normalized_items
 
 
-@login_required
 def upload_to_Document_AI(mime, image_content):
     """ Upload document to Google DocumnetAI servece through client library and return document """
 
