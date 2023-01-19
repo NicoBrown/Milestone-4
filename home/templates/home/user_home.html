@@ -31,12 +31,261 @@
 </div>
 <div class="row justify-content-evenly">
     <section class="col-md-12 col-lg-5 mt-5 p-3 g-0 bg-light bg-gradient">
-        {% if expenses %}
-        <h1 class="ms-3 h5">Unsettled Expenses:</h1>
-        <div class="m-3">
-            <div class="collapse" id="empty_content">
-                <form class="" id="unpaid_item_form" method="POST" action="{% url 'add_expense' %}">
-                    {% csrf_token %}
+        <!-- Tabs navs -->
+        <ul class="nav nav-tabs nav-justified mb-3" id="ex1" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="ex3-tab-1" data-mdb-toggle="tab" href="#ex3-tabs-1" role="tab"
+                    aria-controls="ex3-tabs-1" aria-selected="true">Unpaid Expenses</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="ex3-tab-2" data-mdb-toggle="tab" href="#ex3-tabs-2" role="tab"
+                    aria-controls="ex3-tabs-2" aria-selected="false">Paid Expenses</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="ex3-tab-3" data-mdb-toggle="tab" href="#ex3-tabs-3" role="tab"
+                    aria-controls="ex3-tabs-3" aria-selected="false">Your Requested Expenses</a>
+            </li>
+        </ul>
+        <!-- Tabs content -->
+        <div class="tab-content" id="ex2-content">
+            <!-- Tabs navs -->
+            <div class="tab-pane fade show active" id="ex3-tabs-1" role="tabpanel" aria-labelledby="ex3-tab-1">
+                <div class="m-3">
+                    <div class="accordion" id="accordian1" onload="accordian_content(this)" class="panel-group"
+                        role="tablist" aria-multiselectable="false">
+                        {% if profile.expense %}
+                        {% for expense in profile.expense.all %}
+                        <form class="" method="GET" action="{% url 'checkout' %}">
+                            {% csrf_token %}
+                            {% for line_item in expense.lineitems.all %}
+                            {% if line_item.user_profile == profile %}
+                            <div class="accordion-item border border-secondary">
+                                <span class="d-flex justify-content-between p-2">
+                                    <h6 class="accordion-header my-3"
+                                        id="heading_{{ forloop.counter0 }}_{{ expense.expense_id }}">
+                                        {{ expense.supplier_name }}
+                                    </h6>
+                                    <a class="btn btn-primary btn-floating float-right m-2" role="button"
+                                        aria-controls="accordian1_{{ forloop.counter0 }}_{{ expense.expense_id }}"
+                                        onclick="toggle_accordion(this);">
+                                        <i class="fas fa-angle-double-down float-right"></i>
+                                    </a>
+                                </span>
+                                <span class="d-flex flex-row-reverse align-items-center p-2">
+                                    <i class="fas fa-thumbs-down text-danger mb-3 mx-3"></i>
+                                    <p class="fw-bold">Total Amount: {{ expense.total_amount }}
+                                    </p>
+                                    <small class="text-muted mb-3 me-3">Amount paid: {{ expense.paid_amount }}</small>
+                                </span>
+                                <div id="accordian1_{{ forloop.counter0 }}_{{ expense.expense_id }}"
+                                    class="accordian-body collapse"
+                                    aria-labelledby="heading_{{ forloop.counter0 }}_{{ expense.expense_id }}">
+                                    <div class="p-1">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm caption-top align-middle mb-0 bg-white">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th>Description</th>
+                                                        <th>Quantity</th>
+                                                        <th>Amount</th>
+                                                        <th>Total</th>
+                                                        <th>Owner</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for line_item in expense.lineitems.all %}
+                                                    <tr>
+                                                        <input class="collapse collapse-horizontal"
+                                                            name="{{ line_item.pk }}" id="{{ line_item }}"
+                                                            value="{{ line_item.pk }}">
+                                                        </input>
+                                                        <td>
+                                                            <p>{{ line_item.description }}</p>
+                                                        </td>
+                                                        <td>
+                                                            <p>{{ line_item.quantity }}</p>
+                                                        </td>
+                                                        <td>
+                                                            <p>{{ line_item.amount }}</p>
+                                                        </td>
+                                                        <td>
+                                                            <p>£ {{ line_item.lineitem_total }}</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="text-wrap">{{ line_item.user_profile }}</p>
+                                                        </td>
+                                                        <td>
+                                                            {% if line_item.user_profile != profile and line_item.is_paid == False %}
+                                                            <span
+                                                                class="badge badge-danger rounded-pill d-inline">Awaiting
+                                                                Payment</span>
+                                                            {% elif line_item.user_profile != profile and line_item.is_paid == True %}
+                                                            <span
+                                                                class="badge badge-success rounded-pill d-inline">Paid</span>
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="text-end my-3">
+                                            {% if expense.user_profile != profile %}
+                                            <button type="submit" value="{{ expense.pk }}"
+                                                {% if profile.stripe_requirements_due %} disabled {% endif %}
+                                                name="expense_id" class="btn btn-small btn-primary">Pay
+                                                Expense
+                                                {% if profile.stripe_requirements_due %}
+                                                <span
+                                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-warning">
+                                                    Verify account
+                                                </span>
+                                                {% endif %}
+                                            </button>
+                                            {% else %}
+                                            <div class="my-5"></div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <a class="btn btn-primary btn-floating float-right m-2 collapse"
+                                        data-mdb-toggle="collapse"
+                                        href="#accordian_{{ forloop.counter0 }}_{{ expense.expense_id }}" role="button"
+                                        aria-expanded="false"
+                                        aria-controls="accordian_{{ forloop.counter0 }}_{{ expense.expense_id }}"><span
+                                            class="badge badge-info m-3">Open for more details</span>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </form>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="ex3-tabs-2" role="tabpanel" aria-labelledby="ex3-tab-2">
+                <h1 class="ms-3 h5">Fully paid expenses:</h1>
+                <div class="p-3">
+                    <div class="accordion" id="accordion2">
+                        {% for expense in profile.expenses.all %}
+                        {% if expense.paid_amount == expense.net_amount %}
+                        <div class="pe-0 me-0 accordion-item border border-secondary">
+                            <span class="d-flex justify-content-between p-2">
+                                <h6 class="accordion-header my-3"
+                                    id="heading_{{ forloop.counter0 }}_{{ expense.expense_id }}">
+                                    {{ expense.supplier_name }}
+                                </h6>
+                                <p class="text-muted mt-3">owner:
+                                    {{ expense.user_profile }}</p>
+                                <a class="btn btn-primary btn-floating float-right m-2" role="button"
+                                    aria-controls="accordian2_{{ forloop.counter0 }}_{{ expense.expense_id }}"
+                                    onclick="toggle_accordion(this);">
+                                    <i class="fas fa-angle-double-down float-right"></i>
+                                </a>
+                            </span>
+                            <span class="d-flex flex-row-reverse align-items-center p-2">
+                                <i class="fas fa-thumbs-up text-success mb-3 mx-3"></i>
+                                <p class="fw-bold">Net Amount: {{ expense.net_amount }}
+                                </p>
+                                <small class="text-muted mb-3 me-3">Amount paid: {{ expense.paid_amount }}</small>
+                            </span>
+                            <div id="accordian1_{{ forloop.counter0 }}_{{ expense.expense_id }}"
+                                class="accordian-body collapse"
+                                aria-labelledby="heading_{{ forloop.counter0 }}_{{ expense.expense_id }}"
+                                data-mdb-parent="#accordion2" data-toggle="collapse">
+                                <div class="p-1">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm caption-top align-middle mb-0 bg-white">
+                                            <caption>
+                                                You've paid for:
+                                            </caption>
+                                            <thead class="bg-light">
+                                                <tr>
+                                                    <th>Description</th>
+                                                    <th>Quantity</th>
+                                                    <th>Amount</th>
+                                                    <th>Total</th>
+                                                    <th>Owner</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for line_item in expense.lineitems.all %}
+                                                {% if line_item.user_profile == profile and line_item.is_paid == True %}
+                                                <tr>
+                                                    <input class="collapse collapse-horizontal"
+                                                        name="{{ line_item.pk }}" id="{{ line_item }}"
+                                                        value="{{ line_item.pk }}">
+                                                    </input>
+                                                    <td>
+                                                        <p>{{ line_item.description }}</p>
+                                                    </td>
+                                                    <td>
+                                                        <p>{{ line_item.quantity }}</p>
+                                                    </td>
+                                                    <td>
+                                                        <p>{{ line_item.amount }}</p>
+                                                    </td>
+                                                    <td>
+                                                        <p>£ {{ line_item.lineitem_total }}</p>
+                                                    </td>
+                                                    <td>
+                                                        <p class="text-wrap">{{ line_item.user_profile }}</p>
+                                                    </td>
+                                                    <td>
+                                                        {% if line_item.user_profile != profile and line_item.is_paid == True %}
+                                                        <span
+                                                            class="badge badge-success rounded-pill d-inline">Paid</span>
+                                                        {% elif line_item.user_profile == profile %}
+                                                        <span class="badge badge-info rounded-pill d-inline">Your
+                                                            Expense</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <a class="btn btn-primary btn-floating float-right m-2" data-mdb-toggle="collapse"
+                                    href="#accordian2_{{ forloop.counter0 }}_{{ expense.expense_id }}"
+                                    {% if profile.stripe_requirements_due %} disabled {% endif %} role="button"
+                                    aria-expanded="false"
+                                    aria-controls="accordian2_{{ forloop.counter0 }}_{{ expense.expense_id }}"><span
+                                        class="badge badge-info m-3">Open for more details</span>
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <hr class="mt-5">
+                    <!-- Grid container for buttons -->
+                    <div class=" position-relative text-center flex-colum align-self-center mt-5"
+                        data-tour="step: 4; title: Add a new expense ; content: Add a new expense here and split it with friends">
+                        <button onclick="location.href='{% url 'add_expense' %}'"
+                            {% if profile.stripe_requirements_due or not profile.follows.all %} disabled {% endif %}
+                            type="button" class="btn btn-small btn-primary">
+                            Add a new expense
+                        </button>
+                        {% if profile.stripe_requirements_due or not profile.follows.all %}
+                        <span class="position-absolute  top-0 start-55 translate-middle badge rounded-pill
+                        badge-danger">
+                            {% if profile.stripe_requirements_due %}
+                            Verify account first
+                            {% else %}
+                            Add followers first
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="tab-pane fade" id="ex3-tabs-3" role="tabpanel" aria-labelledby="ex3-tab-3">
+                <div class="" id="empty_content">
                     <div class="d-flex justify-content-evenly">
                         <div class="col-12 mx-lg-3 p-3 text-white bg-info rounded card">
                             <div class="d-flex card-content ">
@@ -44,248 +293,20 @@
                                     <i class="fas fa-cannabis fa-xl mx-1 mx-lg-5"></i>
                                 </div>
                                 <div>
-                                    <h1 class="h5 mb-3 text-white card-content"> You don't have any
+                                    <h1 class="h5 mb-3 text-white card-content"> You haven't
+                                        submitted
                                         expenses to pay!</h1>
                                     <small>Add some using the button below</small>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="accordion" id="accordion1" onload="accordian_content(this)" class="panel-group" role="tablist"
-                aria-multiselectable="false">
-                {% for expense in expenses %}
-                <form class="" method="GET" action="{% url 'checkout' %}">
-                    {% csrf_token %}
-                    {% for line_item in expense.lineitems.all %}
-                    {% if line_item.user_profile == profile %}
-                    <div class="accordion-item border border-secondary">
-                        <span class="d-flex justify-content-between p-2">
-                            <h6 class="accordion-header my-3"
-                                id="heading_{{ forloop.counter0 }}_{{ expense.expense_id }}">
-                                {{ expense.supplier_name }}
-                            </h6>
-                            <p class="text-muted mt-3">owner:
-                                {{ expense.user_profile }}</p>
-                            <a class="btn btn-primary btn-floating float-right m-2" role="button"
-                                aria-controls="accordian1_{{ forloop.counter0 }}_{{ expense.expense_id }}"
-                                onclick="toggle_accordion(this);">
-                                <i class="fas fa-angle-double-down float-right"></i>
-                            </a>
-                        </span>
-                        <span class="d-flex flex-row-reverse align-items-center p-2">
-                            <i class="fas fa-thumbs-down text-danger mb-3 mx-3"></i>
-                            <p class="fw-bold">Net Amount: {{ expense.net_amount }}
-                            </p>
-                            <small class="text-muted mb-3 me-3">Amount paid: {{ expense.paid_amount }}</small>
-                        </span>
-                        <div id="accordian1_{{ forloop.counter0 }}_{{ expense.expense_id }}"
-                            class="accordian-body collapse"
-                            aria-labelledby="heading_{{ forloop.counter0 }}_{{ expense.expense_id }}">
-                            <div class="p-1">
-                                <div class="table-responsive">
-                                    <table class="table table-sm caption-top align-middle mb-0 bg-white">
-                                        <caption>
-                                            You owe for:
-                                        </caption>
-                                        <thead class="bg-light">
-                                            <tr>
-                                                <th>Description</th>
-                                                <th>Quantity</th>
-                                                <th>Amount</th>
-                                                <th>Total</th>
-                                                <th>Owner</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for line_item in expense.lineitems.all %}
-                                            <tr>
-                                                <input class="collapse collapse-horizontal" name="{{ line_item.pk }}"
-                                                    id="{{ line_item }}" value="{{ line_item.pk }}">
-                                                </input>
-                                                <td>
-                                                    <p>{{ line_item.description }}</p>
-                                                </td>
-                                                <td>
-                                                    <p>{{ line_item.quantity }}</p>
-                                                </td>
-                                                <td>
-                                                    <p>{{ line_item.amount }}</p>
-                                                </td>
-                                                <td>
-                                                    <p>£ {{ line_item.lineitem_total }}</p>
-                                                </td>
-                                                <td>
-                                                    <p class="text-wrap">{{ line_item.user_profile }}</p>
-                                                </td>
-                                                <td>
-                                                    {% if line_item.user_profile != profile and line_item.is_paid == False %}
-                                                    <span class="badge badge-danger rounded-pill d-inline">Awaiting
-                                                        Payment</span>
-                                                    {% elif line_item.user_profile != profile and line_item.is_paid == True %}
-                                                    <span class="badge badge-success rounded-pill d-inline">Paid</span>
-                                                    {% elif line_item.user_profile == profile %}
-                                                    <span class="badge badge-info rounded-pill d-inline">Your
-                                                        Expense</span>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="text-end my-3">
-                                    {% if expense.user_profile != profile %}
-                                    <button type="submit" value="{{ expense.pk }}"
-                                        {% if profile.stripe_requirements_due %} disabled {% endif %} name="expense_id"
-                                        class="btn btn-small btn-primary">Pay
-                                        Expense
-                                        {% if profile.stripe_requirements_due %}
-                                        <span
-                                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-warning">
-                                            Verify account
-                                        </span>
-                                        {% endif %}
-                                    </button>
-                                    {% else %}
-                                    <div class="my-5"></div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <a class="btn btn-primary btn-floating float-right m-2 collapse" data-mdb-toggle="collapse"
-                                href="#accordian_{{ forloop.counter0 }}_{{ expense.expense_id }}" role="button"
-                                aria-expanded="false"
-                                aria-controls="accordian_{{ forloop.counter0 }}_{{ expense.expense_id }}"><span
-                                    class="badge badge-info m-3">Open for more details</span>
-                            </a>
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% endfor %}
-                </form>
-                {% endfor %}
-            </div>
-        </div>
-        <h1 class="ms-3 h5">Fully paid expenses:</h1>
-        <div class="p-3">
-            <div class="accordion" id="accordion2">
-                {% for expense in expenses %}
-                {% if expense.paid_amount == expense.net_amount %}
-                <div class="pe-0 me-0 accordion-item border border-secondary">
-                    <span class="d-flex justify-content-between p-2">
-                        <h6 class="accordion-header my-3" id="heading_{{ forloop.counter0 }}_{{ expense.expense_id }}">
-                            {{ expense.supplier_name }}
-                        </h6>
-                        <p class="text-muted mt-3">owner:
-                            {{ expense.user_profile }}</p>
-                        <a class="btn btn-primary btn-floating float-right m-2" role="button"
-                            aria-controls="accordian2_{{ forloop.counter0 }}_{{ expense.expense_id }}"
-                            onclick="toggle_accordion(this);">
-                            <i class="fas fa-angle-double-down float-right"></i>
-                        </a>
-                    </span>
-                    <span class="d-flex flex-row-reverse align-items-center p-2">
-                        <i class="fas fa-thumbs-up text-success mb-3 mx-3"></i>
-                        <p class="fw-bold">Net Amount: {{ expense.net_amount }}
-                        </p>
-                        <small class="text-muted mb-3 me-3">Amount paid: {{ expense.paid_amount }}</small>
-                    </span>
-                    <div id="accordian1_{{ forloop.counter0 }}_{{ expense.expense_id }}" class="accordian-body collapse"
-                        aria-labelledby="heading_{{ forloop.counter0 }}_{{ expense.expense_id }}"
-                        data-mdb-parent="#accordion2" data-toggle="collapse">
-                        <div class="p-1">
-                            <div class="table-responsive">
-                                <table class="table table-sm caption-top align-middle mb-0 bg-white">
-                                    <caption>
-                                        You've paid for:
-                                    </caption>
-                                    <thead class="bg-light">
-                                        <tr>
-                                            <th>Description</th>
-                                            <th>Quantity</th>
-                                            <th>Amount</th>
-                                            <th>Total</th>
-                                            <th>Owner</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for line_item in expense.lineitems.all %}
-                                        {% if line_item.user_profile == profile and line_item.is_paid == True %}
-                                        <tr>
-                                            <input class="collapse collapse-horizontal" name="{{ line_item.pk }}"
-                                                id="{{ line_item }}" value="{{ line_item.pk }}">
-                                            </input>
-                                            <td>
-                                                <p>{{ line_item.description }}</p>
-                                            </td>
-                                            <td>
-                                                <p>{{ line_item.quantity }}</p>
-                                            </td>
-                                            <td>
-                                                <p>{{ line_item.amount }}</p>
-                                            </td>
-                                            <td>
-                                                <p>£ {{ line_item.lineitem_total }}</p>
-                                            </td>
-                                            <td>
-                                                <p class="text-wrap">{{ line_item.user_profile }}</p>
-                                            </td>
-                                            <td>
-                                                {% if line_item.user_profile != profile and line_item.is_paid == True %}
-                                                <span class="badge badge-success rounded-pill d-inline">Paid</span>
-                                                {% elif line_item.user_profile == profile %}
-                                                <span class="badge badge-info rounded-pill d-inline">Your
-                                                    Expense</span>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                        {% endif %}
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <a class="btn btn-primary btn-floating float-right m-2" data-mdb-toggle="collapse"
-                            href="#accordian2_{{ forloop.counter0 }}_{{ expense.expense_id }}"
-                            {% if profile.stripe_requirements_due %} disabled {% endif %} role="button"
-                            aria-expanded="false"
-                            aria-controls="accordian2_{{ forloop.counter0 }}_{{ expense.expense_id }}"><span
-                                class="badge badge-info m-3">Open for more details</span>
-                        </a>
-                    </div>
                 </div>
-                {% endif %}
-                {% endfor %}
-            </div>
-            {% endif %}
-            <hr class="mt-5">
-            <!-- Grid container for buttons -->
-            <div class=" position-relative text-center flex-colum align-self-center mt-5"
-                data-tour="step: 4; title: Add a new expense ; content: Add a new expense here and split it with friends">
-                <button onclick="location.href='{% url 'add_expense' %}'"
-                    {% if profile.stripe_requirements_due or not profile.follows.all %} disabled {% endif %}
-                    type="button" class="btn btn-small btn-primary">
-                    Add a new expense
-                </button>
-                {% if profile.stripe_requirements_due or not profile.follows.all %}
-                <span class="position-absolute  top-0 start-55 translate-middle badge rounded-pill
-                badge-danger">
-                    {% if profile.stripe_requirements_due %}
-                    Verify account first
-                    {% else %}
-                    Add followers first
-                    {% endif %}
-                </span>
             </div>
         </div>
-        {% endif %}
     </section>
     <Section class="col-md-12 col-lg-5 mt-2 p-3 g-0">
         <div id="topnav" class="my-3 pt-lg-2 p-3 g-0">
-            {% if request.user.is_authenticated %}
             <form method="POST" action="{% url 'user_home' %}" class="d-flex mb-3" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="row">
@@ -313,23 +334,22 @@
                 </div>
                 <div class="mx-5 flex-grow-1">
                     <div class="col-12">
-                        <p class="my-3"><strong>Name:</strong> {{ profile.user.first_name }}
-                            {{ profile.user.last_name }} </p>
-                        <p class="my-3"><strong>Username</strong> : {{ profile.user.username }}</p>
-                        <p class="my-3"><strong>Email</strong> : {{ profile.user.email }}</p>
+                        <p class="my-3"><strong>Name:</strong>{{ user.first_name }}
+                            {{ user.last_name }} </p>
+                        <p class="my-3"><strong>Username</strong> : {{ user.username }}</p>
+                        <p class="my-3"><strong>Email</strong> : {{ user.email }}</p>
                         <p class="my-3"><strong>Phone</strong> : {{ profile.default_phone_number }}</p>
                         <p class="my-3"><strong>Postcode</strong> : {{ profile.default_postcode }}</p>
                     </div>
                 </div>
             </form>
-            {% endif %}
             <hr>
             <div
                 data-tour="step: 2; title: Search Results; content: User Search Results will appear underneath the search bar">
                 <h1 class="mt-5 h5">Search and follow users here:</h1>
                 <div class=""
                     data-tour="step: 1; title: Add and follow other users; content: Search for other users and follow them to enable you to split payments with them">
-                    <form method="GET" action="{% url 'user_home' %}" class="d-flex">
+                    <form method="GET" action="{% url 'user_search' %}" class="d-flex">
                         {% csrf_token %}
                         <input type="text" id="user_search" name="user_search"
                             class="form-control border mb-3 flex-grow-1" placeholder="User Search">
@@ -338,14 +358,14 @@
                         </button>
                     </form>
                 </div>
-                <ul class="list-group list-group-light list-unstyled">
-                    {% if profiles %}
-                    <p>Search Results</p>
-                    {% endif %}
-                    {% for user_profile in profiles %}
-                    {% if user_profile != profile %}
-                    <li class="my-3">
-                        <form method="POST" action="{% url 'user_home' %}">
+                <form method="POST" action="{% url 'update_following' %}">
+                    <ul class="list-group list-group-light list-unstyled">
+                        {% if search_profiles %}
+                        <p>Search Results</p>
+                        {% endif %}
+                        {% for user_profile in search_profiles %}
+                        {% if user_profile != profile %}
+                        <li class="my-3">
                             {% csrf_token %}
                             <div class="card">
                                 <div class="card-content  mx-1 mx-lg-5 d-flex flex-wrap justify-content-between">
@@ -371,25 +391,24 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                    </li>
-                    {% endif %}
-                    {% endfor %}
-                </ul>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </form>
             </div>
             <div data-tour="step: 3; title: Followed Users; content: Users you follow will show here">
                 <h1 class="h5 mt-md-5">Already Following:</h1>
-                <ul class="list-group list-group-light list-unstyled">
-                    {% for following in profile.follows.all %}
-                    {% if following != profile %}
-                    <li class="my-3">
-                        <form method="POST" action="{% url 'user_home' %}">
+                <form method="POST" action="{% url 'update_following' %}">
+                    <ul class="list-group list-group-light list-unstyled">
+                        {% for following in profile.follows.all %}
+                        {% if following is not profile %}
+                        <li class="my-3">
                             {% csrf_token %}
                             <div class="card">
                                 <div class="card-content  mx-1 mx-lg-5 d-flex justify-content-between flex-wrap">
                                     {% if following.profile_image_url %}
-                                    <a class="mt-1" href="{% url 'user_home' %}"> <img
-                                            class="image_cover rounded-circle border-dark"
+                                    <a class="mt-1" href=""> <img class="image_cover rounded-circle border-dark"
                                             src='{{ following.profile_image_url }}' height="50" width="50">
                                     </a>
                                     {% else %}
@@ -405,11 +424,11 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                    </li>
-                    {% endif %}
-                    {% endfor %}
-                </ul>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                </form>
             </div>
         </div>
     </Section>
@@ -442,8 +461,11 @@
     tourbutton.addEventListener("click", startTour);
 
     function accordian_content(accordian) {
-        var e = document.querySelectorAll('#accordian1 > div');
-        e.length ? document.getElementById("empty_content").classList.remove('collapse') : console.log("works fine")
+        var e = document.querySelectorAll('#accordian1');
+        if (e.length != 0) {
+            document.getElementById("empty_content").classList.remove('collapse');
+            console.log("works fine")
+        }
     }
 
     function toggle_accordion(button) {

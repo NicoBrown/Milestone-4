@@ -27,7 +27,7 @@ def checkout(request):
     Returns:
         binary_sum (str): Binary string of the sum of a and b
     """
-    profile = get_object_or_404(UserProfile, user=request.user)
+
     context = {
         'profile': profile,
     }
@@ -85,7 +85,7 @@ def checkout(request):
             return redirect(session.url)
 
     else:
-        return redirect('user_home')
+        return render(request, 'user_home.html')
 
 
 @login_required
