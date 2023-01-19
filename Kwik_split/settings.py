@@ -67,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'Kwik_split.context_middleware.SimpleMiddleware',
 ]
 
 ROOT_URLCONF = 'Kwik_split.urls'
@@ -85,6 +86,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',  # required by allauth
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'Kwik_split.context_middleware.profile',
             ],
             'libraries':{
                 'bin_2_img': 'Kwik_split.templatetags.bin_2_img',

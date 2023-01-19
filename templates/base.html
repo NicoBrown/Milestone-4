@@ -67,7 +67,7 @@
 
             <!-- Collapsible wrapper -->
             <div class="">
-                {% if request.user.is_authenticated %}
+                {% if user.is_authenticated %}
                 <div class="d-inline-flex d-flex align-items-center justify-content-center position-relative me-3">
                     {% if profile.profile_image_url %}
                     <a href="{% url 'user_home' %}"> <img class="image_cover rounded-circle border-dark"
@@ -78,13 +78,13 @@
                         href="{% url 'user_home' %}"><i class="fas fa-user-alt fa-2xl"></i>
                     </a>
                     {% endif %}
-                    <a href="{% url 'account_logout' %}" class="btn btn-outline-light btn-light mx-3">Logout</a>
+                    <a href="{% url 'account_logout' %}" class="btn btn-light mx-3">Logout</a>
                 </div>
                 {% else %}
-                <a href="{% url 'account_signup' %}" class="btn btn-outline-light btn-light mx-3">
+                <a href="{% url 'account_signup' %}" class="btn btn-light mx-3">
                     <strong>Sign up</strong>
                 </a>
-                <a href="{% url 'account_login' %}" class="btn btn-outline-light btn-light mx-3">
+                <a href="{% url 'account_login' %}" class="btn btn-light mx-3">
                     Log in
                 </a>
                 {% endif %}
