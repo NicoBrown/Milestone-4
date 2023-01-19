@@ -31,13 +31,6 @@ processor_id = os.environ["DOCUMENT_AI_PROCESSOR_ID"]
 def add_expense(request, expense_id=""):
     """ upload image to Google vision API """
 
-    profile = get_object_or_404(UserProfile, user=request.user)
-    tip_split = False
-
-    context = {
-        'profile': profile
-    }
-
     if request.method == "POST" and request.FILES != {}:
         # try:
         expense_id = uuid.uuid4().hex.upper()
@@ -73,14 +66,18 @@ def add_expense(request, expense_id=""):
             'net_amount': net_amount,
             'expense_id': expense_id,
             'image_url': image_url,
-            'profile': profile,
             'normalized_items': normalized_items,
             'line_items': line_items,
         }
 
         return render(request, 'expenses/edit_expense.html', context)
+    return render(request, 'expenses/upload_image.html', context)
 
-    elif request.method == 'POST' and request.FILES == {}:
+
+@login_required
+def edit_expense(request):
+
+    if request.method == 'POST' and request.FILES == {}:
 
         line_items = [v for k, v in request.POST.items()
                       if k.startswith('line_item ')]
@@ -121,25 +118,25 @@ def add_expense(request, expense_id=""):
                     is_paid=False,
                 )
 
-                order_line_item.tax_amount = float(
-                    order_line_item.amount) / float(expense.total_amount) / float(expense.total_tax_amount)
+                order_line_item.tax_amount = (float(expense.total_tax_amount) / float(expense.total_amount)) * float(
+                    order_line_item.lineitem_total)
 
-                order_line_item.is_paid = user_profile == profile
+                order_line_item.lineitem_total = float(
+                    order_line_item.lineitem_total) + float(order_line_item.tax_amount)
+
+                if user_profile == request.profile:
+                    order_line_item.is_paid = True
+                    expense.paid_amount += order_line_item.lineitem_total
+                    expense.save()
 
                 order_line_item.save()
 
         messages.info(request, 'Successfully Saved Expense!')
         return redirect(reverse("user_home"))
 
-    else:
-
-        template = 'expenses/upload_image.html'
-        profile = get_object_or_404(UserProfile, user=request.user)
-
-        return render(request, template, context)
+    return render(request, 'expenses/upload_image.html', context)
 
 
-@login_required
 def edit_expense(request, expense_id):
     """ Edit an expense after uploading an image """
 
@@ -152,19 +149,15 @@ def edit_expense(request, expense_id):
     if request.method == 'POST':
 
         messages.info(request, 'Successfully saved changes to expense!')
-        return render(request, "home/user_home.html", {"profile": current_user_profile}, args=[expense_id])
+        return render(request, "home/user_home.html")
 
-        # else:
-        #     messages.error(request,
-        #                    ('Failed to update product. '
-        #                     'Please ensure the form is valid.'))
     else:
         # form = ProductForm(instance=product)
 
-        return render(request, "expense/edit_expense.html", {"profile": current_user_profile})
+        return render(request, "expense/edit_expense.html")
 
 
-@login_required
+@ login_required
 def delete_expense(request, expense_id):
     """ Delete a product from the store """
     if not request.user:
