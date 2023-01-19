@@ -43,12 +43,12 @@ class Expense(Model):
         self.paid_amount = self.lineitems.filter(is_paid=True).aggregate(Sum('lineitem_total'))[
             'lineitem_total__sum'] or 0
         self.line_item_count = self.lineitems.count()
-        if not self.total_amount:
-            self.total_amount = self.lineitems.aggregate(Sum('lineitem_total'))[
-                'lineitem_total__sum'] or 0
         if not self.net_amount:
-            self.net_amount = self.total_amount
-            + self.total_tax_amount + self.tip_amount
+            self.net_amount = self.lineitems.aggregate(Sum('lineitem_total'))[
+                'lineitem_total__sum'] or 0
+        if not self.total_amount:
+            self.total_amount = self.total_amount
+            + self.tip_amount + self.total_tax_amount
         self.save()
 
     def __str__(self):
@@ -78,11 +78,14 @@ class OrderLineItem(Model):
         Override the original save method to set the lineitem total
         and update the order total.
         """
+        if not self.tax_amount:
+            self.tax_amount = (float(self.order.total_tax_amount) / float(self.order.total_amount)) * (float(
+                self.quantity) * float(self.amount))
+
         if not self.lineitem_total:
-            self.lineitem_total = float(
-                self.amount) * float(self.quantity)
-            if self.tax_amount:
-                self.lineitem_total + float(self.tax_amount)
+            self.lineitem_total = float(self._tax_amount) + (float(self.amount) * float(
+                self.quantity))
+
         super().save(*args, **kwargs)
 
     def __str__(self):
