@@ -11,6 +11,7 @@ from google.cloud import documentai
 from google.api_core.client_options import ClientOptions
 from base64 import b64encode, b64decode
 from io import BytesIO, TextIOWrapper
+from home.forms import image_form
 
 import stripe
 import proto
@@ -32,46 +33,49 @@ def add_expense(request, expense_id=""):
     """ upload image to Google vision API """
 
     if request.method == "POST" and request.FILES != {}:
-        # try:
-        expense_id = uuid.uuid4().hex.upper()
-        image = request.FILES['image']
-        content = image.read()
-        image_url = ""
+        form = image_form({}, request.FILES)
+        if form.is_valid():
 
-        # process image and process results for template
-        # need to set mime type on image upload Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
-        mime_type = image.content_type.split('.')[-1]
-        mime = mime_type + ";" if mime_type else ";"
+            image = request.FILES['image']
+            expense_id = uuid.uuid4().hex.upper()
+            content = image.read()
 
-        file_directory_within_bucket = f"user_upload_files/{expense_id}"
+            # process image and process results for template
+            # need to set mime type on image upload Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
+            mime_type = image.content_type.split('.')[-1]
+            mime = mime_type + ";" if mime_type else ";"
 
-        # synthesize a full file path; note that we included the filename
-        file_path_within_bucket = os.path.join(
-            file_directory_within_bucket,
-            image.name
-        )
+            file_directory_within_bucket = f"user_upload_files/{expense_id}"
 
-        media_storage = MediaStorage()
-        # avoid overwriting existing file
-        if not media_storage.exists(file_path_within_bucket):
-            media_storage.save(file_path_within_bucket, image)
-            image_url = media_storage.url(file_path_within_bucket)
+            # synthesize a full file path; note that we included the filename
+            file_path_within_bucket = os.path.join(
+                file_directory_within_bucket,
+                image.name
+            )
 
-        result_dict = upload_to_Document_AI(mime_type, content)
-        line_items = update_line_items(result_dict)
-        normalized_items = update_normalized_items(result_dict)
-        net_amount = line_items['net_amount']
+            media_storage = MediaStorage()
+            # avoid overwriting existing file
+            if not media_storage.exists(file_path_within_bucket):
+                media_storage.save(file_path_within_bucket, image)
+                image_url = media_storage.url(file_path_within_bucket)
 
-        context = {
-            'net_amount': net_amount,
-            'expense_id': expense_id,
-            'image_url': image_url,
-            'normalized_items': normalized_items,
-            'line_items': line_items,
-        }
+            result_dict = upload_to_Document_AI(mime_type, content)
+            line_items = update_line_items(result_dict)
+            normalized_items = update_normalized_items(result_dict)
+            net_amount = line_items['net_amount']
 
-        return render(request, 'expenses/edit_expense.html', context)
-    return render(request, 'expenses/upload_image.html', context)
+            context = {
+                'net_amount': net_amount,
+                'expense_id': expense_id,
+                'image_url': image_url,
+                'normalized_items': normalized_items,
+                'line_items': line_items,
+            }
+
+            return render(request, 'expenses/edit_expense.html', context)
+        else:
+            messages.error(request, form.errors.as_text())
+    return render(request, 'expenses/upload_image.html')
 
 
 @login_required

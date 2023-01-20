@@ -28,10 +28,6 @@ def checkout(request):
         binary_sum (str): Binary string of the sum of a and b
     """
 
-    context = {
-        'profile': profile,
-    }
-
     if request.method == "GET":
         if "expense_id" in request.GET:
             expense = get_object_or_404(
@@ -39,13 +35,15 @@ def checkout(request):
             destination = stripe.Account.retrieve(
                 expense.user_profile.stripe_customer_id)
             customer = stripe.Account.retrieve(
-                profile.stripe_customer_id)
+                request.profile.stripe_customer_id)
             order_total = 0
             line_items_array = []
             line_items_ids = {}
 
             line_items = OrderLineItem.objects.filter(
-                user_profile=profile, order=expense, is_paid=False)
+                user_profile=request.profile, order=expense, is_paid=False)
+
+            breakpoint()
 
             for line_item in line_items:
                 line_items_ids.update({line_item.description: line_item.pk})
@@ -64,7 +62,7 @@ def checkout(request):
                 })
 
             session = stripe.checkout.Session.create(
-                customer_email=profile.user.email,
+                customer_email=request.profile.user.email,
                 line_items=line_items_array,
                 payment_intent_data={
                     'application_fee_amount': round(20 + (order_total * 0.03)),
@@ -78,14 +76,14 @@ def checkout(request):
                     **line_items_ids,
                 },
                 mode='payment',
-                success_url='https://8000-nicobrown-milestone4-2zd8u4fa9x3.ws-eu82.gitpod.io/checkout/checkout_success/{CHECKOUT_SESSION_ID}',
-                cancel_url='https://8000-nicobrown-milestone4-2zd8u4fa9x3.ws-eu82.gitpod.io/user_home',
+                success_url='https://https://kwik-split.herokuapp.com/checkout/checkout_success/{CHECKOUT_SESSION_ID}',
+                cancel_url='https://https://kwik-split.herokuapp.com//user_home',
             )
-
+            breakpoint()
             return redirect(session.url)
 
     else:
-        return render(request, 'user_home.html')
+        return redirect('user_home')
 
 
 @login_required

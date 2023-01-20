@@ -22,23 +22,23 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <!-- Google Fonts Roboto -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
-    <!-- Globalt sylesheet -->
+    <!-- Global sylesheet -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% endblock %}
 
     {% block corejs %}
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.3.js"
         integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
     </script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/dixonandmoe/rellax@master/rellax.min.js"></script>
-    <script src='{% static "js/javascript.js" %}'></script>
     <!-- Stripe -->
     <script src="https://js.stripe.com/v3/"></script>
     <!-- Tourguide.js -->
     <script src="https://cdn.jsdelivr.net/npm/tourguidejs@1.0.1/tourguide.min.js"></script>
+    <script src='{% static "js/javascript.js" %}'></script>
     {% endblock %}
 
     {% block extra_js %}
@@ -54,7 +54,6 @@
     <nav class="navbar navbar-expand-lg navbar-dark navbar-colour sticky-top">
         <!-- Container wrapper -->
         <div class="container-fluid m-md-3">
-
             <!-- Navbar brand -->
             <a class="navbar-brand mt-lg-0 h1 text-center align-middle underline" href="{% url 'home' %}">KwikSplit <svg
                     class="css-ze2te4 css-qd6ojx" width="50" height="50" viewBox="0 0 40 40">
@@ -63,9 +62,8 @@
                             d="M79.3,30.2c6.1,0,11-4.9,11-11c0-6.1-4.9-11-11-11c-6.1,0-11,4.9-11,11c0,2.9,1.2,5.6,3,7.6L57.9,41c-2-1.9-4.7-3.1-7.6-3.1  c-2.9,0-5.6,1.1-7.5,3L29.4,28.6c0.9-1.2,1.4-2.7,1.4-4.3c0-4-3.3-7.3-7.3-7.3c-4,0-7.3,3.3-7.3,7.3c0,4,3.3,7.3,7.3,7.3  c1.9,0,3.6-0.7,4.9-1.9L41.8,42c-1.5,1.9-2.4,4.3-2.4,6.9c0,2.9,1.1,5.5,2.9,7.4L27.5,71.9c-1.9-1.6-4.3-2.5-7-2.5  c-6.1,0-11,4.9-11,11c0,6.1,4.9,11,11,11c6.1,0,11-4.9,11-11c0-2.9-1.1-5.5-2.9-7.4l14.7-15.6c1.9,1.6,4.3,2.5,7,2.5  c0.2,0,0.3,0,0.5,0l1.9,17c-4,0.8-7.1,4.3-7.1,8.6c0,4.9,3.9,8.8,8.8,8.8s8.8-3.9,8.8-8.8c0-4.9-3.9-8.8-8.8-8.8c-0.1,0-0.2,0-0.3,0  l-1.9-17c2.6-0.5,4.9-1.8,6.5-3.8l13.6,9.8c-0.6,1.1-1,2.3-1,3.7c0,4,3.3,7.3,7.3,7.3s7.3-3.3,7.3-7.3c0-4-3.3-7.3-7.3-7.3  c-2.2,0-4.1,1-5.4,2.5l-13.6-9.8c1.1-1.7,1.7-3.7,1.7-5.8c0-2.6-0.9-4.9-2.4-6.8l13.5-14.3C74.3,29.3,76.7,30.2,79.3,30.2z">
                         </path>
                     </g>
-                </svg></a>
-
-            <!-- Collapsible wrapper -->
+                </svg>
+            </a>
             <div class="">
                 {% if user.is_authenticated %}
                 <div class="d-inline-flex d-flex align-items-center justify-content-center position-relative me-3">
@@ -109,13 +107,32 @@
         {% endfor %}
     </div>
     {% endif %}
-
     {% block content %}
     {% endblock %}
+    <footer class=" text-white fixed-bottom bg-secondary bg-gradient" style="background-color: #caced1;">
+        <!-- Copyright -->
+        <div class="p-1 navbar-colour d-flex justify-content-end">
+            <small>© 2022 Copyright:
+                <a class="text-white" href="https://mdbootstrap.com/">KwikSplit.com</a>
+            </small>
+        </div>
+    </footer>
     {% block postload-js %}
-    <script type="text/javascript">
-        function toast(element) {
-            element.remove()
+    {{ block.super }}
+    <script>
+        function preview() {
+            frame.src = URL.createObjectURL(event.target.files[0]);
+            document.getElementById('frame').classList.remove('d-none');
+            document.getElementById('image-reset').classList.remove('disabled');
+            document.getElementById('image-submit').classList.remove('disabled');
+        }
+
+        function clearImage() {
+            document.getElementById('customFile').value = null;
+            frame.src = "";
+            frame.classList.add('d-none');
+            document.getElementById('image-reset').classList.add('disabled');
+            document.getElementById('image-submit').classList.add('disabled');
         }
     </script>
     {% endblock %}

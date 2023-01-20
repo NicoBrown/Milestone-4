@@ -6,6 +6,7 @@ from expenses.models import Expense, OrderLineItem
 from django.db.models import Q
 from django.contrib.auth.models import User
 from custom_storages import MediaStorage
+from home.forms import image_form
 
 import os
 import stripe
@@ -34,28 +35,36 @@ def user_home(request):
     """ Display the user's home page. """
     template = 'home/user_home.html'
 
+    context = {}
+    form = image_form()
+    context['image_form'] = form
+
     if request.method == 'POST':
         if request.FILES != {}:
-            image = request.FILES['image']
+            form = image_form({}, request.FILES)
+            if form.is_valid():
+                image = request.FILES['image']
 
-            file_directory_within_bucket = f"user_upload_files/{request.user.username}"
+                file_directory_within_bucket = f"user_upload_files/{request.user.username}"
 
-            # synthesize a full file path; note that we included the filename
-            file_path_within_bucket = os.path.join(
-                file_directory_within_bucket,
-                image.name
-            )
+                # synthesize a full file path; note that we included the filename
+                file_path_within_bucket = os.path.join(
+                    file_directory_within_bucket,
+                    image.name
+                )
 
-            media_storage = MediaStorage()
-            media_storage.save(file_path_within_bucket, image)
-            request.profile.profile_image_url = media_storage.url(
-                file_path_within_bucket)
-            request.profile.save()
+                media_storage = MediaStorage()
+                media_storage.save(file_path_within_bucket, image)
+                request.profile.profile_image_url = media_storage.url(
+                    file_path_within_bucket)
+                request.profile.save()
+            else:
+                messages.error(request, form.errors.as_text())
+                return render(request, template, context)
+    return render(request, template, context)
 
-    return render(request, template)
 
-
-@login_required
+@ login_required
 def update_following(request):
     """ Display the user's profile. """
     if request.method == "POST":
@@ -74,7 +83,7 @@ def update_following(request):
         return redirect("user_home")
 
 
-@login_required
+@ login_required
 def user_search(request):
 
     profiles = UserProfile.objects.all()
@@ -99,7 +108,7 @@ def user_search(request):
                 return redirect(reverse("user_home"))
 
 
-@login_required
+@ login_required
 def onboard_user(request):
 
     stripe.api_key = os.environ["STRIPE_SECRET_KEY"]

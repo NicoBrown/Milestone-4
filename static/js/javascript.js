@@ -9,15 +9,11 @@ document.onload = function () {
 
     });
 
-    toasts = document.getElementsByClassName(".toast");
-    for (toast in toasts) {
-        toast.show()
-    };
-
-
     var rellaxH = new Rellax('.rellax', {
         horizontal: true
     });
+
+
 
     wordflick();
 };
