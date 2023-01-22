@@ -23,6 +23,13 @@
     .hero-text {
         font-size: 3em !important;
         margin-left: 1em !important;
+        background-color: black;
+        color: #fff;
+        display: inline;
+        padding: 0.5rem;
+
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
     }
 
     .section-heading {
@@ -37,15 +44,15 @@
 /* Large devices (desktops, less than 1200px) */
 @media (min-width: 1199.98px) {
     .hero-text {
-        min-height: 13rem;
-        color: #FF495C;
-        font-size: 8em;
-        margin-left: 1em;
-        font-family: "Montserrat",
-            sans-serif;
+        font-size: 4em;
         font-weight: 800;
         text-transform: uppercase;
-        text-shadow: #4e4e4e 0.05em 0.05em;
+        background-color: black;
+        color: #fff;
+        display: inline;
+        padding: 0.5rem;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
     }
 }
 
@@ -94,19 +101,7 @@ h3 {
 }
 
 .navbar-colour {
-    background-color: rgb(54, 54, 54);
-}
-
-#hero-banner {
-    min-height: 80vh;
-}
-
-.hero-image-div {
-    opacity: 30%;
-}
-
-.hero-text:last-child {
-    margin-bottom: 3em;
+    background-color: rgb(31, 31, 31);
 }
 
 #user-section {
@@ -117,134 +112,25 @@ h3 {
     object-fit: cover;
 }
 
-@keyframes openclose {
-    0% {
-        top: 0.2rem;
-        width: 0;
-    }
-
-    5% {
-        width: 0;
-    }
-
-    15% {
-        width: 50%;
-    }
-
-    30% {
-        top: 0.2rem;
-        width: 50%;
-    }
-
-    33% {
-        top: 0.2rem;
-        width: 0;
-    }
-
-    35% {
-        top: 0.2rem;
-        width: 0;
-    }
-
-    38% {
-        top: -4.5rem;
-
-    }
-
-    48% {
-        top: -4.5rem;
-        width: 50%;
-    }
-
-    62% {
-        top: -4.5rem;
-        width: 50%;
-    }
-
-    66% {
-        top: -4.5rem;
-        width: 0;
-        text-indent: 0;
-    }
-
-    71% {
-        top: -9rem;
-        width: 0;
-        text-indent: 5px;
-    }
-
-    86% {
-        top: -9rem;
-        width: 50%;
-    }
-
-    95% {
-        top: -9rem;
-        width: 50%;
-    }
-
-    98% {
-        top: -9rem;
-        width: 0;
-        text-indent: 5px;
-    }
-
-    100% {
-        top: 0;
-        width: 0;
-        text-indent: 0;
-    }
-}
-
 .cursor {
     cursor: pointer;
 }
 
-
-.arrow {
-    color: #66C7F4;
-    font-size: 10rem;
-    font-weight: 800;
+.btn-primary {
+    background-color: #4c75a3;
 }
 
-.hero-image-div {
-    background-image: url("/static/images/social.webp");
-    background-repeat: no-repeat;
-    background-position: right;
-    background-size: 65%;
+
+.hero-image {
     position: absolute;
-    min-height: 95vh;
-    min-width: 100vw;
-    z-index: -100;
-    filter: hue-rotate(90deg);
-    animation: filter-animation 12s infinite;
+    top: 100px;
+    right: 50px;
+    filter: blur(2px);
+    filter: contrast(0.5);
+    z-index: -1000;
+    transform: skewY(15deg);
 }
 
-@keyframes filter-animation {
-    0% {
-        filter: hue-rotate(0deg);
-    }
-
-    50% {
-        filter: hue-rotate(100deg);
-    }
-
-    100% {
-        filter: hue-rotate(0deg);
-    }
-}
-
-@keyframes opacity {
-
-    0%,
-    100% {
-        opacity: 0;
-    }
-
-    50% {
-        opacity: 1;
-    }
-}
 
 #image-scan {
     position: relative;
@@ -269,8 +155,8 @@ h3 {
 .divider-image {
     background-image: url('/static/images/dinner.webp');
     background-repeat: no-repeat;
-    margin: 10em auto;
-    height: 50vh;
+    background-size: cover;
+    height: 40vh;
 }
 
 .divider-image-background {
@@ -280,4 +166,40 @@ h3 {
     background-color: #3DDC97;
     z-index: -1;
     position: relative;
+}
+
+.card-bg-branded {
+    background-color: #635bff50;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.stripe {
+    background-color: #635bff;
+    padding: 5rem;
+    position: absolute;
+    top: 55%;
+    right: 20%;
+    width: 100vw;
+    transform: rotate(-5deg) skew(-5deg);
+    z-index: -1200;
+    height: 60px;
+}
+
+.alternate-stripe {
+    background-color: #3DDC97;
+    padding: 5rem;
+    position: absolute;
+    top: 45%;
+    left: 20%;
+    width: 100vw;
+    transform: rotate(-5deg) skew(-5deg);
+    z-index: -1000;
+    height: 40px;
+}
+
+.g-logo {
+    width: 120px;
+    height: 80px;
+    position: absolute;
 }

@@ -54,10 +54,10 @@ def add_expense(request, expense_id=""):
             )
 
             media_storage = MediaStorage()
-            # avoid overwriting existing file
-            if not media_storage.exists(file_path_within_bucket):
-                media_storage.save(file_path_within_bucket, image)
-                image_url = media_storage.url(file_path_within_bucket)
+            media_storage.save(file_path_within_bucket, image)
+            request.profile.profile_image_url = media_storage.url(
+                file_path_within_bucket)
+            request.profile.save()
 
             result_dict = upload_to_Document_AI(mime_type, content)
             line_items = update_line_items(result_dict)

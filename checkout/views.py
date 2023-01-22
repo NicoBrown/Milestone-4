@@ -43,45 +43,47 @@ def checkout(request):
             line_items = OrderLineItem.objects.filter(
                 user_profile=request.profile, order=expense, is_paid=False)
 
-            breakpoint()
+            if (line_items):
+                for line_item in line_items:
+                    line_items_ids.update(
+                        {line_item.description: line_item.pk})
+                    order_total += int(line_item.amount * 100)
+                    price_data = stripe.Price.create(
+                        unit_amount=int(line_item.amount * 100),
+                        currency="gbp",
+                        product_data={
+                            'name': line_item.description
+                        },
+                    )
 
-            for line_item in line_items:
-                line_items_ids.update({line_item.description: line_item.pk})
-                order_total += int(line_item.amount * 100)
-                price_data = stripe.Price.create(
-                    unit_amount=int(line_item.amount * 100),
-                    currency="gbp",
-                    product_data={
-                        'name': line_item.description
+                    line_items_array.append({
+                        'price': price_data,
+                        'quantity': 1,
+                    })
+
+                session = stripe.checkout.Session.create(
+                    customer_email=request.profile.user.email,
+                    line_items=line_items_array,
+                    payment_intent_data={
+                        'application_fee_amount': round(20 + (order_total * 0.03)),
+                        'transfer_data': {
+                            'destination': destination,
+                        },
                     },
+                    metadata={
+                        'destination_profile': expense.user_profile,
+                        'expense_id': expense.expense_id,
+                        **line_items_ids,
+                    },
+                    mode='payment',
+                    success_url='https://https://kwik-split.herokuapp.com/checkout/checkout_success/{CHECKOUT_SESSION_ID}',
+                    cancel_url='https://https://kwik-split.herokuapp.com//user_home',
                 )
-
-                line_items_array.append({
-                    'price': price_data,
-                    'quantity': 1,
-                })
-
-            session = stripe.checkout.Session.create(
-                customer_email=request.profile.user.email,
-                line_items=line_items_array,
-                payment_intent_data={
-                    'application_fee_amount': round(20 + (order_total * 0.03)),
-                    'transfer_data': {
-                        'destination': destination,
-                    },
-                },
-                metadata={
-                    'destination_profile': expense.user_profile,
-                    'expense_id': expense.expense_id,
-                    **line_items_ids,
-                },
-                mode='payment',
-                success_url='https://https://kwik-split.herokuapp.com/checkout/checkout_success/{CHECKOUT_SESSION_ID}',
-                cancel_url='https://https://kwik-split.herokuapp.com//user_home',
-            )
-            breakpoint()
-            return redirect(session.url)
-
+                return redirect(session.url)
+            else:
+                messages.warning(
+                    request, f"Could not find any items to pay for")
+                return redirect('user_home')
     else:
         return redirect('user_home')
 

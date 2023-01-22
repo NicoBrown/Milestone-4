@@ -1,112 +1,195 @@
 {% extends "base.html" %}
 {% load static %}
+{% block extra-title %}
+Split Your Bills Easily
+{% endblock %}
+
 
 {% block content %}
-<section class="section">
-    <!-- TODO: <div style="" class="">Add background gradient in here -->
-    <!-- </div> -->
-    <div class="hero-image-div  me-5" title="Background-graphic" alt="background-graphic">
-    </div>
-    <div class="row d-flex align-items-center" id="hero-banner">
-        <div class="col-10 offset-1 mt-5 " id="hero-text-div">
-            <h1 class="h2">Use Kwik Split to divide your bills with</h1>
-
-            <div class="hero-text word"></div>
-            <h1 class="hero-text"><i class="fas fa-long-arrow-alt-right me-2 arrow"></i>Family</h1>
-            <h1 class="hero-text rellax" data-rellax-speed="-1">Friends</h1>
-            <h1 class="hero-text mb-5 rellax" data-rellax-speed="-2"><i
-                    class="fas fa-long-arrow-alt-right me-2 arrow"></i>Anyone</h1>
-            <h2 class="h2">Scan and split invoices, bills and receipts.<br>
-                Make payments and track expenses with ease.</h3>
+<img class="d-flex hero-image" src="{% static 'images/branding/invoice.webp' %}" alt="background-invoice">
+<section class="section position-relative">
+    <div class="p-5 text-center">
+        <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+            <div class="d-flex justify-content-center align-items-center h-75">
+                <div class="text-white ">
+                    <div class="m-5 p-5">
+                        <h1 class="display-1 d-inline">Splitting your bills and receipts made<h1
+                                class="d-inline display-1 ms-2 fw-bold text-danger">Easy.
+                            </h1>
+                        </h1>
+                    </div>
+                    <div class="text-center container">
+                        <h2 class="m-5 fw-light">Scan and split invoices, bills and
+                            receipts.<br><br> User Kwik-Split to make payments and keep track of your shared
+                            expenses with ease.</h2>
+                    </div>
+                    <a class="btn btn-primary p-2 btn-lg px-5 py-2 mt-5" data-mdb-ripple-color="dark" href=" #!"
+                        role="button">Sign-up</a>
+                </div>
+            </div>
         </div>
     </div>
 </section>
-<section id="about-section" class="container section">
-    <div class="row d-flex align-items-center">
-        <h1 class="col-12 section-heading underline">Skip the Kwik math</h1>
-        <div class="col-sm-12 col-lg-6 align-items-center my-5">
-            <h1 class="h1 mb-5 text-decoration-underline">Just scan your receipt</h1>
-            <h4 class="">Split complicated bills with ease!<br> Just take a
-                picture of your receipt, and Splitwise will automatically scan its contents using AI.</h4>
-            <h4 class="mt-5">After scanning a receipt, Kwiksplit will detect the
-                individual
-                items so that you can assign them to your friends. Perfect for splitting restaurant and grocery bills.
-            </h4>
-            <h4></h4>
-            <ul>
-                <li>
-                    credit_card_last_four_digits
-                </li>
-                <li>
-                    currency
-                </li>
-                <li>
-                    end_date
-                </li>
-                <li>
-                    total_amount
-                </li>
-                <li>
-                    payment_type
-
-                </li>
-                <li>
-                    purchase_time
-                </li>
-                <li>
-                    receipt_date
-                </li>
-                <li>
-                    total_tax_amount
-                </li>
-                <li>
-                    supplier_address
-                </li>
-                <li>
-                    supplier_city
-
-                </li>
-                <li>
-                    supplier_name
-
-                </li>
-                <li>
-                    tip_amount
-
-                </li>
-                <li>
-
-                    line_item
-                    line_item/amount
-                    line_item/description
-                    line_item/product_code
-                </li>
-
-            </ul>
+<section id="about-section" class="container">
+    <div class="row d-flex align-items-center px-3 px-xl-5 gx-5">
+        <h1 class="col-12 mt-5 fw-bold display-1 underline">Skip the Kwik math</h1>
+        <div class="row d-flex justify-content-center">
+            <div class="mt-5 col-sm-12 col-lg-7 px-3 my-3 p-xl-5 d-flex d-lg-block">
+                <h1 class="display-5 text-decoration-underline">Let us do the work, we use google cloud AI
+                    to
+                    process your expense and receipt images.</h1>
+                <div class="d-flex align-content-center justify-content-center">
+                    <img class="g-logo" src="{% static 'images/branding/google_cloud.webp' %}" alt="google-logo"></img>
+                </div>
+            </div>
+            <div class="col-12 mt-lg-5 text-center col-lg-5 py-5">
+                <img class="img-fluid" src="{% static 'images/salt-bae scan.webp' %}" alt="image of receipt scan"></img>
+            </div>
         </div>
-        <div class="col-sm-12 col-lg-6">
-            <img id="image-scan" class="rellax img-fluid" data-rellax-speed="-1"
-                src="{% static 'images/scan-image.webp' %}">
+    </div>
+    <hr>
+    <h6 class="col-12 py-3 p-lg-3 display-5 text-decoration-underline">How it works:
+    </h6>
+    <div class="px-0 col-12 mt-lg-5 pb-5">
+        <div class="d-lg-flex d-xl-inline-flex justify-content-between">
+            <div class="col d-flex align-items-stretch">
+                <div class="card flex-fill text-center card-bg-branded">
+                    <div class="card-body">
+                        <h5 class="card-title">Take a picture of your receipt</h5>
+                        <p class="card-text">
+                            Just use your phone to take a photo of your receipt or expense and submit it
+                        </p>
+                    </div>
+                    <i class="my-5 fa-2xl fas fa-camera-retro"></i>
+                </div>
+            </div>
+            <div class="col d-flex align-items-stretch">
+                <div class="card flex-fill text-center card-bg-branded">
+                    <div class="card-body">
+                        <h5 class="card-title">Kwik-Split will scan it</h5>
+                        <p class="card-text">
+                            We'll use google's AI to read each item bought and determine things like tax and
+                            even tips!
+                        </p>
+                    </div>
+                    <i class="my-5 fa-2xl fas fa-align-justify"></i>
+                </div>
+            </div>
+            <div class="col d-flex align-items-stretch">
+                <div class="card flex-fill text-center card-bg-branded">
+                    <div class="card-body">
+                        <h5 class="card-title">Split the cost</h5>
+                        <p class="card-text">
+                            Follow your freinds and family to add them to shared expenses
+                        </p>
+                    </div>
+                    <i class="my-5 fa-2xl fas fa-expand-arrows-alt"></i>
+                </div>
+            </div>
+            <div class="col d-flex align-items-stretch">
+                <div class="card flex-fill text-center card-bg-branded">
+                    <div class="card-body">
+                        <h5 class="card-title">Receive instant payouts</h5>
+                        <p class="card-text">
+                            Send a request and your friends can checkout using stripe
+                        </p>
+                    </div>
+                    <i class="my-5 fa-2xl fas fa-credit-card"></i>
+                </div>
+            </div>
+            <div class="col d-flex align-items-stretch">
+                <div class="card flex-fill text-center card-bg-branded">
+                    <div class="card-body">
+                        <h5 class="card-title">Track Spending</h5>
+                        <p class="card-text">
+                            Keep
+                            track of all of
+                            your
+                            expenses
+                        </p>
+                    </div>
+                    <i class="my-5 fa-2xl fas fa-hand-holding-usd"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h4 class="py-5 p-lg-5 display-6">After scanning a receipt, Kwiksplit will detect the
+        individual items so that you can assign them to your friends. Perfect for splitting restaurant and
+        grocery
+        bills.
+    </h4>
+
+    <div class="align-items-center justify-content-middle">
+        <div class="img-fluid divider-image order-first">
+            <div class="rellaxH img-fluid divider-image-background" data-rellax-speed="-1"></div>
         </div>
     </div>
 </section>
-<div class="align-items-center justify-content-middle">
-    <div class="img-fluid divider-image container order-first">
-        <div class="rellaxH img-fluid divider-image-background" data-rellax-speed="-1"></div>
-    </div>
-</div>
-<section id="about-section" class="">
-    <div class="container text-center">
-        <h1 class="col-12 text-center section-heading">Pay the Kwik Split way</h1>
-        <div>
-            <img class="img-fluid" src=" {% static 'images/background.webp' %}">
-        </div>
 
-        <h3 class="">Split expenses with any group: trips, housemates, friends, and
-            family. Split by % or shares of total and leave tips.
-            <br><br>
-            Send payments to friends using your bank account or paypal,
-            stripe, venmo accounts.</h3>
+<section id="about-section" class="mt-5 container">
+    <div class="row my-5">
+        <h1 class="mb-5 fw-bold display-1 underline">Pay the kwik-split way</h1>
+        <div class="col">
+            <h3 class="">Split expenses with any group: trips, housemates, friends, and
+                family. Split by what you bought and even the tips.
+                <br><br>
+                Send payments to friends using your bank account or paypal,
+                existing stripe, venmo accounts.</h3>
+        </div>
+        <div class="col d-flex justify-content-center align-content-center mb-5">
+            <img class="stripe-logo p-5" src="{% static 'images/branding/stripe_logo.svg' %}" alt="stripe logo"></img>
+        </div>
+    </div>
     </div>
 </section>
-{% endblock %}
+<hr>
+<section class="gx-0 position-relative">
+    <div class="stripe py-0"></div>
+    <div class="alternate-stripe opacity-50 py-0"></div>
+    <div class="container my-5">
+        <!-- Code for form taken and adapted from https://mdbootstrap.com/snippets/standard/mdbootstrap/2958439?view=side -->
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-12 col-lg-9 col-xl-8">
+                <h1 class="my-5 fw-bold display-1">Contact us:</h1>
+                <div class="card rounded">
+                    <div class="row g-0">
+                        <div class="d-flex align-items-center">
+                            <div class="card-body py-5 px-4 p-md-5">
+                                <form action="">
+                                    <h4 class="fw-bold mb-4" style="color: #92aad0;">Send us a message below:</h4>
+                                    <div class="my-4">
+                                        <label class="form-label col-3" for="form4Example1">Name:</label>
+                                        <input type="text" id="form4Example1" class="form-control" />
+                                    </div>
+                                    <!-- Email input -->
+                                    <div class="mb-4">
+                                        <label class="form-label col-3" for="form4Example2">Email address:</label>
+                                        <input type="email" id="form4Example2" class="form-control" />
+                                    </div>
+                                    <!-- Message input -->
+                                    <div class="mb-4">
+                                        <label class="form-label col-3" for="form4Example3">Message:</label>
+                                        <textarea class="form-control" id="form4Example3" rows="5"></textarea>
+                                    </div>
+                                    <!-- Checkbox -->
+                                    <div class="form-check d-flex justify-content-center mb-4">
+                                        <input class="form-check-input me-2" type="checkbox" value="" id="form4Example4"
+                                            checked />
+                                        <label class="form-check-label" for="form4Example4">
+                                            Send me a copy of this message
+                                        </label>
+                                    </div>
+                                    <div class="d-flex justify-content-end pt-1 mb-4">
+                                        <button class="btn btn-primary btn-rounded" type="button"
+                                            style="background-color: #92aad0;">Log in</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- {% endblock %} -->
