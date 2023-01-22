@@ -32,12 +32,12 @@ Split Your Bills Easily
 </section>
 <section id="about-section" class="position-relative">
     <div class="contact-background py-0"></div>
-    <div class="alternate-stripe opacity-50 py-0"></div>
+    <div class="alternate-stripe py-5"></div>
     <div class="container my-5">
         <div class="row d-flex align-items-center px-3 px-xl-5 gx-5">
-            <h1 class="col-12 mt-5 fw-bold display-1 underline">Skip the Kwik math</h1>
+            <h1 class="col-12 mt-5 fw-bold display-1">Skip the Kwik math</h1>
             <div class="row d-flex justify-content-center">
-                <div class="mt-5 col-sm-12 col-lg-7 px-3 my-3 p-xl-5 d-flex d-lg-block">
+                <div class="mt-5 col-sm-12 col-lg-7 px-3 my-3 d-flex d-lg-block">
                     <h1 class="display-5 text-decoration-underline">Let us do the work, we use google cloud AI
                         to
                         process your expense and receipt images.</h1>
@@ -59,7 +59,8 @@ Split Your Bills Easily
                 <div class="col d-flex align-items-stretch">
                     <div class="card flex-fill text-center card-margin">
                         <div class="card-body">
-                            <h5 class="card-title">Take a picture of your receipt</h5>
+                            <h5 class="card-title display-6">Snap your receipt</h5>
+                            <hr>
                             <p class="card-text">
                                 Just use your phone to take a photo of your receipt or expense and submit it
                             </p>
@@ -70,7 +71,8 @@ Split Your Bills Easily
                 <div class="col d-flex align-items-stretch">
                     <div class="card flex-fill text-center card-margin">
                         <div class="card-body">
-                            <h5 class="card-title">Kwik-Split will scan it</h5>
+                            <h5 class="card-title display-6">Kwik-Split will scan it</h5>
+                            <hr>
                             <p class="card-text">
                                 We'll use google's AI to read each item bought and determine things like tax and
                                 even tips!
@@ -82,7 +84,8 @@ Split Your Bills Easily
                 <div class="col d-flex align-items-stretch">
                     <div class="card flex-fill text-center card-margin">
                         <div class="card-body">
-                            <h5 class="card-title">Split the cost</h5>
+                            <h5 class="card-title display-6">Split the cost</h5>
+                            <hr>
                             <p class="card-text">
                                 Follow your freinds and family to add them to shared expenses
                             </p>
@@ -93,9 +96,10 @@ Split Your Bills Easily
                 <div class="col d-flex align-items-stretch">
                     <div class="card flex-fill text-center card-margin">
                         <div class="card-body">
-                            <h5 class="card-title">Receive instant payouts</h5>
+                            <h5 class="card-title display-6">Receive payouts</h5>
+                            <hr>
                             <p class="card-text">
-                                Send a request and your friends can checkout using stripe
+                                Send a payment request and your friends can checkout using stripe instantly
                             </p>
                         </div>
                         <i class="my-5 fa-2xl fas fa-credit-card"></i>
@@ -104,7 +108,8 @@ Split Your Bills Easily
                 <div class="col d-flex align-items-stretch">
                     <div class="card flex-fill text-center card-margin">
                         <div class="card-body">
-                            <h5 class="card-title">Track Spending</h5>
+                            <h5 class="card-title display-6">Track Spending</h5>
+                            <hr>
                             <p class="card-text">
                                 Keep
                                 track of all of
@@ -123,7 +128,7 @@ Split Your Bills Easily
             bills.
         </h4>
 </section>
-<div class="container g-0 px-3">
+<div class="container g-0 px-3 pb-5">
     <div class="align-items-center justify-content-middle">
         <div class="img-fluid divider-image order-first">
             <div class="rellaxH img-fluid divider-image-background" data-rellax-speed="-1"></div>
@@ -131,14 +136,14 @@ Split Your Bills Easily
     </div>
 </div>
 
-<section id="payment-section" class="position-relative my-5">
+<section id="payment-section" class="position-relative mt-5">
     <div class="stripe py-0"></div>
     <div class="alternate-stripe opacity-50 py-0"></div>
-    <div class="mt-5 container p-5">
+    <div class="mt-5 container">
         <div class="row my-5 p-5 card">
-            <h1 class="mb-5 fw-bold display-1 underline">Pay the kwik-split way</h1>
+            <h1 class="mb-5 fw-bold display-1">Pay the kwik-split way</h1>
             <div class="col">
-                <h3 class="">Split expenses with any group: trips, housemates, friends, and
+                <p class="fw-light">Split expenses with any group: trips, housemates, friends, and
                     family. Split by what you bought and even the tips.
                     <br><br>
                     Send payments to friends using your bank account or paypal,
@@ -148,7 +153,7 @@ Split Your Bills Easily
                     management happens
                     with the stripe platform,
                     ensuring private details stay private.
-                </h3>
+                </p>
             </div>
             <div class="col d-flex justify-content-center align-content-center mb-5">
                 <img class="stripe-logo p-5" src="{% static 'images/branding/stripe_logo.svg' %}"
@@ -162,9 +167,9 @@ Split Your Bills Easily
     <div class="container my-5">
         <!-- Code for form taken and adapted from https://mdbootstrap.com/snippets/standard/mdbootstrap/2958439?view=side -->
         <div class="row d-flex justify-content-center align-items-center">
-            <div class="col-12 col-lg-9 col-xl-8">
-                <h1 class="my-5 fw-bold display-1">Contact us:</h1>
-                <div class="card rounded">
+            <div class="col-12 bg-white">
+                <div class="p-5 mb-5">
+                    <h1 class="my-5 fw-bold display-1">Contact us:</h1>
                     <div class="row g-0">
                         <div class="d-flex align-items-center">
                             <div class="card-body py-5 px-4 p-md-5">
@@ -194,7 +199,7 @@ Split Your Bills Easily
                                     </div>
                                     <div class="d-flex justify-content-end pt-1 mb-4">
                                         <button class="btn btn-primary btn-rounded" type="button"
-                                            style="background-color: #92aad0;">Log in</button>
+                                            style="background-color: #92aad0;">Send Message</button>
                                     </div>
                                 </form>
                             </div>
