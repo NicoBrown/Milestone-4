@@ -121,9 +121,9 @@ def onboard_user(request):
         response = stripe.AccountLink.create(
             account=account_response.id,
             # TODO: change for deployment
-            refresh_url=f'https://{request.META["HTTP_X_FORWARDED_HOST"]}/user_home',
+            refresh_url='https://kwik-split.herokuapp.com/user_home',
             # TODO: change for deployment
-            return_url=f'https://{request.META["HTTP_X_FORWARDED_HOST"]}/onboard_user',
+            return_url='https://kwik-split.herokuapp.com/onboard_user',
             type="account_onboarding",
             collect="eventually_due",
         )
