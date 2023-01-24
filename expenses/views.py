@@ -2,6 +2,7 @@ from PIL import Image
 from .models import Expense, OrderLineItem
 from django.forms import modelformset_factory, Form
 from profiles.models import UserProfile
+
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib import messages
@@ -11,7 +12,8 @@ from google.cloud import documentai
 from google.api_core.client_options import ClientOptions
 from base64 import b64encode, b64decode
 from io import BytesIO, TextIOWrapper
-from home.forms import image_form
+from home.forms import Image_form
+from expenses.forms import Expense_form, OrderForm
 
 import stripe
 import proto
@@ -29,11 +31,11 @@ processor_id = os.environ["DOCUMENT_AI_PROCESSOR_ID"]
 
 
 @login_required
-def add_expense(request, expense_id=""):
+def add_image(request, expense_id=""):
     """ upload image to Google vision API """
 
     if request.method == "POST" and request.FILES != {}:
-        form = image_form({}, request.FILES)
+        form = Image_form({}, request.FILES)
         if form.is_valid():
 
             image = request.FILES['image']
@@ -55,9 +57,16 @@ def add_expense(request, expense_id=""):
 
             media_storage = MediaStorage()
             media_storage.save(file_path_within_bucket, image)
-            request.profile.profile_image_url = media_storage.url(
+            image_url = media_storage.url(
                 file_path_within_bucket)
-            request.profile.save()
+
+            expense = Expense(
+                image_url=image_url,
+                expense_id=expense_id,
+                user_profile=request.profile,
+                paid_amount=0
+            )
+            expense.save()
 
             result_dict = upload_to_Document_AI(mime_type, content)
             line_items = update_line_items(result_dict)
@@ -66,79 +75,80 @@ def add_expense(request, expense_id=""):
 
             context = {
                 'net_amount': net_amount,
-                'expense_id': expense_id,
-                'image_url': image_url,
+                'expense': expense,
                 'normalized_items': normalized_items,
                 'line_items': line_items,
             }
 
-            return render(request, 'expenses/edit_expense.html', context)
+            return render(request, 'expenses/add_expense.html', context)
         else:
             messages.error(request, form.errors.as_text())
     return render(request, 'expenses/upload_image.html')
 
 
 @login_required
-def edit_expense(request):
+def add_expense(request):
 
     if request.method == 'POST' and request.FILES == {}:
+        form = expense_form(request.POST, request.FILES)
+        if form.is_valid():
 
-        line_items = [v for k, v in request.POST.items()
-                      if k.startswith('line_item ')]
-        expense = Expense(
-            image_url=request.POST.get('image_url', ''),
-            expense_id=request.POST.get('expense_id', ''),
-            supplier_name=request.POST.get('supplier_name', ''),
-            supplier_address=request.POST.get('supplier_address', ''),
-            supplier_phone=request.POST.get('supplier_phone', ''),
-            user_profile=profile,
-            total_amount=float(request.POST.get('total_amount', 0)),
-            total_tax_amount=float(request.POST.get('total_tax_amount', 0)),
-            tip_amount=float(request.POST.get('tip_amount', 0)),
-            net_amount=float(request.POST.get('net_amount', 0)),
-            line_item_count=line_items.__len__(),
-            paid_amount=0
-        )
+            line_items = [v for k, v in request.POST.items()
+                          if k.startswith('line_item ')]
+            expense = Expense(
+                supplier_name=request.POST.get('supplier_name', ''),
+                supplier_address=request.POST.get('supplier_address', ''),
+                supplier_phone=request.POST.get('supplier_phone', ''),
+                total_amount=float(request.POST.get('total_amount', 0)),
+                total_tax_amount=float(
+                    request.POST.get('total_tax_amount', 0)),
+                tip_amount=float(request.POST.get('tip_amount', 0)),
+                net_amount=float(request.POST.get('net_amount', 0)),
+                line_item_count=line_items.__len__(),
+            )
 
-        tip_split = request.POST.get('tip_split', False)
-        expense.update_totals()
-        expense.save()
+            tip_split = request.POST.get('tip_split', False)
+            expense.update_totals()
+            expense.save()
 
-        line_items = [v for k, v in request.POST.items()
-                      if k.startswith('line_item ')]
-        if line_items:
-            for line_item in line_items:
-                items = line_item.split(" % ")
-                user_profile = get_object_or_404(UserProfile, pk=int(items[3]))
+            line_items = [v for k, v in request.POST.items()
+                          if k.startswith('line_item ')]
+            if line_items:
+                for line_item in line_items:
+                    items = line_item.split(" % ")
+                    user_profile = get_object_or_404(
+                        UserProfile, pk=int(items[3]))
 
-                order_line_item = OrderLineItem(
-                    order=expense,
-                    user_profile=user_profile,
-                    description=items[0],
-                    quantity=float(items[1]),
-                    amount=float(items[2]),
-                    lineitem_total=float(items[1]) * float(items[2]),
-                    tax_amount=0,
-                    is_paid=False,
-                )
+                    order_line_item = OrderLineItem(
+                        order=expense,
+                        user_profile=user_profile,
+                        description=items[0],
+                        quantity=float(items[1]),
+                        amount=float(items[2]),
+                        lineitem_total=float(items[1]) * float(items[2]),
+                        tax_amount=0,
+                        is_paid=False,
+                    )
 
-                order_line_item.tax_amount = (float(expense.total_tax_amount) / float(expense.total_amount)) * float(
-                    order_line_item.lineitem_total)
+                    order_line_item.tax_amount = (float(expense.total_tax_amount) / float(expense.total_amount)) * float(
+                        order_line_item.lineitem_total)
 
-                order_line_item.lineitem_total = float(
-                    order_line_item.lineitem_total) + float(order_line_item.tax_amount)
+                    order_line_item.lineitem_total = float(
+                        order_line_item.lineitem_total) + float(order_line_item.tax_amount)
 
-                if user_profile == request.profile:
-                    order_line_item.is_paid = True
-                    expense.paid_amount += order_line_item.lineitem_total
-                    expense.save()
+                    if user_profile == request.profile:
+                        order_line_item.is_paid = True
+                        expense.paid_amount += order_line_item.lineitem_total
+                        expense.save()
 
-                order_line_item.save()
+                    order_line_item.save()
 
-        messages.info(request, 'Successfully Saved Expense!')
-        return redirect(reverse("user_home"))
+            messages.info(request, 'Successfully Saved Expense!')
+            return redirect(reverse("user_home"))
+        else:
+            messages.error(request, form.errors.as_text())
 
-    return render(request, 'expenses/upload_image.html', context)
+    return redirect(request, 'expenses/upload_image.html', context)
 
 
 def edit_expense(request, expense_id):
@@ -156,22 +166,20 @@ def edit_expense(request, expense_id):
         return render(request, "home/user_home.html")
 
     else:
-        # form = ProductForm(instance=product)
-
-        return render(request, "expense/edit_expense.html")
+        return render(request, "home/user_home.html")
 
 
 @ login_required
 def delete_expense(request, expense_id):
     """ Delete a product from the store """
-    if not request.user:
-        messages.error(request, 'Sorry, only expense owners can do that.')
-        return redirect(reverse('home/user_home.html'))
 
-    expense = get_object_or_404(Expense, pk=expense_id)
+    expense = Expense.objects.filter(pk=expense_id)
+    media_storage = MediaStorage()
+    media_storage.delete(expense.)
     expense.delete()
+
     messages.success(request, 'Expense deleted!')
-    return redirect(reverse('home/user_home.html'))
+    return redirect(reverse('user_home'))
 
 
 def update_line_items(json_dump):

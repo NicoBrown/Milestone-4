@@ -108,9 +108,7 @@ h3 {
 }
 
 .receipt-image {
-
-    max-height: 50vh;
-    max-width: 40vw;
+    max-height: 40vh;
     height: auto;
     width: auto;
 }

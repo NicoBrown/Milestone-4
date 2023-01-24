@@ -65,10 +65,6 @@
                         {% for expense in profile.expense.all %}
                         <div class="accordion-item border border-secondary">
                             <span class="d-flex justify-content-between p-2">
-                                <h6 class="accordion-header my-3"
-                                    id="heading_{{ forloop.counter0 }}_{{ expense.expense_id }}">
-                                    {{ expense.supplier_name }}
-                                </h6>
                                 <a class="btn btn-primary btn-floating float-right m-2" role="button"
                                     data-mdb-toggle="collapse"
                                     data-mdb-target="#accordian1_{{ forloop.counter0 }}_{{ expense.expense_id }}"
@@ -76,9 +72,22 @@
                                     aria-controls="accordian1_{{ forloop.counter0 }}_{{ expense.expense_id }}">
                                     <i class="fas fa-angle-double-down float-right"></i>
                                 </a>
+                                <h6 class="accordion-header my-3"
+                                    id="heading_{{ forloop.counter0 }}_{{ expense.expense_id }}">
+                                    {{ expense.supplier_name }}
+                                    <a role="button" href="{% url 'edit_expense' expense.pk %}"><i
+                                            class="fas fa-edit text-dark fa-2xl mx-3"></i></a>
+                                    <a role="button" href="{% url 'delete_expense' expense.pk %}">
+                                        <i class="fas fa-trash-alt text-danger fa-2xl mx-3"></i>
+                                    </a>
+                                </h6>
                             </span>
                             <span class="d-flex flex-row-reverse align-items-center p-2">
+                                {% if expense.is_paid %}
+                                <i class="fas fa-thumbs-up text-success mb-3 mx-3"></i>
+                                {% else %}
                                 <i class="fas fa-thumbs-down text-danger mb-3 mx-3"></i>
+                                {% endif %}
                                 <p class="fw-bold">Total Amount: {{ expense.total_amount }}
                                 </p>
                                 <small class="text-muted mb-3 me-3">Amount paid: {{ expense.paid_amount }}</small>
@@ -175,7 +184,7 @@
                 </div>
                 <div class=" position-relative text-center flex-colum align-self-center m-3"
                     data-tour="step: 4; title: Add a new expense ; content: Add a new expense here and split it with friends">
-                    <button onclick="location.href='{% url 'add_expense' %}'"
+                    <button onclick="location.href='{% url 'add_image' %}'"
                         {% if profile.stripe_requirements_due or not profile.follows.all %} disabled {% endif %}
                         type="button" class="btn btn-small btn-primary">
                         Add a new expense
