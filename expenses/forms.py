@@ -2,7 +2,7 @@ from django import forms
 from .models import Expense, OrderLineItem
 
 
-class OrderForm(forms.ModelForm):
+class Order_form(forms.ModelForm):
     class Meta:
         model = OrderLineItem
         fields = ('lineitem_total',

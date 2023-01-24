@@ -13,7 +13,7 @@ from google.api_core.client_options import ClientOptions
 from base64 import b64encode, b64decode
 from io import BytesIO, TextIOWrapper
 from home.forms import Image_form
-from expenses.forms import Expense_form, OrderForm
+from expenses.forms import Expense_form, Order_form
 
 import stripe
 import proto
@@ -173,13 +173,14 @@ def edit_expense(request, expense_id):
 def delete_expense(request, expense_id):
     """ Delete a product from the store """
 
-    expense = Expense.objects.filter(pk=expense_id)
-    media_storage = MediaStorage()
-    media_storage.delete(expense.)
-    expense.delete()
+    if request.method == "POST":
+        expense = Expense.objects.filter(pk=expense_id)
+        media_storage = MediaStorage()
+        media_storage.delete(expense.image_url)
+        expense.delete()
 
-    messages.success(request, 'Expense deleted!')
-    return redirect(reverse('user_home'))
+        messages.success(request, 'Expense deleted!')
+        return redirect(reverse('user_home'))
 
 
 def update_line_items(json_dump):
