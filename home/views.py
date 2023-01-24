@@ -6,7 +6,7 @@ from expenses.models import Expense, OrderLineItem
 from django.db.models import Q
 from django.contrib.auth.models import User
 from custom_storages import MediaStorage
-from home.forms import image_form
+from home.forms import Image_form
 
 import os
 import stripe
@@ -36,8 +36,8 @@ def user_home(request):
     template = 'home/user_home.html'
 
     context = {}
-    form = image_form()
-    context['image_form'] = form
+    form = Image_form()
+    context['Image_form'] = form
 
     if request.method == 'POST':
         if request.FILES != {}:

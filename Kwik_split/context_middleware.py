@@ -22,15 +22,16 @@ def profile(request):
         paid_expenses = []
         unpaid_expenses = []
 
-        line_items = OrderLineItem.objects.filter(user_profile=profile)
+        if request.path.startswith('/user_home'):
+            line_items = OrderLineItem.objects.filter(user_profile=profile)
 
-        for line_item in line_items:
-            if line_item.is_paid is True:
-                if line_item.order not in paid_expenses:
-                    paid_expenses.append(line_item.order)
-            else:
-                if line_item.order not in unpaid_expenses:
-                    unpaid_expenses.append(line_item.order)
+            for line_item in line_items:
+                if line_item.is_paid is True:
+                    if line_item.order not in paid_expenses:
+                        paid_expenses.append(line_item.order)
+                else:
+                    if line_item.order not in unpaid_expenses:
+                        unpaid_expenses.append(line_item.order)
 
         return {'profile': profile,
                 'unpaid_expenses': unpaid_expenses,

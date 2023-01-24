@@ -24,15 +24,15 @@ class Expense(Model):
     date = models.DateField(auto_now=True)
     line_item_count = models.IntegerField(null=True, blank=True)
     total_amount = models.DecimalField(
-        max_digits=6, decimal_places=2, null=True, blank=True)
+        max_digits=8, decimal_places=2, null=True, blank=True)
     total_tax_amount = models.DecimalField(
-        max_digits=6, decimal_places=2, null=True, blank=True)
+        max_digits=8, decimal_places=2, null=True, blank=True)
     tip_amount = models.DecimalField(
-        max_digits=6, decimal_places=2, null=True, blank=True)
+        max_digits=8, decimal_places=2, null=True, blank=True)
     net_amount = models.DecimalField(
-        max_digits=6, decimal_places=2, null=True, blank=True)
+        max_digits=8, decimal_places=2, null=True, blank=True)
     paid_amount = models.DecimalField(
-        max_digits=6, decimal_places=2, null=True, blank=True)
+        max_digits=8, decimal_places=2, null=True, blank=True)
     is_paid = models.BooleanField(default=False, null=True, blank=True)
 
     def update_totals(self):
@@ -64,11 +64,11 @@ class OrderLineItem(Model):
                                          max_digits=6, decimal_places=2)
     description = models.CharField(max_length=254, null=True, blank=True)
     amount = models.DecimalField(
-        max_digits=6, decimal_places=2, null=True, blank=True)
+        max_digits=8, decimal_places=2, null=True, blank=True)
     quantity = models.DecimalField(
-        max_digits=6, decimal_places=2, null=True, blank=True)
+        max_digits=8, decimal_places=2, null=True, blank=True)
     tax_amount = models.DecimalField(
-        max_digits=6, decimal_places=2, null=True, blank=True)
+        max_digits=8, decimal_places=2, null=True, blank=True)
     is_paid = models.BooleanField(default=False, null=True, blank=True)
     stripe_pid = models.CharField(
         max_length=254, null=True, blank=True, default='')

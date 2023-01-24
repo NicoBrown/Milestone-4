@@ -68,10 +68,6 @@ h3 {
     line-height: 1.5;
 }
 
-p {
-    font-size: 1.5rem;
-}
-
 .navbar-colour {
     background-color: rgb(31, 31, 31);
 }
@@ -109,6 +105,14 @@ p {
 
 #image-scan {
     position: relative;
+}
+
+.receipt-image {
+
+    max-height: 50vh;
+    max-width: 40vw;
+    height: auto;
+    width: auto;
 }
 
 .section {

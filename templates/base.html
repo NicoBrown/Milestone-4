@@ -37,7 +37,6 @@
     <!-- <script src="https://js.stripe.com/v3/"></script> -->
     <!-- Tourguide.js -->
     <script src="https://cdn.jsdelivr.net/npm/tourguidejs@1.0.1/tourguide.min.js"></script>
-    <script src='{% static "js/javascript.js" %}'></script>
     {% endblock %}
 
     {% block extra_js %}
@@ -68,11 +67,12 @@
                 <i class="fas fa-bars"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="d-flex justify-content-end">
+                <div class="d-flex flex-grow-1 justify-content-end">
                     {% if user.is_authenticated %}
-                    <div class="d-inline-flex d-flex align-items-center justify-content-center position-relative me-3">
+                    <div class="d-flex align-items-center justify-content-center position-relative me-3">
                         {% if profile.profile_image_url %}
-                        <a href="{% url 'user_home' %}"> <img class="image_cover rounded-circle border-dark nav-item"
+                        <a href="{% url 'user_home' %}"> <img
+                                class="float-end image_cover rounded-circle border-dark nav-item"
                                 src='{{ profile.profile_image_url }}' height="50" width="50">
                         </a>
                         {% else %}
@@ -80,7 +80,7 @@
                             href="{% url 'user_home' %}"><i class="fas fa-user-alt fa-2xl"></i>
                         </a>
                         {% endif %}
-                        <a href="{% url 'account_logout' %}" class="btn btn-primary mx-3 nav-item">Logout</a>
+                        <a href="{% url 'account_logout' %}" class="float-end btn btn-primary mx-3 nav-item">Logout</a>
                     </div>
                     {% else %}
                     <a href="{% url 'account_signup' %}" class="btn btn-primary mx-3 nav-item">
@@ -125,15 +125,6 @@
     {% block postload-js %}
     {{ block.super }}
     <script>
-        // Check for click events on the navbar burger icon
-        document.getElementsByClassName("navbar-burger").click(function () {
-
-            // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-            document.getElementsByClassName("navbar-burger").toggleClass("is-active");
-            document.getElementsByClassName("navbar-menu").toggleClass("is-active");
-
-        });
-
         function preview() {
             frame.src = URL.createObjectURL(event.target.files[0]);
             document.getElementById('frame').classList.remove('d-none');

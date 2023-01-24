@@ -15,28 +15,21 @@
     </div>
 </div>
 <div class="row d-flex justify-content-evenly flex-column m-3 p-lg-5">
-    <form class="col-lg-12 col-xl-8 offset-xl-2" id="expense_form" method="POST" action="{% url 'edit_expense' %}"
+    <form class="col-lg-12 col-xl-8 offset-xl-2" id="expense_form" method="POST" action="{% url 'add_expense' %}"
         enctype="multipart/form-data">
         {% csrf_token %}
         <div class="card p-lg-5 p-sm-1 mx-auto">
             <div class="row">
                 <ul class="col-12 col col-lg-6 list-group list-group-light list-unstyled p-3"
                     data-tour="step: 1; title: Supplier Information; content: Start here by checking the supplier information and amending the fields where needed">
-
-                    <label class="h5" for="expense_id">Expense ID:</label>
-                    <div class="fw-bold col-12 input-group mb-2">
-                        <input id="expense_id" name="expense_id" value="{{ expense_id }}"
-                            class="form-control form-control-light form-control-sm" aria-label="readonly input"
-                            readonly></h5>
-                    </div>
                     <h5 class="h5">Edit supplier details below:</h5>
                     {% for key, value in normalized_items.items %}
                     {% if key == "supplier_name" or key == "supplier_address" or key == "supplier_phone" %}
                     <li class="">
                         <label class="" for="{{ key }}">{{ key }}</label>
                         <div class="fw-bold col-12 input-group">
-                            <input class="form-control form-control-sm" name="{{ key }}" id="{{ key }}"
-                                value="{{ value |default:'No value for this one sorry 🤷' }}">
+                            <input class="form-control form-control-sm" maxlength="200" minlength="5" name="{{ key }}"
+                                id="{{ key }}" value="{{ value |default:'No value for this one sorry 🤷' }}">
                             </input>
                             <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
                         </div>
@@ -47,8 +40,8 @@
                     <li class="">
                         <label class="" for="supplier_name">Supplier Name</label>
                         <div class="fw-bold col-12 input-group">
-                            <input class="form-control form-control-sm" name="supplier_name" id="supplier_name"
-                                value="No value for this one sorry 🤷">
+                            <input class="form-control form-control-sm" maxlength="200" minlength="5"
+                                name="supplier_name" id="supplier_name" value="No value for this one sorry 🤷">
                             </input>
                             <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
                         </div>
@@ -58,8 +51,8 @@
                     <li class="">
                         <label class="" for="supplier_address">Supplier Address</label>
                         <div class="fw-bold col-12 input-group">
-                            <input class="form-control form-control-sm" name="supplier_address" id="supplier_address"
-                                value="No value for this one sorry 🤷">
+                            <input class="form-control form-control-sm" maxlength="200" minlength="5"
+                                name="supplier_address" id="supplier_address" value="No value for this one sorry 🤷">
                             </input>
                             <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
                         </div>
@@ -69,8 +62,8 @@
                     <li class="">
                         <label class="" for="supplier_phone">Supplier Phone</label>
                         <div class="fw-bold col-12 input-group">
-                            <input class="form-control form-control-sm" name="supplier_phone" id="supplier_phone"
-                                value="No value for this one sorry 🤷">
+                            <input class="form-control form-control-sm" maxlength="200" minlength="5"
+                                name="supplier_phone" id="supplier_phone" value="No value for this one sorry 🤷">
                             </input>
                             <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
                         </div>
@@ -78,8 +71,8 @@
                     {% endif %}
                 </ul>
                 <div class="col-10 offset-1 col order-first col-lg-5 p-3">
-                    <input type="text" value="{{ image_url }}" class="collapse invisible" name="image_url">
-                    <img src="{{ image_url }}" height="100%" width="100%" alt="" />
+                    <img class="img-fluid receipt-image" src="{{ expense.image_url }}" height="100%" width="100%"
+                        alt="receipt image" />
                     </input>
                 </div>
             </div>
@@ -98,14 +91,15 @@
                         <div class="col-6 d-flex justify-content-between">
                             <label class="me-2" for="quantity_{{ forloop.counter }}">Quantity:</label>
                             <input type="number" class="form-control form-control-sm"
-                                id="quantity_{{ forloop.counter }}" onchange="quantityChange(this);"
-                                value="{{ values.quantity }}">
+                                id="quantity_{{ forloop.counter }}" maxlength="3" minlength="1"
+                                onchange="quantityChange(this);" value="{{ values.quantity }}">
                             </input>
                         </div>
                         <div class="col-6 d-flex justify-content-between">
                             <label class="mx-3" for="amount_{{ forloop.counter }}">Amount:</label>
-                            <input class="form-control form-control-sm" id=" amount_{{ forloop.counter }}"
-                                onchange="amountChange(this);" value="{{ values.amount |default:'#' }}">
+                            <input class="form-control form-control-sm" maxlength="3" minlength="1"
+                                id=" amount_{{ forloop.counter }}" onchange="amountChange(this);"
+                                value="{{ values.amount |default:'#' }}">
                             </input>
                         </div>
                     </div>
@@ -138,8 +132,8 @@
                 <li class="list-item col-12 col-md-6 align-self-end">
                     <div class="input-group ">
                         <h5 class="h5  w-50 fw-bold me-3 mt-2">Net Amount: </h5>
-                        <input class="form-control form-control-sm form-icon-trailing" name="net_amount"
-                            value="{{ net_amount }}">
+                        <input class="form-control form-control-sm form-icon-trailing" maxlength="8" minlength="1"
+                            name="net_amount" value="{{ net_amount }}">
                         </input>
                         <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
                     </div>
@@ -153,8 +147,8 @@
                     <div class="input-group">
                         <h5 class="h5 col-6 form-control w-50 fw-bold me-3">Tip amount:
                         </h5>
-                        <input class="col-6 form-control form-control-sm form-icon-trailing" name="{{ key }}"
-                            value="{{ value |default:'No value for this one sorry 🤷' }}">
+                        <input class="col-6 form-control form-control-sm form-icon-trailing" maxlength="8" minlength="1"
+                            name="{{ key }}" value="{{ value |default:'No value for this one sorry 🤷' }}">
                         </input>
                         <span class="input-group-text"><i class="fas fa-pen trailing"></i></span>
                     </div>
@@ -192,8 +186,8 @@
                 <li class="list-item col-12 col-md-6 align-self-end mt-2">
                     <div class="input-group">
                         <h5 class="h5 w-50 fw-bold mt-3 me-3">Tax amount:</h5>
-                        <input class="col-6 form-control form-control-sm form-icon-trailing" name="{{ key }}"
-                            value="{{ value |default:'No value for this one sorry 🤷' }}">
+                        <input class="col-6 form-control form-control-sm form-icon-trailing" maxlength="8" minlength="1"
+                            name="{{ key }}" value="{{ value |default:'No value for this one sorry 🤷' }}">
                         </input>
                         <span class="input-group-text"><i class="fas fa-pen trailing"></i></span>
                     </div>
@@ -204,8 +198,8 @@
                 <li class="list-item col-12 col-md-6 align-self-end mt-2">
                     <div class="input-group ">
                         <h5 class="h5 w-50 fw-bold mt-3 me-3">Total including Tax, Tips, etc: </h5>
-                        <input class="form-control form-control-sm form-icon-trailing" name="{{ key }}"
-                            value="{{ value |default:'No value for this one sorry 🤷' }}">
+                        <input class="form-control form-control-sm form-icon-trailing" maxlength="8" minlength="1"
+                            name="{{ key }}" value="{{ value |default:'No value for this one sorry 🤷' }}">
                         </input>
                         <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
                     </div>
@@ -216,8 +210,8 @@
                 <li class="list-item col-12 col-md-6 align-self-end mt-2">
                     <div class="input-group">
                         <h5 class="h5 w-50 fw-bold mt-3 me-3">Tax amount:</h5>
-                        <input class="col-6 form-control form-control-sm form-icon-trailing" name="total_tax_amount"
-                            value="No value for this one sorry 🤷">
+                        <input class="col-6 form-control form-control-sm form-icon-trailing" maxlength="8" minlength="1"
+                            name="total_tax_amount" value="No value for this one sorry 🤷">
                         </input>
                         <span class="input-group-text"><i class="fas fa-pen trailing"></i></span>
                     </div>
@@ -227,8 +221,8 @@
                 <li class="list-item col-12 col-md-6 align-self-end mt-2">
                     <div class="input-group ">
                         <h5 class="h5 w-50 fw-bold mt-3 me-3">Total including Tax, Tips, etc: </h5>
-                        <input class="form-control form-control-sm form-icon-trailing" name="total_amount"
-                            value="No value for this one sorry 🤷">
+                        <input class="form-control form-control-sm form-icon-trailing" maxlength="8" minlength="1"
+                            name="total_amount" value="No value for this one sorry 🤷">
                         </input>
                         <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
                     </div>
@@ -237,7 +231,7 @@
             </ul>
             <div class="d-grid gap-2 d-sm-block mx-auto text-center"
                 data-tour="step: 4; title: Finish; content: You can submit or cancel the expense here. Your friends will receive notifications of the items above when you press submit and they can split the cost with you. You'll be returned to the home screen if you cancel">
-                <a type="button" class="btn btn-secondary" href="{% url 'user_home' %}">Cancel</a>
+                <a type="button" class="btn btn-secondary" href="{% url 'delete_expense' expense.pk %}">Cancel</a>
                 <button type="submit" class="btn btn-primary mx-md-3">Submit Expense</button>
             </div>
         </div>

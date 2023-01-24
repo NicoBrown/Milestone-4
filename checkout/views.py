@@ -101,7 +101,7 @@ def checkout_success(request, CHECKOUT_SESSION_ID):
     if response['payment_status'] == 'paid':
         expense_id = response['metadata']['expense_id']
         expense = Expense.objects.get(expense_id=expense_id)
-        print(response)
+
         destination_profile = UserProfile.objects.get(
             user__username={response['metadata']['destination_profile']})
 
