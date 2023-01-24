@@ -173,14 +173,13 @@ def edit_expense(request, expense_id):
 def delete_expense(request, expense_id):
     """ Delete a product from the store """
 
-    if request.method == "POST":
-        expense = Expense.objects.filter(pk=expense_id)
-        media_storage = MediaStorage()
-        media_storage.delete(expense.image_url)
-        expense.delete()
+    expense = Expense.objects.filter(pk=expense_id).first()
+    media_storage = MediaStorage()
+    media_storage.delete(expense.image_url)
+    expense.delete()
 
-        messages.success(request, 'Expense deleted!')
-        return redirect(reverse('user_home'))
+    messages.success(request, 'Expense deleted!')
+    return redirect(reverse('user_home'))
 
 
 def update_line_items(json_dump):

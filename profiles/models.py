@@ -64,6 +64,5 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
                               "transfers": {"requested": True}},
                 tos_acceptance={"date": 1609798905, "ip": "0.0.0.0"},
             )
-        user_profile.follows = user_profile
         user_profile.stripe_customer_id = user_account_response.stripe_id
         user_profile.save()

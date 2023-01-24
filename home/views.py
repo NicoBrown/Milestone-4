@@ -41,7 +41,7 @@ def user_home(request):
 
     if request.method == 'POST':
         if request.FILES != {}:
-            form = image_form({}, request.FILES)
+            form = Image_form({}, request.FILES)
             if form.is_valid():
                 image = request.FILES['image']
 

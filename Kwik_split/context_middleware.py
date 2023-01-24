@@ -17,7 +17,6 @@ def profile(request):
 
     if request.user.is_authenticated:
         profile = UserProfile.objects.filter(user=request.user).first()
-        print(request.resolver_match._func_path)
 
         paid_expenses = []
         unpaid_expenses = []

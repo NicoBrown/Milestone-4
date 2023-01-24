@@ -39,14 +39,15 @@
         frame.src = URL.createObjectURL(event.target.files[0]);
         document.getElementById('frame').classList.remove('d-none');
         document.getElementById('image-reset').classList.remove('disabled');
+        document.getElementById('image-submit').classList.remove('disabled');
     }
 
     function clearImage() {
-        event.preventDefault();
         document.getElementById('customFile').value = null;
         frame.src = "";
         frame.classList.add('d-none');
         document.getElementById('image-reset').classList.add('disabled');
+        document.getElementById('image-submit').classList.add('disabled');
     }
 </script>
 {% endblock %}

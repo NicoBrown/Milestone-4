@@ -1,38 +1,39 @@
 {% extends "base.html" %}
 {% load static %}
 {% block extra-title %}
-Split Your Bills Easily
+| Use AI on your bills
 {% endblock %}
 
 
 {% block content %}
-<img class="d-flex hero-image opacity-50" src="{% static 'images/branding/invoice.webp' %}" alt="background-invoice">
-<section id="hero-section" class="section position-relative">
+<img class="d-flex hero-image opacity-50" loading="eager" src="{% static 'images/branding/invoice.webp' %}"
+    alt="background-invoice">
+<section id="hero-section" class="section hero-section">
     <div class="p-5 text-center">
-        <div class="mask" style="background-color: rgba(0, 0, 0, 0.3);">
-            <div class="d-flex justify-content-center align-items-center h-75">
-                <div class="text-white ">
-                    <div class="m-5 p-5">
-                        <h1 class="display-1 d-inline">Splitting your bills and receipts made<h1
-                                class="d-inline display-1 ms-2 fw-bold text-danger">Easy.
-                            </h1>
-                        </h1>
-                    </div>
-                    <div class="text-center container">
-                        <h2 class="m-5 fw-light">Scan and split invoices, bills and
-                            receipts.<br><br> User Kwik-Split to make payments and keep track of your shared
-                            expenses with ease.</h2>
-                    </div>
-                    <a class="btn btn-primary p-2 btn-lg px-5 py-2 mt-5" data-mdb-ripple-color="dark" href=" #!"
-                        role="button">Sign-up</a>
+        <div class="d-flex justify-content-center align-items-center h-75">
+            <div class="text-white ">
+                <div class="m-3 m-md-5 p-5">
+                    <h1 class="display-1 d-inline">Splitting your bills and receipts made<h2
+                            class="h1 d-inline display-1 ms-2 fw-bold text-danger">Easy.
+                        </h2>
+                    </h1>
                 </div>
+                <div class="text-center container">
+                    <h2 class="m-3 m-md-5 fw-light">Scan and split invoices, bills and
+                        receipts.<br><br> User Kwik-Split to make payments and keep track of your shared
+                        expenses with ease.</h2>
+                </div>
+                <a href="{% url 'account_signup' %}" data-mdb-ripple-color="dark"><button
+                        class="btn btn-primary p-2 btn-lg px-5 py-2 mt-5">Sign-up</button></a>
             </div>
         </div>
     </div>
 </section>
-<section id="about-section" class="position-relative overflow-hidden">
-    <div class="contact-background py-0"></div>
-    <div class="alternate-stripe py-5"></div>
+<section id="about-section" class="position-relative">
+    <div class="overflow-hidden">
+        <div class="contact-background py-0"></div>
+        <div class="alternate-stripe py-5"></div>
+    </div>
     <div class="container my-5">
         <div class="row d-flex align-items-center px-3 px-xl-5 gx-5">
             <h1 class="col-12 mt-5 fw-bold display-1">Skip the Kwik math</h1>
@@ -42,18 +43,18 @@ Split Your Bills Easily
                         to
                         process your expense and receipt images.</h1>
                     <div class="d-flex align-content-center mx-5 justify-content-center">
-                        <img class="g-logo" src="{% static 'images/branding/google_cloud.webp' %}"
-                            alt="google-logo"></img>
+                        <img class="g-logo" loading="lazy" src="{% static 'images/branding/google_cloud.webp' %}"
+                            alt="google-logo">
                     </div>
                 </div>
                 <div class="col-12 mt-lg-5 text-center col-lg-5 py-5">
-                    <img class="img-fluid" src="{% static 'images/salt-bae scan.webp' %}"
-                        alt="image of receipt scan"></img>
+                    <img class="img-fluid" src="{% static 'images/salt-bae scan.webp' %}" height="600px" width="300px"
+                        loading="lazy" alt="image of receipt scan">
                 </div>
             </div>
         </div>
-        <h6 class="col-12 py-3 p-lg-3 display-5 text-decoration-underline text-white">How it works:
-        </h6>
+        <h1 class="h6 col-12 py-3 p-lg-3 display-5 text-decoration-underline text-white">How it works:
+        </h1>
         <div class="px-0 col-12 mt-lg-5 pb-5">
             <div class="d-lg-flex d-xl-inline-flex justify-content-between">
                 <div class="col d-flex align-items-stretch">
@@ -127,20 +128,22 @@ Split Your Bills Easily
             grocery
             bills.
         </h4>
+    </div>
 </section>
 <div class="container g-0 px-3 pb-5">
     <div class="align-items-center justify-content-middle">
-        <div class="img-fluid divider-image order-first">
+        <div loading="lazy" class="img-fluid divider-image order-first">
             <div class="img-fluid divider-image-background"></div>
         </div>
     </div>
 </div>
-
-<section id="payment-section" class="position-relative mt-5 overflow-hidden">
-    <div class="stripe py-0"></div>
-    <div class="alternate-stripe opacity-50 py-0"></div>
+<section id="payment-section" class="position-relative mt-5">
+    <div class="overflow-hidden">
+        <div class="stripe py-0"></div>
+        <div class="alternate-stripe opacity-50 py-0"></div>
+    </div>
     <div class="mt-5 container">
-        <div class="row my-5 p-5 card">
+        <div class="my-5 p-3 card">
             <h1 class="mb-5 fw-bold display-1">Pay the kwik-split way</h1>
             <div class="col">
                 <p class="fw-light">Split expenses with any group: trips, housemates, friends, and
@@ -156,33 +159,35 @@ Split Your Bills Easily
                 </p>
             </div>
             <div class="col d-flex justify-content-center align-content-center mb-5">
-                <img class="stripe-logo p-5" src="{% static 'images/branding/stripe_logo.svg' %}"
-                    alt="stripe logo"></img>
+                <img class="stripe-logo p-3" loading="lazy" src="{% static 'images/branding/stripe_logo.svg' %}"
+                    height="100" width="200" alt="stripe logo"></img>
             </div>
         </div>
     </div>
 </section>
 <section id="contact-section" class="gx-0 position-relative">
-    <div class="contact-background py-0"></div>
-    <div class="container my-5">
+    <div class="overflow-hidden">
+        <div class="contact-background py-0"></div>
+    </div>
+    <div class="container my-lg-5">
         <!-- Code for form taken and adapted from https://mdbootstrap.com/snippets/standard/mdbootstrap/2958439?view=side -->
-        <div class="row d-flex justify-content-center align-items-center">
+        <div class="d-flex justify-content-center align-items-center">
             <div class="col-12 bg-white">
-                <div class="p-5 mb-5">
+                <div class="p-3 mb-5">
                     <h1 class="my-5 fw-bold display-1">Contact us:</h1>
                     <div class="row g-0">
                         <div class="d-flex align-items-center">
                             <div class="card-body py-5 px-4 p-md-5">
                                 <form action="">
-                                    <h4 class="fw-bold mb-4" style="color: #92aad0;">Send us a message below:</h4>
-                                    <div class="my-4">
+                                    <h4 class="fw-bold mb-4">Send us a message below:</h4>
+                                    <div class=" my-4">
                                         <label class="form-label col-3" for="form4Example1">Name:</label>
-                                        <input type="text" id="form4Example1" class="form-control" />
+                                        <input type="text" id="form4Example1" class="form-control">
                                     </div>
                                     <!-- Email input -->
                                     <div class="mb-4">
                                         <label class="form-label col-3" for="form4Example2">Email address:</label>
-                                        <input type="email" id="form4Example2" class="form-control" />
+                                        <input type="email" id="form4Example2" class="form-control">
                                     </div>
                                     <!-- Message input -->
                                     <div class="mb-4">
@@ -192,14 +197,13 @@ Split Your Bills Easily
                                     <!-- Checkbox -->
                                     <div class="form-check d-flex justify-content-center mb-4">
                                         <input class="form-check-input me-2" type="checkbox" value="" id="form4Example4"
-                                            checked />
+                                            checked>
                                         <label class="form-check-label" for="form4Example4">
                                             Send me a copy of this message
                                         </label>
                                     </div>
                                     <div class="d-flex justify-content-end pt-1 mb-4">
-                                        <button class="btn btn-primary btn-rounded" type="button"
-                                            style="background-color: #92aad0;">Send Message</button>
+                                        <button class="btn btn-primary btn-rounded" type="button">Send Message</button>
                                     </div>
                                 </form>
                             </div>
@@ -210,4 +214,4 @@ Split Your Bills Easily
         </div>
     </div>
 </section>
-<!-- {% endblock %} -->
+{% endblock %}

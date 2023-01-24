@@ -70,9 +70,9 @@
                     </li>
                     {% endif %}
                 </ul>
-                <div class="col-10 offset-1 col order-first col-lg-5 p-3">
-                    <img class="img-fluid receipt-image" src="{{ expense.image_url }}" height="100%" width="100%"
-                        alt="receipt image" />
+                <div class="col-12 col-lg-6 p-3">
+                    <img class="img-fluid receipt-image image_cover text-center" src="{{ expense.image_url }}"
+                        height="400px" width="400px" alt="receipt image" />
                     </input>
                 </div>
             </div>
@@ -273,12 +273,9 @@
         parentLi = selected.closest("li")
         options = parentLi.querySelectorAll("option")
         const value = option[0].getAttribute("value").split("%")
-        print(value)
         value[2] = newValue
 
         optionValue = value.join()
-
-        print(optionValue)
 
         for (option in options) {
             option.setAttribute("value", optionValue)
@@ -291,13 +288,9 @@
         parentLi = selected.closest("li")
         options = parentLi.querySelectorAll("option")
         const value = option[0].getAttribute("value").split("%")
-        print(value)
         value[3] = newValue
 
         optionValue = value.join()
-
-        print(optionValue)
-
         for (option in options) {
             option.setAttribute("value", optionValue)
         }

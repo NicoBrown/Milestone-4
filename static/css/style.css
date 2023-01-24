@@ -1,7 +1,6 @@
 /* Media Queries */
 /* No media query necessary for xs breakpoint as it's effectively `@media (max-width: 0) { ... }` */
-/* X-Small devices (portrait phones, less than 576px) */
-
+/* ----------------------------- X-Small devices (portrait phones, less than 576px)-----------------------------*/
 @media (min-width: 0px) and (max-width: 1198.98px) {
     .hero-text {
         font-size: 3em !important;
@@ -20,7 +19,7 @@
     }
 }
 
-/* Large devices (desktops, less than 1200px) */
+/* ----------------------------- Large devices (desktops, less than 1200px) ----------------------------- */
 @media (min-width: 1199.98px) {
     .hero-text {
         font-weight: 800;
@@ -34,29 +33,16 @@
     }
 }
 
+/*----------------------------- General selectors ----------------------------- */
+
 body {
     overflow-x: hidden;
 }
-
-.control-group {
-    display: inline-flex;
-}
-
-.control-group label {
-    width: 40%;
-}
-
 
 input,
 select {
     width: 100%;
 
-}
-
-.input {
-    background: white !important;
-    color: black !important;
-    cursor: default;
 }
 
 .h1,
@@ -69,11 +55,7 @@ h3 {
 }
 
 .navbar-colour {
-    background-color: rgb(31, 31, 31);
-}
-
-#user-section {
-    border-left: 5px solid rgb(54, 54, 54);
+    background-color: #1F1F1F;
 }
 
 .image_cover {
@@ -86,8 +68,15 @@ h3 {
 
 .btn-primary {
     background-color: #4c75a3;
+    z-index: 1;
 }
 
+.message-container {
+    z-index: 100;
+    position: fixed;
+}
+
+/*----------------------------- Index Page selectors ----------------------------- */
 
 .hero-image {
     background-image: url('static/images/branding/invoice.webp');
@@ -102,15 +91,8 @@ h3 {
 
 }
 
-
-#image-scan {
-    position: relative;
-}
-
-.receipt-image {
-    max-height: 40vh;
-    height: auto;
-    width: auto;
+.hero-section {
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .section {
@@ -188,4 +170,12 @@ h3 {
     width: 120px;
     height: 80px;
     position: absolute;
+}
+
+/*----------------------------- add image selectors ----------------------------- */
+
+.receipt-image {
+    max-height: 40vh;
+    height: auto;
+    width: auto;
 }
