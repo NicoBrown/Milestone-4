@@ -128,7 +128,6 @@ h3 {
 
 .stripe {
     background-color: #635bff;
-    padding: 5rem;
     position: absolute;
     top: 55%;
     right: 10%;
@@ -136,12 +135,15 @@ h3 {
     transform: rotate(-5deg) skew(-5deg);
     z-index: -1100;
     height: 60px;
+
+}
+
+.stripe::after {
     overflow: hidden;
 }
 
 .alternate-stripe {
     background-color: #3DDC97;
-    padding: 5rem;
     position: absolute;
     top: 35%;
     left: 10%;
@@ -149,6 +151,9 @@ h3 {
     transform: rotate(-5deg) skew(-5deg);
     z-index: -1000;
     height: 50px;
+}
+
+.alternate-stripe::after {
     overflow: hidden;
 }
 
@@ -164,6 +169,10 @@ h3 {
     transform: rotate(-5deg) skew(-5deg);
     z-index: -1000;
     height: 100%;
+}
+
+.contact-background::after {
+    overflow: hidden;
 }
 
 .g-logo {
