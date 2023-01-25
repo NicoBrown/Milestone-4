@@ -9,4 +9,5 @@ urlpatterns = [
     path('user_search', views.user_search, name='user_search'),
     path("profile/<int:pk>", views.profile, name="profile"),
     path('onboard_user', views.onboard_user, name='onboard_user'),
+    path('contact_form', views.contact_form, name='contact_form'),
 ]

@@ -7,6 +7,9 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from custom_storages import MediaStorage
 from home.forms import Image_form
+from django.http import HttpResponse
+from django.core.mail import send_mail
+from .forms import Contact_form
 
 import os
 import stripe
@@ -17,8 +20,8 @@ import stripe
 
 def index(request):
     """ A view to return the index page """
-
-    return render(request, 'home/index.html')
+    contact_form = Contact_form()
+    return render(request, 'home/index.html', context={'form': contact_form})
 
 
 @login_required
@@ -134,3 +137,24 @@ def onboard_user(request):
         request.profile.save()
 
         return redirect(reverse("user_home"))
+
+
+def contact_form(request):
+    """ Display the user's home page. """
+
+    if request.method == "POST":
+        form = Contact_form(request.POST, {})
+        if form.is_valid():
+            subject = 'contact form submission'
+            body = form['message']
+
+            send_mail(
+                subject,
+                body,
+                {os.environ['DEFAULT_FROM_EMAIL'], },
+                {os.environ['DEFAULT_FROM_EMAIL'], }
+            )
+            messages.info(request, 'Thanks for contacting us!')
+            return render(request, 'home/index.html')
+        else:
+            return render(request, 'home/index.html', context={'form': form})

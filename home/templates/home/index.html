@@ -13,9 +13,9 @@
         <div class="d-flex justify-content-center align-items-center h-75">
             <div class="text-white ">
                 <div class="m-3 m-md-5 p-5">
-                    <h1 class="display-1 d-inline">Splitting your bills and receipts made<h2
+                    <h1 class="display-1 d-inline">Splitting your bills and receipts made<p
                             class="h1 d-inline display-1 ms-2 fw-bold text-danger">Easy.
-                        </h2>
+                        </p>
                     </h1>
                 </div>
                 <div class="text-center container">
@@ -23,8 +23,8 @@
                         receipts.<br><br> User Kwik-Split to make payments and keep track of your shared
                         expenses with ease.</h2>
                 </div>
-                <a href="{% url 'account_signup' %}" data-mdb-ripple-color="dark"><button
-                        class="btn btn-primary p-2 btn-lg px-5 py-2 mt-5">Sign-up</button></a>
+                <a href="{% url 'account_signup' %}" role="button" data-mdb-ripple-color="dark"
+                    class="btn btn-primary p-2 btn-lg px-5 py-2 mt-5">Sign-up</a>
             </div>
         </div>
     </div>
@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="col-12 mt-lg-5 text-center col-lg-5 py-5">
-                    <img class="img-fluid" src="{% static 'images/salt-bae scan.webp' %}" height="600px" width="300px"
+                    <img class="img-fluid" src="{% static 'images/salt-bae scan.webp' %}" height="600" width="300"
                         loading="lazy" alt="image of receipt scan">
                 </div>
             </div>
@@ -132,7 +132,7 @@
 </section>
 <div class="container g-0 px-3 pb-5">
     <div class="align-items-center justify-content-middle">
-        <div loading="lazy" class="img-fluid divider-image order-first">
+        <div class="img-fluid divider-image order-first">
             <div class="img-fluid divider-image-background"></div>
         </div>
     </div>
@@ -160,8 +160,7 @@
             </div>
             <div class="col d-flex justify-content-center align-content-center mb-5">
                 <img class="stripe-logo p-3 img-fluid" loading="lazy"
-                    src="{% static 'images/branding/stripe_logo.svg' %}" height="100" width="200"
-                    alt="stripe logo"></img>
+                    src="{% static 'images/branding/stripe_logo.svg' %}" height="100" width="200" alt="stripe logo">
             </div>
         </div>
     </div>
@@ -179,32 +178,12 @@
                     <div class="row g-0">
                         <div class="d-flex align-items-center">
                             <div class="card-body py-5 px-4 p-md-5">
-                                <form action="">
+                                <form id="contact_form" method="POST" action="{% url 'contact_form' %}">
+                                    {% csrf_token %}
                                     <h4 class="fw-bold mb-4">Send us a message below:</h4>
-                                    <div class=" my-4">
-                                        <label class="form-label col-3" for="form4Example1">Name:</label>
-                                        <input type="text" id="form4Example1" class="form-control">
-                                    </div>
-                                    <!-- Email input -->
-                                    <div class="mb-4">
-                                        <label class="form-label col-3" for="form4Example2">Email address:</label>
-                                        <input type="email" id="form4Example2" class="form-control">
-                                    </div>
-                                    <!-- Message input -->
-                                    <div class="mb-4">
-                                        <label class="form-label col-3" for="form4Example3">Message:</label>
-                                        <textarea class="form-control" id="form4Example3" rows="5"></textarea>
-                                    </div>
-                                    <!-- Checkbox -->
-                                    <div class="form-check d-flex justify-content-center mb-4">
-                                        <input class="form-check-input me-2" type="checkbox" value="" id="form4Example4"
-                                            checked>
-                                        <label class="form-check-label" for="form4Example4">
-                                            Send me a copy of this message
-                                        </label>
-                                    </div>
+                                    {{ form | crispy }}
                                     <div class="d-flex justify-content-end pt-1 mb-4">
-                                        <button class="btn btn-primary btn-rounded" type="button">Send Message</button>
+                                        <button class="btn btn-primary btn-rounded" type="submit">Send Message</button>
                                     </div>
                                 </form>
                             </div>
