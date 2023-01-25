@@ -146,13 +146,13 @@ def contact_form(request):
         form = Contact_form(request.POST, {})
         if form.is_valid():
             subject = 'contact form submission'
-            body = form['message']
+            body = form.cleaned_data['message']
 
             send_mail(
                 subject,
                 body,
-                {os.environ['DEFAULT_FROM_EMAIL'], },
-                {os.environ['DEFAULT_FROM_EMAIL'], }
+                {os.environ['EMAIL_HOST_USER'], },
+                {os.environ['EMAIL_HOST_USER'], }
             )
             messages.info(request, 'Thanks for contacting us!')
             return render(request, 'home/index.html')
