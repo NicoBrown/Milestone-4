@@ -83,7 +83,7 @@ class OrderLineItem(Model):
                 self.quantity) * float(self.amount))
 
         if not self.lineitem_total:
-            self.lineitem_total = float(self._tax_amount) + (float(self.amount) * float(
+            self.lineitem_total = float(self.tax_amount) + (float(self.amount) * float(
                 self.quantity))
 
         super().save(*args, **kwargs)

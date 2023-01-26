@@ -89,8 +89,8 @@ def add_image(request, expense_id=""):
 @login_required
 def add_expense(request):
 
-    if request.method == 'POST' and request.FILES == {}:
-        form = expense_form(request.POST, request.FILES)
+    if request.method == 'POST':
+        form = Expense_form(request.POST, {})
         if form.is_valid():
 
             line_items = [v for k, v in request.POST.items()
@@ -148,25 +148,7 @@ def add_expense(request):
         else:
             messages.error(request, form.errors.as_text())
 
-    return redirect(request, 'expenses/upload_image.html', context)
-
-
-def edit_expense(request, expense_id):
-    """ Edit an expense after uploading an image """
-
-    profile = get_object_or_404(UserProfile, user=request.user)
-
-    context = {
-        'profile': profile
-    }
-
-    if request.method == 'POST':
-
-        messages.info(request, 'Successfully saved changes to expense!')
-        return render(request, "home/user_home.html")
-
-    else:
-        return render(request, "home/user_home.html")
+    return redirect(request, 'expenses/upload_image.html')
 
 
 @ login_required

@@ -5,18 +5,16 @@ from .models import Expense, OrderLineItem
 class Order_form(forms.ModelForm):
     class Meta:
         model = OrderLineItem
-        fields = ('lineitem_total',
-                  'tax_amount', 'is_paid',
-                  'order', 'user_profile', 'description', 'amount',
-                  'stripe_pid',)
+        fields = ('description', 'lineitem_total',
+                  'tax_amount',
+                  'amount', 'is_paid',)
 
 
 class Expense_form(forms.Form):
 
     class Meta:
         model = Expense
-        fields = ('expense_id',
-                  'total_tax_amount', 'is_paid',
-                  'supplier_name', 'user_profile', 'paid_amount', 'total_amount',
-                  'tip_amount', 'supplier_address', 'supplier_phone'
-                  'image_url', 'line_item_count', 'net_amount')
+        fields = ('total_tax_amount', 'is_paid',
+                  'supplier_name', 'total_amount',
+                  'tip_amount', 'supplier_address', 'supplier_phone',
+                  'net_amount')

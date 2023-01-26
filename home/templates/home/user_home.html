@@ -37,7 +37,7 @@
         <!-- Tabs navs -->
         <ul class="nav nav-tabs nav-justified mb-3" id="ex1" role="tablist">
             <li class="nav-item" role="presentation"
-                data-tour="step: 4; title: Your expenses ; content: View and add new expenses here and split it then friends">
+                data-tour="step: 2; title: Your expenses ; content: View and add new expenses here and split it then friends">
                 <a class="nav-link active" id="ex3-tab-1" data-mdb-toggle="tab" href="#ex3-tabs-1" role="tab"
                     aria-controls="ex3-tabs-1" aria-selected="true"><i
                         class="fas fa-donate fa-fw text-info me-2"></i>Your
@@ -45,14 +45,14 @@
                     Expenses</a>
             </li>
             <li class="nav-item" role="presentation"
-                data-tour="step: 5; title: Other paid expenses ; content: These are expenses other people have requested you to pay, that have been paid">
+                data-tour="step: 3; title: Other paid expenses ; content: These are expenses other people have requested you to pay, that have been paid">
                 <a class="nav-link" id="ex3-tab-2" data-mdb-toggle="tab" href="#ex3-tabs-2" role="tab"
                     aria-controls="ex3-tabs-2" aria-selected="false"><i
                         class="fas fa-hand-holding-usd text-success me-2"></i>Your Paid
                     Expenses</a>
             </li>
             <li class="nav-item" role="presentation"
-                data-tour="step: 6; title: Other unpaid expenses ; content: These are expenses other people have requested you to pay, that are unpaid">
+                data-tour="step: 4; title: Other unpaid expenses ; content: These are expenses other people have requested you to pay, that are unpaid">
                 <a class="nav-link" id="ex3-tab-3" data-mdb-toggle="tab" href="#ex3-tabs-3" role="tab"
                     aria-controls="ex3-tabs-3" aria-selected="false"><i
                         class="fas fa-hand-holding-usd text-danger me-2"></i>Your Unpaid Expenses</a>
@@ -187,7 +187,8 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class=" position-relative text-center flex-colum align-self-center m-3">
+                <div class=" position-relative text-center flex-colum align-self-center m-3"
+                    data-tour="step: 5; title: Add new expenses! ; content: use this button to add new expenses and request payments">
                     <button onclick="location.href='{% url 'add_image' %}'"
                         {% if profile.stripe_requirements_due or not profile.follows.all %} disabled {% endif %}
                         type="button" class="btn btn-small btn-primary">
@@ -395,103 +396,41 @@
         <!-- -------------------- NEXT Section ------------------------- -->
         <!-- Grid container for buttons -->
     </section>
-
     <Section class="col-md-12 col-lg-5 mt-2 p-3 g-0">
         <div id="topnav" class="my-3 pt-lg-2 p-3 g-0">
-            <form method="POST" action="{% url 'user_home' %}" class="d-flex mb-3" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-sm-6 col-12"
-                        data-tour="step: 7; title: Profile Image ; content: You can upload a new profile image here">
-                        <div class="d-flex flex-column justify-content-center">
-                            <div class="col-12 text-center  pe-5">
-                                {% if profile.profile_image_url %}
-                                <img id="frame" class="image_cover rounded float-left border-dark"
-                                    src="{{ profile.profile_image_url }}" alt="Avatar" height="300" width="300">
-                                {% else %}
-                                <img id="frame" title="uploaded-image"
-                                    src="{% static 'images/stock-user-profile-icon.jpg' %}"
-                                    class="image_cover rounded float-left d-block" height="300" width="300" alt="">
-                                {% endif %}
-                            </div>
-                            <p>{{ form_error.all }}</p>
-                            <input type="file" name="image" class="col-12 form-control form-control-sm my-1"
-                                id="customFile" onchange="preview()" required />
-                            <div class="btn-group col-12 btn-group-sm text-center" role="group">
-                                <button type="submit" id="image-submit"
-                                    class="btn btn-small btn-primary bg-gradient text-dark disabled">Submit</button>
-                                <button type="reset" id="image-reset" onclick="clearImage()"
-                                    class="btn btn-small bg-warning bg-gradient text-dark disabled">Clear</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-12 flex-grow-1">
-                        <div class="col-12">
-                            <p class="my-3"><strong>Name</strong>: {{ user.first_name }}
-                                {{ user.last_name }} </p>
-                            <p class="my-3"><strong>Username</strong>: {{ user.username }}</p>
-                            <p class="my-3"><strong>Email</strong>: {{ user.email }}</p>
-                            <p class="my-3"><strong>Phone</strong>: {{ profile.default_phone_number }}</p>
-                            <p class="my-3"><strong>Postcode</strong>: {{ profile.default_postcode }}</p>
+            <div class="row"
+                data-tour="step: 6; title: User information ; content: You can view your profile here and edit it with the button">
+                <div class="col-sm-6 col-12">
+                    <div class="d-flex flex-column justify-content-center">
+                        <div class="col-12 text-center  pe-5">
+                            {% if profile.profile_image_url %}
+                            <img id="frame" class="image_cover rounded float-left border-dark"
+                                src="{{ profile.profile_image_url }}" alt="Avatar" height="300" width="300">
+                            {% else %}
+                            <img id="frame" title="uploaded-image"
+                                src="{% static 'images/stock-user-profile-icon.jpg' %}"
+                                class="image_cover rounded float-left d-block" height="300" width="300" alt="">
+                            {% endif %}
                         </div>
                     </div>
                 </div>
-            </form>
+                <div class="col-sm-6 col-12 flex-grow-1">
+                    <div class="col-12">
+                        <p class="my-3"><strong>Name</strong>: {{ user.first_name }}
+                            {{ user.last_name }} </p>
+                        <p class="my-3"><strong>Username</strong>: {{ user.username }}</p>
+                        <p class="my-3"><strong>Email</strong>: {{ user.email }}</p>
+                        <p class="my-3"><strong>Phone</strong>: {{ profile.default_phone_number }}</p>
+                        <p class="my-3"><strong>Postcode</strong>: {{ profile.default_postcode }}</p>
+                        <div class="text-center"><a class="btn btn-primary m-3" href="{% url 'edit_profile' %}">Edit
+                                Profile</a></div>
+
+                    </div>
+                </div>
+            </div>
             <hr>
             <div
-                data-tour="step: 2; title: Search Results; content: User Search Results will appear underneath the search bar">
-                <h1 class="mt-5 h5">Search and follow users here:</h1>
-                <div class=""
-                    data-tour="step: 1; title: Add and follow other users; content: Search for other users and follow them to enable you to split payments with them">
-                    <form method="GET" action="{% url 'user_search' %}" class="d-flex">
-                        {% csrf_token %}
-                        <input type="text" id="user_search" name="user_search"
-                            class="form-control border mb-3 flex-grow-1" placeholder="User Search">
-                        <button type="submit" class="btn btn-outline-primary mb-3 ms-3">
-                            Search
-                        </button>
-                    </form>
-                </div>
-                <form method="POST" action="{% url 'update_following' %}">
-                    <ul class="list-group list-group-light list-unstyled">
-                        {% if search_profiles %}
-                        <p>Search Results</p>
-                        {% endif %}
-                        {% for user_profile in search_profiles %}
-                        {% if user_profile != profile %}
-                        <li class="my-3">
-                            {% csrf_token %}
-                            <div class="card">
-                                <div class="card-content  mx-1 mx-lg-5 d-flex flex-wrap justify-content-between">
-                                    {% if user_profile.profile_image_url %}
-                                    <a class="mt-1" href="{% url 'user_home' %}">
-                                        <img class="image_cover rounded-circle border-dark" alt="Profile image"
-                                            src='{{ user_profile.profile_image_url }}' height="50" width="50">
-                                    </a>
-                                    {% else %}
-                                    <i class="fas mx-2 fa-user-alt fa-2xl mt-4" height="50" width="50"></i>
-                                    {% endif %}
-                                    <a href="{% url 'profile' user_profile.pk %}">
-                                        <p class="m-3">{{ user_profile }}</p>
-                                    </a>
-                                    <div class="my-3">
-                                        {% if user_profile in profile.follows.all %}
-                                        <button class="btn btn-sm bg-warning me-1 me-lg-5" name="unfollow"
-                                            value="{{ user_profile.pk }}">Unfollow</button>
-                                        {% else %}
-                                        <button class="btn btn-sm  bg-primary me-1 me-lg-5" name="follow"
-                                            value="{{ user_profile.pk }}">Follow</button>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        {% endif %}
-                        {% endfor %}
-                    </ul>
-                </form>
-            </div>
-            <div data-tour="step: 3; title: Followed Users; content: Users you follow will show here">
+                data-tour="step: 7; title: Followed Users; content: Users you follow will show here, they can be quickly unfollowed but use the button to add more">
                 <h1 class="h5 mt-md-5">Already Following:</h1>
                 <form method="POST" action="{% url 'update_following' %}">
                     <ul class="list-group list-group-light list-unstyled">
@@ -524,6 +463,10 @@
                     </ul>
                 </form>
             </div>
+            <hr>
+            <div class="container text-center">
+                <a class="btn btn-primary m-3" href="{% url 'edit_profile' %}">Follow Friends</a>
+            </div>
         </div>
     </Section>
 </div>
@@ -551,20 +494,5 @@
         });
     });
 </script>
-<script>
-    function preview() {
-        frame.src = URL.createObjectURL(event.target.files[0]);
-        document.getElementById('frame').classList.remove('d-none');
-        document.getElementById('image-reset').classList.remove('disabled');
-        document.getElementById('image-submit').classList.remove('disabled');
-    }
 
-    function clearImage() {
-        document.getElementById('customFile').value = null;
-        frame.src = "";
-        frame.classList.add('d-none');
-        document.getElementById('image-reset').classList.add('disabled');
-        document.getElementById('image-submit').classList.add('disabled');
-    }
-</script>
 {% endblock %}

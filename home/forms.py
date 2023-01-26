@@ -1,9 +1,11 @@
 from django import forms
 from django.forms.widgets import ClearableFileInput
+from django.core.validators import FileExtensionValidator
 
 
 class Image_form(forms.Form):
-    image = forms.ImageField(required=True)
+    image = forms.ImageField(required=True, validators=[FileExtensionValidator(
+        ['gif', 'tif', 'jpg', 'jpeg', 'png', 'bmp', 'webp'])])
 
 
 class Contact_form(forms.Form):
