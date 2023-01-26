@@ -5,3 +5,20 @@
     integrity="sha512-G/T7HQJXSeNV7mKMXeJKlYNJ0jrs8RsWzYG7rVACye+qrcUhEAYKYzaa+VFy6eFzM2+/JT1Q+eqBbZFSHmJQew=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 {% endblock %}
+
+{% block content %}
+<div class="mask d-flex align-items-center h-100" style="background-color: #D6D6D6;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card" style="border-radius: 1rem;">
+                    <div class="card-body p-3">
+                        {% block form-content %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

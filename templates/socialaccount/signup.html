@@ -4,7 +4,7 @@
 
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
-{% block content %}
+{% block form-content %}
 <h1>{% trans "Sign Up" %}</h1>
 
 <p>{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your
@@ -23,7 +23,7 @@
   <p class="text-center">By clicking, you agree to our terms and the <a href="/connect-account/legal">Stripe Connected
       Account Agreement</a>.</p>
   <div class="text-center">
-    <button type="submit">{% trans "Sign Up" %} &raquo;</button>
+    <button type="submit btn btn-primary">{% trans "Sign Up" %} &raquo;</button>
   </div>
 </form>
 
