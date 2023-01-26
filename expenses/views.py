@@ -20,9 +20,6 @@ import proto
 import os
 import uuid
 
-
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"kwik-split-0a449986ee26.json"
-
 # set google document AI variables
 project_id = os.environ["DOCUMENT_AI_PROJECT_ID"]
 location = os.environ["DOCUMENT_AI_LOCATION"]  # Format is 'us' or 'eu'
