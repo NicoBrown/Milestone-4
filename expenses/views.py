@@ -26,6 +26,9 @@ location = os.environ["DOCUMENT_AI_LOCATION"]  # Format is 'us' or 'eu'
 # Create processor before running sample, Refer to https://cloud.google.com/document-ai/docs/manage-processor-versions for more information
 processor_id = os.environ["DOCUMENT_AI_PROCESSOR_ID"]
 
+if 'DEVELOPMENT' in os.environ:
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"kwik-split-0a449986ee26.json"
+
 
 @login_required
 def add_image(request, expense_id=""):
