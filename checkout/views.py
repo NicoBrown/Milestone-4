@@ -27,6 +27,8 @@ def checkout(request):
     Returns:
         binary_sum (str): Binary string of the sum of a and b
     """
+    profile = get_object_or_404(
+        UserProfile, user=request.user)
 
     if request.method == "GET":
         if "expense_id" in request.GET:
@@ -35,13 +37,13 @@ def checkout(request):
             destination = stripe.Account.retrieve(
                 expense.user_profile.stripe_customer_id)
             customer = stripe.Account.retrieve(
-                request.profile.stripe_customer_id)
+                profile.stripe_customer_id)
             order_total = 0
             line_items_array = []
             line_items_ids = {}
 
             line_items = OrderLineItem.objects.filter(
-                user_profile=request.profile, order=expense, is_paid=False)
+                user_profile=profile, order=expense, is_paid=False)
 
             if (line_items):
                 for line_item in line_items:
@@ -62,7 +64,7 @@ def checkout(request):
                     })
 
                 session = stripe.checkout.Session.create(
-                    customer_email=request.profile.user.email,
+                    customer_email=request.user.email,
                     line_items=line_items_array,
                     payment_intent_data={
                         'application_fee_amount': round(20 + (order_total * 0.03)),
