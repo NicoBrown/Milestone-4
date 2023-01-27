@@ -7,7 +7,7 @@ from django.utils.deprecation import MiddlewareMixin
 class SimpleMiddleware(MiddlewareMixin):
     def process_view(self, request, view_func, view_args, view_kwargs):
         # This code is executed just before the view is called
-        if request.user.is_authenticated and request.headers['HTTP_HOST'] == 'https://https//kwik-split.herokuapp.com/':
+        if request.user.is_authenticated and request.headers['HTTP_HOST'] == 'kwik-split.herokuapp.com':
             if 'profile' not in request:
                 request.profile = UserProfile.objects.filter(
                     user=request.user).first()
@@ -21,7 +21,7 @@ def profile(request):
         paid_expenses = []
         unpaid_expenses = []
 
-        if request.path.startswith('/user_home') and request.headers['HTTP_HOST'] == 'https://https//kwik-split.herokuapp.com/':
+        if request.path.startswith('/user_home') and request.headers['HTTP_HOST'] == 'kwik-split.herokuapp.com':
             line_items = OrderLineItem.objects.filter(user_profile=profile)
 
             for line_item in line_items:
