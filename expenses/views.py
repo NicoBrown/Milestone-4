@@ -105,7 +105,6 @@ def add_expense(request):
             )
 
             tip_split = request.POST.get('tip_split', False)
-            expense.update_totals()
             expense.save()
 
             line_items = [v for k, v in request.POST.items()
