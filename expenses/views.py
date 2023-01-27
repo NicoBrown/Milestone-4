@@ -86,7 +86,7 @@ def add_image(request, expense_id=""):
 @login_required
 def add_expense(request):
 
-    if request.method == 'POST':
+    if request.method == 'POST' and request.FILES == {}:
         form = Expense_form(request.POST, {})
         if form.is_valid():
             expense_id = request.POST.get('expense_id', '')
