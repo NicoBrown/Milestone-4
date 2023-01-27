@@ -89,20 +89,23 @@ def add_expense(request):
     if request.method == 'POST':
         form = Expense_form(request.POST, {})
         if form.is_valid():
+            expense = get_object_or_404(
+                Expense, expense_id=request.POST['expense_id'])
 
             line_items = [v for k, v in request.POST.items()
                           if k.startswith('line_item ')]
-            expense = Expense(
-                supplier_name=request.POST.get('supplier_name', ''),
-                supplier_address=request.POST.get('supplier_address', ''),
-                supplier_phone=request.POST.get('supplier_phone', ''),
-                total_amount=float(request.POST.get('total_amount', 0)),
-                total_tax_amount=float(
-                    request.POST.get('total_tax_amount', 0)),
-                tip_amount=float(request.POST.get('tip_amount', 0)),
-                net_amount=float(request.POST.get('net_amount', 0)),
-                line_item_count=line_items.__len__(),
-            )
+
+            expense.supplier_name = request.POST.get('supplier_name', '')
+            expense.supplier_address = request.POST.get(
+                'supplier_address', '')
+            expense.supplier_phone = request.POST.get('supplier_phone', '')
+            expense.total_amount = float(request.POST.get('total_amount', 0))
+            expense.total_tax_amount = float(
+                request.POST.get('total_tax_amount', 0))
+            expense.tip_amount = float(request.POST.get('tip_amount', 0))
+            expense.net_amount = float(request.POST.get('net_amount', 0))
+            expense.line_item_count = line_items.__len__()
+            expense.user_profile = request.profile
 
             tip_split = request.POST.get('tip_split', False)
             expense.save()

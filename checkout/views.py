@@ -63,6 +63,13 @@ def checkout(request):
                         'quantity': 1,
                     })
 
+                if 'DEVELOPMENT' in os.environ:
+                    success_url = 'https://{request.META["HTTP_X_FORWARDED_HOST"]}//checkout/checkout_success/{CHECKOUT_SESSION_ID}',
+                    cancel_url = 'https://{request.META["HTTP_X_FORWARDED_HOST"]}/onboard_user',
+                else:
+                    success_url = 'https://kwik-split.herokuapp.com/checkout/checkout_success/{CHECKOUT_SESSION_ID}'
+                    cancel_url = 'https://kwik-split.herokuapp.com/user_home'
+
                 session = stripe.checkout.Session.create(
                     customer_email=request.user.email,
                     line_items=line_items_array,
@@ -78,8 +85,8 @@ def checkout(request):
                         **line_items_ids,
                     },
                     mode='payment',
-                    success_url='https://kwik-split.herokuapp.com/checkout/checkout_success/{CHECKOUT_SESSION_ID}',
-                    cancel_url='https://kwik-split.herokuapp.com//user_home',
+                    success_url=success_url,
+                    cancel_url=cancel_url,
                 )
                 return redirect(session.url)
             else:

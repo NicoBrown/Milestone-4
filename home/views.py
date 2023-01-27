@@ -41,12 +41,18 @@ def onboard_user(request):
     if account_response.requirements['currently_due'] != []:
         request.profile.stripe_requirements_due = True
         request.profile.save()
+
+        if 'DEVELOPMENT' in os.environ:
+            refresh_url = 'https://{request.META["HTTP_X_FORWARDED_HOST"]}/user_home',
+            return_url = 'https://{request.META["HTTP_X_FORWARDED_HOST"]}/onboard_user',
+        else:
+            refresh_url = 'https://kwik-split.herokuapp.com/user_home'
+            return_url = 'https://kwik-split.herokuapp.com/onboard_user'
+
         response = stripe.AccountLink.create(
             account=account_response.id,
-            # TODO: change for deployment
-            refresh_url='https://kwik-split.herokuapp.com/user_home',
-            # TODO: change for deployment
-            return_url='https://kwik-split.herokuapp.com/onboard_user',
+            refresh_url=refresh_url,
+            return_url=return_url,
             type="account_onboarding",
             collect="eventually_due",
         )
