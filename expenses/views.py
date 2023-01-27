@@ -26,9 +26,6 @@ location = os.environ["DOCUMENT_AI_LOCATION"]  # Format is 'us' or 'eu'
 # Create processor before running sample, Refer to https://cloud.google.com/document-ai/docs/manage-processor-versions for more information
 processor_id = os.environ["DOCUMENT_AI_PROCESSOR_ID"]
 
-if 'DEVELOPMENT' in os.environ:
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"kwik-split-0a449986ee26.json"
-
 
 @login_required
 def add_image(request, expense_id=""):
@@ -75,7 +72,7 @@ def add_image(request, expense_id=""):
 
             context = {
                 'net_amount': net_amount,
-                'expense': expense,
+                'expense_id': expense_id,
                 'normalized_items': normalized_items,
                 'line_items': line_items,
             }
@@ -92,8 +89,8 @@ def add_expense(request):
     if request.method == 'POST':
         form = Expense_form(request.POST, {})
         if form.is_valid():
-            expense = get_object_or_404(
-                Expense, expense_id=request.POST['expense_id'])
+            expense_id = request.POST.get('expense_id', '')
+            expense = get_object_or_404(Expense, expense_id=expense_id)
 
             line_items = [v for k, v in request.POST.items()
                           if k.startswith('line_item ')]

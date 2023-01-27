@@ -24,12 +24,11 @@
                     information and amending the fields where needed">
                     <h5 class="h5" for="expense_id">Expense ID:</h5>
                     <div class="fw-bold col-12 input-group mb-2">
-                        <input id="expense_id" name="expense_id" value="{{ expense.expense_id }}"
+                        <input id="expense_id" name="expense_id" value="{{ expense_id }}"
                             class="form-control form-control-light form-control-sm" aria-label="readonly input"
                             readonly>
                         </input>
                     </div>
-
                     <h5 class="h5">Edit supplier details below:</h5>
                     {% for key, value in normalized_items.items %}
                     {% if key == "supplier_name" or key == "supplier_address" or key == "supplier_phone" %}
