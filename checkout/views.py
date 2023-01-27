@@ -76,8 +76,8 @@ def checkout(request):
                         **line_items_ids,
                     },
                     mode='payment',
-                    success_url='https://https://kwik-split.herokuapp.com/checkout/checkout_success/{CHECKOUT_SESSION_ID}',
-                    cancel_url='https://https://kwik-split.herokuapp.com//user_home',
+                    success_url='https://kwik-split.herokuapp.com/checkout/checkout_success/{CHECKOUT_SESSION_ID}',
+                    cancel_url='https://kwik-split.herokuapp.com//user_home',
                 )
                 return redirect(session.url)
             else:
