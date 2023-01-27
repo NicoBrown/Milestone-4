@@ -72,7 +72,7 @@ def add_image(request, expense_id=""):
 
             context = {
                 'net_amount': net_amount,
-                'expense_id': expense_id,
+                'expense': expense,
                 'normalized_items': normalized_items,
                 'line_items': line_items,
             }
@@ -147,7 +147,7 @@ def add_expense(request):
         else:
             messages.error(request, form.errors.as_text())
 
-    return redirect(request, 'expenses/upload_image.html')
+    return redirect(request, 'expenses/upload_image.html', context)
 
 
 @ login_required
