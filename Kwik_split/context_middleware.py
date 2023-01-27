@@ -21,7 +21,7 @@ def profile(request):
         paid_expenses = []
         unpaid_expenses = []
 
-        if request.path.startswith('https://kwik-split.herokuapp.com/user_home'):
+        if request.path.startswith('/user_home'):
             line_items = OrderLineItem.objects.filter(user_profile=profile)
 
             for line_item in line_items:
