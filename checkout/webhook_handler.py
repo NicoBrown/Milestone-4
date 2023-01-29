@@ -28,14 +28,11 @@ class StripeWH_Handler:
             content=f'Unhandled webhook received: {event["type"]}',
             status=200)
 
-    def handle_payment_intent_succeeded(self, event):
+    def handle_checkout_succeeded(self, event):
         """
-        Handle the payment_intent.succeeded webhook from Stripe
+        Handle the checkout.session.completed webhook from Stripe
         """
         intent = event.data.object
-        pid = intent.id
-
-        destination_profile = intent.metadata.destination_profile
         expense_id: intent.metadata.expense_id
 
         expense_exists = False
@@ -56,7 +53,6 @@ class StripeWH_Handler:
                 user_profile=profile, order=expense)
             if line_items:
                 for line_item in line_items:
-                    line_item = OrderLineItem.objects.get(pk=int(item_pk))
                     line_item.is_paid = True
                     line_item.save()
 
