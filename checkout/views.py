@@ -87,6 +87,7 @@ def checkout(request):
                     mode='payment',
                     success_url=success_url,
                     cancel_url=cancel_url,
+                    expand=['line_items', 'metadata']
                 )
                 return redirect(session.url)
             else:

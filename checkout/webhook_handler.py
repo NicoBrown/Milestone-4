@@ -9,6 +9,9 @@ from profiles.models import UserProfile
 
 import json
 import time
+import stripe
+
+# Code below taken from Code institutes Boutique Ado project and adapted
 
 
 class StripeWH_Handler:
@@ -40,7 +43,7 @@ class StripeWH_Handler:
         while attempt <= 5:
             try:
                 expense = Expense.objects.get(
-                    pk=expense.pk,
+                    expense_id=expense_id,
                     stripe_pid=pid,
                 )
                 expense_exists = True
@@ -49,6 +52,16 @@ class StripeWH_Handler:
                 attempt += 1
                 time.sleep(1)
         if expense_exists:
+            line_items = OrderLineItem.objects.filter(
+                user_profile=profile, order=expense)
+            if line_items:
+                for line_item in line_items:
+                    line_item = OrderLineItem.objects.get(pk=int(item_pk))
+                    line_item.is_paid = True
+                    line_item.save()
+
+            expense.update_totals()
+            expense.save()
             return HttpResponse(
                 content=f'Webhook received: {event["type"]} | SUCCESS: Verified order already in database',
                 status=200)
