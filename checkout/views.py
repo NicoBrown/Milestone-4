@@ -111,13 +111,13 @@ def checkout_success(request, CHECKOUT_SESSION_ID):
         expense_id = response['metadata']['expense_id']
         expense = Expense.objects.get(expense_id=expense_id)
         destination_profile = UserProfile.objects.get(
-            user=response['metadata']['destination_profile'])
+            user__id=response['metadata']['destination_profile'])
 
         line_item_pks = [v for k, v in response['metadata'].items()
-                         if v.isnumeric()]
+                         if k is not "destination_profile" and k is not "expense_id"]
         if line_item_pks:
             for item_pk in line_item_pks:
-                line_item = OrderLineItem.objects.get(pk=item_pk)
+                line_item = OrderLineItem.objects.get(pk=int(item_pk))
 
                 if line_item:
                     line_item.is_paid = True
