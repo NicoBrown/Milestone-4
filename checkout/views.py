@@ -80,7 +80,7 @@ def checkout(request):
                         },
                     },
                     metadata={
-                        'destination_profile': expense.user_profile,
+                        'destination_profile': expense.user_profile.user,
                         'expense_id': expense.expense_id,
                         **line_items_ids,
                     },
@@ -110,9 +110,8 @@ def checkout_success(request, CHECKOUT_SESSION_ID):
     if response['payment_status'] == 'paid':
         expense_id = response['metadata']['expense_id']
         expense = Expense.objects.get(expense_id=expense_id)
-
         destination_profile = UserProfile.objects.get(
-            user__username={response['metadata']['destination_profile']})
+            user=response['metadata']['destination_profile'])
 
         line_item_pks = [v for k, v in response['metadata'].items()
                          if v.isnumeric()]

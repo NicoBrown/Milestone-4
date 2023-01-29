@@ -14,6 +14,8 @@ from base64 import b64encode, b64decode
 from io import BytesIO, TextIOWrapper
 from home.forms import Image_form
 from expenses.forms import Expense_form, Order_form
+from decimal import Decimal
+
 
 import stripe
 import proto
@@ -25,6 +27,8 @@ project_id = os.environ["DOCUMENT_AI_PROJECT_ID"]
 location = os.environ["DOCUMENT_AI_LOCATION"]  # Format is 'us' or 'eu'
 # Create processor before running sample, Refer to https://cloud.google.com/document-ai/docs/manage-processor-versions for more information
 processor_id = os.environ["DOCUMENT_AI_PROCESSOR_ID"]
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"kwik-split-0a449986ee26.json"
 
 
 @login_required
@@ -76,7 +80,7 @@ def add_image(request, expense_id=""):
                 'normalized_items': normalized_items,
                 'line_items': line_items,
             }
-
+            breakpoint()
             return render(request, 'expenses/add_expense.html', context)
         else:
             messages.error(request, form.errors.as_text())
@@ -90,7 +94,7 @@ def add_expense(request):
         form = Expense_form(request.POST, {})
         if form.is_valid():
             expense_id = request.POST.get('expense_id', '')
-            expense = get_object_or_404(Expense, expense_id=expense_id)
+            expense = Expense.objects.get(expense_id=expense_id)
 
             line_items = [v for k, v in request.POST.items()
                           if k.startswith('line_item ')]
@@ -137,7 +141,7 @@ def add_expense(request):
 
                     if user_profile == request.profile:
                         order_line_item.is_paid = True
-                        expense.paid_amount += decimal(
+                        expense.paid_amount += Decimal(
                             order_line_item.lineitem_total)
                         expense.save()
 
