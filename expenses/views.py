@@ -137,7 +137,8 @@ def add_expense(request):
 
                     if user_profile == request.profile:
                         order_line_item.is_paid = True
-                        expense.paid_amount += order_line_item.lineitem_total
+                        expense.paid_amount += decimal(
+                            order_line_item.lineitem_total)
                         expense.save()
 
                     order_line_item.save()
