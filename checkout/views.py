@@ -80,7 +80,7 @@ def checkout(request):
                         },
                     },
                     metadata={
-                        'destination_profile': expense.user_profile.user,
+                        'destination_profile': expense.user_profile.user.id,
                         'expense_id': expense.expense_id,
                         **line_items_ids,
                     },
