@@ -54,7 +54,8 @@ def checkout(request):
                         unit_amount=int(line_item.amount * 100),
                         currency="gbp",
                         product_data={
-                            'name': line_item.description
+                            'name': line_item.description,
+                            'id': line_item.id
                         },
                     )
 
@@ -87,7 +88,7 @@ def checkout(request):
                     mode='payment',
                     success_url=success_url,
                     cancel_url=cancel_url,
-                    expand=['line_items', 'metadata']
+                    expand=['line_items']
                 )
                 return redirect(session.url)
             else:
