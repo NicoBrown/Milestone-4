@@ -126,7 +126,7 @@ def checkout_success(request, CHECKOUT_SESSION_ID):
         expense.save()
         messages.success(
             request,
-            f"Payment successfully made to {response['metadata']['destination_profile']}! You may have to wait for the order to process so refresh the page in a few minutes",
+            f"Payment successfully made to {destination_profile.get_full_name()}! You may have to wait for the order to process so refresh the page in a few minutes",
             extra_tags=destination_profile.profile_image_url)
     else:
         messages.ERROR(

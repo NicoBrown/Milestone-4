@@ -101,7 +101,7 @@
     </header>
     {% endblock %}
     {% if messages %}
-    <div class="position-fixed start-50">
+    <div class="message-container position-fixed start-50">
         {% for message in messages %}
         {% with message.level as level %}
         {% if level == 40 %}

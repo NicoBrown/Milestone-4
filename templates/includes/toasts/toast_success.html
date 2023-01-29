@@ -6,15 +6,13 @@
     </div>
     <div class="toast-body">
         {% if message.extra_tags %}
-        <div>
-            <div>
-                <img src="{{ message.extra_tags }}" alt="">
-            </div>
-            <div>
-                <img src="{{ profile.profile_image_url }}" alt="">
-            </div>
+        <div class="d-inline-flex">
+            <img class="image_cover rounded-circle border-dark me-3" height="50" width="50"
+                src="{{ message.extra_tags }}" alt="profile image">
+            <p>{{ message }}</p>
         </div>
+        {% else %}
+        <p class="text-center">{{ message }}</p>
         {% endif %}
-        <p>{{ message }}</p>
     </div>
 </div>

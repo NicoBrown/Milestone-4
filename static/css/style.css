@@ -73,7 +73,7 @@ h3 {
 
 .message-container {
     z-index: 100;
-    position: fixed;
+    transform: translateX(-50%);
 }
 
 /*----------------------------- Index Page selectors ----------------------------- */
