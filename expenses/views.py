@@ -81,7 +81,6 @@ def add_image(request, expense_id=""):
                 'normalized_items': normalized_items,
                 'line_items': line_items,
             }
-            breakpoint()
             return render(request, 'expenses/add_expense.html', context)
         else:
             messages.error(request, form.errors.as_text())
