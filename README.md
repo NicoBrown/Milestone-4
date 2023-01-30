@@ -95,17 +95,25 @@ The site was designed with a responsive top navigation bar which displayed the l
 
 The site was designed as a web app in which the user can easily split a bill with another user. Some high-level user stories were developed at the start of the project to define which features to implement:
 
-- as a user, I want to be able to search for and follow other users, so I can split a bill with them.
-- as a user, I want to be able to update my profile information.
-- as a user, I want to be able to calculate a bill amount, so that I can request payment.
-- as a user, I want to be able to easily split a bill with other users.
+- As a user, I want to be able to search for and follow other users, so I can split a bill with them.
+- As a user, I want to be able to update my profile information.
+- As a user, I want to be able to calculate a bill amount, so that I can request payment.
+- As a user, I want to be able to easily split a bill with other users.
+- As a user, I want a history of all of my payments, so I can see what I've spent.
+- As a user, I want a history of all of my requests, so I can see whats been sent to me.
 
 The app was developed with these in mind along with some technical requirements for the application, onboarding and payment flows to be secure.
 
 ### Initial Wire-frames
 
-I created a number of wire-frames as a part of the project development to inform the design as I worked, these were updated as the project progressed and I had more familiarity with the CSS/component library in use, MDB.
-The wire-frames were shown as mobile first and expanded on for larger screen sizes where component layouts would be changed.
+I created a number of wire-frames as a part of the project development to inform the design as I worked, these were updated as the project progressed and I had more familiarity with the CSS/component library in use, MDB. Initial low fidelity wireframes were made for mobile, tablet and desktop:
+
+![image](https://user-images.githubusercontent.com/69271605/215562551-ba6b7d0e-af31-439c-8165-eba228a64134.png)
+
+The wire-frames were shown as mobile first and expanded on for larger screen sizes where component layouts would be changed. I thought the most important interfaces were the users home page and where the user uploaded new expenses.
+
+![image](https://user-images.githubusercontent.com/69271605/215555517-792dab64-5a4b-4c88-883a-2c1af28c1840.png) ![image](https://user-images.githubusercontent.com/69271605/215555749-dfe0e277-c157-435b-961a-b17f2364c02c.png)
+
 
 ### Product Tour
 
@@ -113,11 +121,21 @@ I provided an interactive tour on the users homepage and the page in which you d
 
 The library used was tourguide.js, it was set up by adding data attributes to the html elements which defined the position in the product tour and the title and message for each of the elements covered in the tour.
 
+### User interfaces
+
+The users manage their requested payments and payouts through this tab interface on their home page:
+![image](https://user-images.githubusercontent.com/69271605/215558285-a35c28f9-ecd1-478d-85a3-833dd37ac7bc.png)
+
+Each of the expenses details is shown on the accordian face and each of the line items was shown on the inside of it when expanded:
+![image](https://user-images.githubusercontent.com/69271605/215559018-336796f3-f64e-4853-ae4d-b20053110352.png)
+
+
+
 ------
 
 ## Testing
 
-Testing is a manual process in which I performed functional and user acceptance testing on the application. I used in-browser testing tools to check for the functional requirements such as adequate loading times, accessability, etc. I then performed User acceptance testing by manually testing each flow in the app to ensure that it works as expected from a users perspective the deliver the user stories. I have further documented the testing work undertaken in the TESTING.md file located in this repository.
+Testing for the project was a manual process in which I performed functional and user acceptance testing on the application. I used in-browser testing tools to check for the functional requirements such as adequate loading times, accessability, html and CSS linting etc. I then performed User acceptance testing by manually testing each flow in the app to ensure that it works as expected from a users perspective the deliver the user stories. I have further documented the testing work undertaken in the TESTING.md file located in this repository.
 
 Below, I have outlined the identification and bank account details needed in order to test the third party stripe onboarding and payment flows in which the user is taken away from the app domain to stripe and then returned once completed either successfully or unsuccessfully.
 
