@@ -131,7 +131,7 @@
                     <div class="input-group">
                         <h5 class="h5 col-6 fw-bold me-3">Tax amount:</h5>
                         <input class="col-6 form-control form-control-sm form-icon-trailing" name="{{ key }}"
-                            value="{{ value |default:'No value for this one sorry 🤷' }}">
+                            value="{{ value |default:'0' }}">
                         </input>
                         <span class="input-group-text"><i class="fas fa-pen trailing"></i></span>
                     </div>
@@ -143,7 +143,7 @@
                         <h5 class="h5 col-6 form-control fw-bold me-3">Tip amount:
                         </h5>
                         <input class="col-6 form-control form-control-sm form-icon-trailing" name="{{ key }}"
-                            value="{{ value |default:'No value for this one sorry 🤷' }}">
+                            value="{{ value |default:'0' }}">
                         </input>
                         <span class="input-group-text"><i class="fas fa-pen trailing"></i></span>
                     </div>
@@ -167,8 +167,7 @@
                             <option>total_tax_amount</option>
                             <option>tip_amount</option>
                         </select>
-                        <input class="col-6 form-control form-control-sm" name=""
-                            value="{{ value |default:'No value for this one sorry 🤷' }}">
+                        <input class="col-6 form-control form-control-sm" name="" value="{{ value |default:'0' }}">
                         </input>
                         <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
                         <div id="tip-amount" class="form-check collapse collapse-horizontal m-2">
@@ -189,7 +188,7 @@
                     <div class="input-group ">
                         <h5 class="h5 fw-bold me-3 mt-2">Total including Tax, Tips, etc: </h5>
                         <input class="form-control form-control-sm form-icon-trailing" name="{{ key }}"
-                            value="{{ value |default:'No value for this one sorry 🤷' }}">
+                            value="{{ value |default:'0' }}">
                         </input>
                         <span class="input-group-text"><i class="fas fa-pen trailing m-2"></i></span>
                     </div>
