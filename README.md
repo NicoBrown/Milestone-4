@@ -89,9 +89,37 @@ The breakpoint were set to the 6 default MDB breakpoints:
 
 ## User experience (UX)
 
+The site was designed with a responsive top navigation bar which displayed the log in/out buttons and links to the home page and the users home page.
+
+### User Stories
+
+The site was designed as a web app in which the user can easily split a bill with another user. Some high-level user stories were developed at the start of the project to define which features to implement:
+
+- as a user, I want to be able to search for and follow other users, so I can split a bill with them.
+- as a user, I want to be able to update my profile information.
+- as a user, I want to be able to calculate a bill amount, so that I can request payment.
+- as a user, I want to be able to easily split a bill with other users.
+
+The app was developed with these in mind along with some technical requirements for the application, onboarding and payment flows to be secure.
+
+### Initial Wire-frames
+
+I created a number of wire-frames as a part of the project development to inform the design as I worked, these were updated as the project progressed and I had more familiarity with the CSS/component library in use, MDB.
+The wire-frames were shown as mobile first and expanded on for larger screen sizes where component layouts would be changed.
+
+### Product Tour
+
+I provided an interactive tour on the users homepage and the page in which you define an expense. The tour is intiated by a floating button on the page which then explains the features of the page and how to use the app.
+
+The library used was tourguide.js, it was set up by adding data attributes to the html elements which defined the position in the product tour and the title and message for each of the elements covered in the tour.
+
 ------
 
 ## Testing
+
+Testing is a manual process in which I performed functional and user acceptance testing on the application. I used in-browser testing tools to check for the functional requirements such as adequate loading times, accessability, etc. I then performed User acceptance testing by manually testing each flow in the app to ensure that it works as expected from a users perspective the deliver the user stories. I have further documented the testing work undertaken in the TESTING.md file located in this repository.
+
+Below, I have outlined the identification and bank account details needed in order to test the third party stripe onboarding and payment flows in which the user is taken away from the app domain to stripe and then returned once completed either successfully or unsuccessfully.
 
 ### Stripe Connect
 
@@ -111,10 +139,35 @@ If your platform has connected accounts in different countries or plans to, you 
 
 <div class="Table Table--striped Box-root Padding-vertical--12" style="position:relative"><table><thead><tr><th style="width: 260px;">Information provided</th><th style="width: 186px;">Person verification status</th><th style="width: 382px;">requirements[currently_due]</th></tr></thead><tbody><tr><td>Verified date of birth and verified address</td><td>Verified</td><td>None</td></tr><tr><td>Verified date of birth and unverified address</td><td>Unverified</td><td><code class="InlineCode">verification.additional_document</code></td></tr><tr><td>Unverified date of birth and verified address</td><td>Unverified</td><td><code class="InlineCode">verification.document</code></td></tr><tr><td>Unverified date of birth and unverified address</td><td>Unverified</td><td><code class="InlineCode">verification.additional_document</code>, <code class="InlineCode">verification.document</code></td></tr></tbody></table></div>
 
+The app is currently set to development model in stripe so that users can onboard without having to provide sensitive documents and bank account information. The stripe onboarding screen indicates its in test mode and you can click to use the test documents they provide.
+
 ------
 
 ## Deployment
 
+The application is uses a number of third party services, libraries and API's which need to be set up individually in order to deploy the application. To get started clone a copy of this repo, if you do not know how to do this refer to this [git-guide](https://github.com/git-guides/git-clone). Once you have the project open in your IDE, run the command 
+`pip install -r requirements.txt` in the terminal to install the required packages.
+
+To configure the project to run you'll need to change the django settings and some environment variables. Ive used the python dotenv library to assist with this locally, an example .env file is shown below, this should be placed in the root of your project:
+
+### Django
+
+There are a few different variables which can be set to have the project run locally or when deployed. if USE_AWS is set then the projects media and static files will refer to the files available on AWS, these can be updated by running `python3 manage.py collectstatic` to push your files to the platform.
+if DEVELOPMENT is set then django will report verbose errors to the user, which is useful for development but should be unset in deployment. New users are required to confirm their email addresses by opening a link emailed to them, with DEVELOPMENT set the email will be displayed on the console as a SMPT mail server wont work until its deployed.
+
+
+
+### Python
+
+### AWS S3 storage
+
+### Heroku
+
+### Elephant SQL
+
+### Google Cloud Document AI
+
+### Google email
 ------
 
 ## Credits
@@ -122,7 +175,13 @@ If your platform has connected accounts in different countries or plans to, you 
 ------
 
 ### Code
+The project used the code institutes template for Gitpod as a starting point and took a lot of boiler plate code from the Boutique Ado project.
 
+There were a number of tutorials I followed and took inspiration from in the development of the project:
+
+- Django Social network app - https://testdriven.io/blog/setting-up-stripe-connect-with-django/
+
+- Peer to Peer payment app - https://www.twilio.com/blog/create-peer-to-peer-payment-app-laravel-stripe
 
 
 ### Media
