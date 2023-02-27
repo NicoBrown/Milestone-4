@@ -14,7 +14,11 @@
     <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
       <div class="col-12 d-flex justify-content-evenly flex-column">
         {% csrf_token %}
-        {{ form|crispy }}
+        {% for field in form %}
+        <div class="m-1">
+          {{ field }}
+        </div>
+        {% endfor %}
         {% if redirect_field_value %}
         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}

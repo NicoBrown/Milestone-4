@@ -402,12 +402,12 @@
                     <div class="d-flex flex-column justify-content-center">
                         <div class="col-12 text-center  pe-5">
                             {% if profile.profile_image_url %}
-                            <img id="frame" class="image_cover rounded float-left border-dark"
-                                src="{{ profile.profile_image_url }}" alt="Avatar" height="300" width="300">
+                            <img id="frame" class="image_cover img-fluid rounded float-left border-dark"
+                                src="{{ profile.profile_image_url }}" alt="Avatar">
                             {% else %}
                             <img id="frame" title="uploaded-image"
                                 src="{% static 'images/stock-user-profile-icon.jpg' %}"
-                                class="image_cover rounded float-left d-block" height="300" width="300" alt="">
+                                class="image_cover img-fluid rounded float-left d-block" alt="">
                             {% endif %}
                         </div>
                     </div>
